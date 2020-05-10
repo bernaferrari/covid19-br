@@ -28,11 +28,10 @@ def br():
 
     # write the current file
     current_filename = "public/current_BR.csv"
-    if not os.path.isfile(current_filename):
-        with open(current_filename, "w") as f:
-            csv_writter = csv.writer(f)
-            csv_writter.writerow(header)
-            csv_writter.writerow(data)
+    with open(current_filename, "w") as f:
+        csv_writter = csv.writer(f)
+        csv_writter.writerow(header)
+        csv_writter.writerow(data)
 
     # take care of the file with history
     history_filename = "public/history_BR.csv"
@@ -84,9 +83,8 @@ def gl():
 
     # write the current file
     current_filename = "public/current_GL.csv"
-    if not os.path.isfile(current_filename):
-        with open(current_filename, "w") as f:
-            write_global_fields(csv.writer(f))
+    with open(current_filename, "w") as f:
+        write_global_fields(csv.writer(f))
 
     # take care of the file with history
     history_filename = "public/history_GL.csv"
