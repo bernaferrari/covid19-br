@@ -35,7 +35,7 @@ def br():
             csv_writter.writerow(data)
 
     # take care of the file with history
-    history_filename = "history_BR.csv"
+    history_filename = "public/history_BR.csv"
     with open(history_filename, "a") as f:
         csv_writter = csv.writer(f)
         # create file if it doesn't exists
@@ -83,13 +83,13 @@ def gl():
         csv_writter.writerow(current_data)
 
     # write the current file
-    current_filename = "current_GL.csv"
+    current_filename = "public/current_GL.csv"
     if not os.path.isfile(current_filename):
         with open(current_filename, "w") as f:
             write_global_fields(csv.writer(f))
 
     # take care of the file with history
-    history_filename = "history_GL.csv"
+    history_filename = "public/history_GL.csv"
     with open(history_filename, "a") as f:
         csv_writter = csv.writer(f)
         # create file if it doesn't exists
