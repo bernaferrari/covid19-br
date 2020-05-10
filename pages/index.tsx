@@ -20,6 +20,7 @@ import {
 import { } from "react-icons"
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import News from "../components/News";
 
 export const Container = (props) => (
   <Box width="full" maxWidth="1280px" mx="auto" px={6} {...props} />
@@ -60,6 +61,11 @@ export default () => {
           <Box size={8} />
           <OverallInfo />
         </Box>
+
+        <Box mx="auto" py={4}>
+        <News />
+        </Box>
+
       </Box>
       <GetCovidDataComp>
 
@@ -91,6 +97,8 @@ export default () => {
         <Box maxW="3xl" mx="auto">
           <StatesLines />
         </Box>
+
+        <Divider mt={4} />
 
       </GetCovidDataComp>
 

@@ -27,7 +27,7 @@ def br():
             time = item["Date"]
 
     # write the current file
-    current_filename = "current_BR.csv"
+    current_filename = "public/current_BR.csv"
     if not os.path.isfile(current_filename):
         with open(current_filename, "w") as f:
             csv_writter = csv.writer(f)
