@@ -61,6 +61,18 @@ export default () => {
         </Box>
       </Box>
 
+   <Divider />
+
+      <TextImageContainer>
+        <SectionTitle>Curva de casos</SectionTitle>
+        <SectionSubtitle>Estados do Brasil</SectionSubtitle>
+        <Box size={4} />
+        <CenteredImage src="/figs/animacao_corona.gif" />
+        <Box as="p" mx="8px" textAlign="center">
+	Contribuição: Prof. Marco Antonio Leonel Caetano (INSPER/SP)
+	</Box>
+      </TextImageContainer>
+
       <Divider my={4} />
 
       <TextImageContainer>
