@@ -21,18 +21,10 @@ class OverallInfo extends React.Component {
     const data = this.state["data"];
 
     if (data === null) {
-      return (
-        <Box p={6} flex="1" rounded="10px">
-        </Box>
-      );
+      return <Box p={6} flex="1" rounded="10px"></Box>;
     }
 
     const brazil = data;
-    // const brazil: Array<any> = data.filter(
-    //   (d) =>
-    //     (d.place_type === "s" || d.place_type === "state") &&
-    //     d.is_last === "True"
-    // );
 
     const casesBrazil = brazil
       .map((d) => +d.confirmed)
