@@ -88,7 +88,7 @@ export default () => {
               subtitle="Visualização temporal de dados de COVID19."
               access="Acessar site"
               src="/elias_preview.jpg"
-              url="shiny.leg.ufpr.br/elias/covid19time/"
+              url="http://shiny.leg.ufpr.br/elias/covid19time/"
             />
           </StyledFlex>
         </Box>
