@@ -23,6 +23,9 @@ const News = () => {
                 <Link href="https://www.insper.edu.br/noticias/covid-19-portal-marco-antonio/" isExternal>
                     <Icon name="chevron-right" mx="2px" /> Professor do Insper colabora com a UFPR em portal sobre a Covid-19 <Icon name="external-link" mx="2px" />
                 </Link> <br/>
+                <Link href="https://www.medrxiv.org/content/10.1101/2020.06.05.20123604v1" isExternal>
+                    <Icon name="chevron-right" mx="2px" /> Scrutinizing the heterogeneous spreading of COVID-19 outbreak in Brazilian territory <Icon name="external-link" mx="2px" />
+                </Link> <br/>
 		
         </Box>
     );

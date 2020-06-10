@@ -152,6 +152,12 @@ class RelatedLinksList extends Component {
       "Marco Antonio Leonel Caetano",
       "http://covid.c3sl.ufpr.br/docs/rascunhocorona.pdf"
     ),
+    new RelatedDocument(
+        "Scrutinizing the heterogeneous spreading of COVID-19 outbreak in Brazilian territory",
+        DocumentKind.Article,
+        "Silva,R.M., Mendes,C.F.O., Manchein,C.,2020",
+        "https://www.medrxiv.org/content/10.1101/2020.06.05.20123604v1"
+    ),
   ];
 
   render() {
