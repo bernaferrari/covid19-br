@@ -14,6 +14,9 @@ const News = () => {
                     Novidades
                 </Heading>
                 <Divider />
+                <Link href="https://www.medrxiv.org/content/10.1101/2020.06.05.20123604v1" isExternal>
+                    <Icon name="chevron-right" mx="2px" /> Scrutinizing the heterogeneous spreading of COVID-19 outbreak in Brazilian territory <Icon name="external-link" mx="2px" />
+                </Link> <br/>
                 <Link href="https://ricmais.com.br/videos/parana-no-ar/diagnostico-do-coronavirus-exame-de-raio-x-identifica-doenca/" isExternal>
                     <Icon name="chevron-right" mx="2px" /> Diagnóstico do Corona Vírus por Raio-X - professores UFPR e UFOP <Icon name="external-link" mx="2px" />
                 </Link> <br/>
@@ -23,10 +26,6 @@ const News = () => {
                 <Link href="https://www.insper.edu.br/noticias/covid-19-portal-marco-antonio/" isExternal>
                     <Icon name="chevron-right" mx="2px" /> Professor do Insper colabora com a UFPR em portal sobre a Covid-19 <Icon name="external-link" mx="2px" />
                 </Link> <br/>
-                <Link href="https://www.medrxiv.org/content/10.1101/2020.06.05.20123604v1" isExternal>
-                    <Icon name="chevron-right" mx="2px" /> Scrutinizing the heterogeneous spreading of COVID-19 outbreak in Brazilian territory <Icon name="external-link" mx="2px" />
-                </Link> <br/>
-		
         </Box>
     );
 };
