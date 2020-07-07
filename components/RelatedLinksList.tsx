@@ -87,12 +87,6 @@ function getCorrespondingColor(kind: DocumentKind) {
 class RelatedLinksList extends Component {
   data: Array<RelatedDocument> = [
     new RelatedDocument(
-      "Atualização da Situação do Estado do Paraná",
-      DocumentKind.Article,
-      "Silva, R., Beims, M., 22/06/2020",
-      "/docs/arquivo-parana.pdf"
-    ),
-    new RelatedDocument(
         "Scrutinizing the heterogeneous spreading of COVID-19 outbreak in Brazilian territory",
         DocumentKind.Article,
         "Silva,R.M., Mendes,C.F.O., Manchein,C.,2020",
