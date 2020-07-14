@@ -17,7 +17,7 @@ import {
   Divider,
   Link,
 } from "@chakra-ui/core";
-import { } from "react-icons"
+import {} from "react-icons";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import News from "../components/News";
@@ -63,16 +63,14 @@ export default () => {
         </Box>
 
         <Box mx="auto" py={4}>
-        <News />
+          <News />
         </Box>
-
       </Box>
-      <GetCovidDataComp>
-
+      {/* <GetCovidDataComp>
         <Box bg="#f4f4f4" mx="auto" py={4}>
           <Heading size="sm" textAlign="center">
             Evolução dos casos
-        </Heading>
+          </Heading>
           <Box size={4} />
 
           <Box maxW="3xl" mx="auto" textAlign="center">
@@ -99,11 +97,9 @@ export default () => {
         </Box>
 
         <Divider mt={4} />
-
-      </GetCovidDataComp>
+      </GetCovidDataComp> */}
 
       <Footer />
-
     </Box>
   );
 };

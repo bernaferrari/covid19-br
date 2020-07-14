@@ -2,6 +2,10 @@ node_modules
 **/.next/**
 **/_next/**
 **/dist/**
+
+out/**
+public/**
+
 packages/next/compiled/**
 packages/react-refresh-utils/**/*.js
 packages/react-refresh-utils/**/*.d.ts

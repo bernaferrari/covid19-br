@@ -61,7 +61,7 @@ export default () => {
         </Box>
       </Box>
 
-   <Divider />
+      <Divider />
 
       <TextImageContainer>
         <SectionTitle>Curva de casos</SectionTitle>
@@ -69,8 +69,8 @@ export default () => {
         <Box size={4} />
         <CenteredImage src="/figs/animacao_corona.gif" />
         <Box as="p" mx="8px" textAlign="center">
-	Contribuição: Prof. Marco Antonio Leonel Caetano (INSPER/SP)
-	</Box>
+          Contribuição: Prof. Marco Antonio Leonel Caetano (INSPER/SP)
+        </Box>
       </TextImageContainer>
 
       <Divider my={4} />

@@ -62,9 +62,10 @@ de Sistemas de Informação"
         <Text fontSize="xs">
           Developed & Designed by{" "}
           <a href="https://github.com/bernaferrari">Bernardo Ferrari</a> &
-          Rafael Ancara <br/>
-	  Mantido por Natália Yada, Tamy Beppler (com financiamento da bolsa CAPES para combate ao COVID-19) <br/>
-	  Administrado por André Grégio
+          Rafael Ancara <br />
+          Mantido por Natália Yada, Tamy Beppler (com financiamento da bolsa
+          CAPES para combate ao COVID-19) <br />
+          Administrado por André Grégio
         </Text>
       </div>
       <img

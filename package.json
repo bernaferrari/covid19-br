@@ -5,7 +5,8 @@
     "dev": "next",
     "build": "next build",
     "export": "next build && next export",
-    "start": "next start"
+    "start": "next start",
+    "lint": "prettier --check \"**/*.{js,mjs,cjs,jsx,json,ts,tsx,md,mdx,css,html,yml,yaml,scss,less,graphql,graphqls,gql}\""
   },
   "license": "MIT",
   "dependencies": {
@@ -28,6 +29,7 @@
     "@types/node": "^13.13.4",
     "@types/react": "^16.9.34",
     "@types/topojson-client": "^3.0.0",
+    "prettier": "^2.0.5",
     "typescript": "^3.8.3"
   }
 }
