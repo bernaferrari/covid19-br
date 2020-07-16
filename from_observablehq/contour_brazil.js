@@ -1,7 +1,7 @@
 // https://observablehq.com/@bernaferrari/brazil-contour-covid-19-map@2144
 import * as topojson from "topojson-client";
 import * as d3 from "d3";
-import { parseDataCityCovid, getDataCityCovid, getMapFrom } from "../utils/fetcher";
+import { getMapFrom, getCitiesCSV } from "../utils/fetcher";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -263,26 +263,25 @@ export default function define(runtime, observer) {
       600
     )
   });
-  main
-    .variable(observer("data"))
-    .define("data", ["data_city_covid"], async function (
-      data_city_covid
-    ) {
-      return await parseDataCityCovid(data_city_covid, false);
-    });
-  main
-    .variable(observer("data_city_covid"))
-    .define("data_city_covid", [], async function () {
-      return await getDataCityCovid(null, null);
-    });
-  main.variable(observer("recentData")).define("recentData", ["data"], function (data) {
+  main.variable(observer("recentData")).define("recentData", ["data_covid", "data_city"], function (data_covid, data_city) {
     return (
-      data[data.length - 1]
+      data_covid.map(d => {
+        let value = data_city.find(e => d.city_ibge_code === e.city_ibge_code);
+        return { ...d, ...value }
+      })
     )
   });
-  main.variable(observer("parseDate")).define("parseDate", ["d3"], function (d3) {
+  main.variable(observer("data_city")).define("data_city", async function () {
+    return await getCitiesCSV();
+  });
+  main.variable(observer("data_covid")).define("data_covid", ["d3", "FileAttachment"], async function (d3, FileAttachment) {
     return (
-      d3.utcParse("%Y-%m-%d")
+      await d3.csv("/data/br_heatmap.csv", d => {
+        d['city_ibge_code'] = +d['z'];
+        d['confirmed'] = +d['c'];
+
+        return d
+      })
     )
   });
   main.variable(observer("provinces")).define("provinces", ["topojson", "brasil"], function (topojson, brasil) {
@@ -364,7 +363,7 @@ export default function define(runtime, observer) {
     )
   });
   main.variable(observer("brasil")).define("brasil", async function () {
-    return await getMapFrom("br");
+    return await getMapFrom("map_br");
   });
   main.variable(observer("topojson")).define("topojson", topojson);
   main.variable(observer("d3")).define("d3", d3);

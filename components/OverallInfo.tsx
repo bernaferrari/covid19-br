@@ -1,5 +1,4 @@
 import React from "react";
-import { getCovidCSV } from "../utils/fetcher";
 import { Box, Stat, StatLabel, StatGroup } from "@chakra-ui/core";
 import styled from "@emotion/styled";
 import * as d3 from "d3";

@@ -29,13 +29,18 @@ const Footer = (props) => {
         <div style={{ height: 2 }} />
         <Container>
           <a href="https://www.c3sl.ufpr.br/">
-            <img height="12" width="85" src="/img_c3sl.png" alt="C3SL" />
+            <img
+              height="12"
+              width="85"
+              src="/header_footer/img_c3sl.png"
+              alt="C3SL"
+            />
           </a>
           <a href="http://www.exatas.ufpr.br/portal/en/">
             <img
               height="12"
               width="85"
-              src="/img_exatas.png"
+              src="/header_footer/img_exatas.png"
               alt="Exatas UFPR"
             />
           </a>
@@ -43,7 +48,7 @@ const Footer = (props) => {
             <img
               height="12"
               width="85"
-              src="/img_leg.png"
+              src="/header_footer/img_leg.png"
               alt="Laboratório de Estatística e Geoinformação"
             />
           </a>
@@ -52,7 +57,7 @@ const Footer = (props) => {
             width="85"
             style={{ padding: "12px" }}
             // padding of 24 so that 62+24 ~= 85 (all other images are 85)
-            src="/img_labdsi.png"
+            src="/header_footer/img_labdsi.png"
             alt="Laboratório de Design 
 de Sistemas de Informação"
           />
@@ -63,8 +68,9 @@ de Sistemas de Informação"
           Developed & Designed by{" "}
           <a href="https://github.com/bernaferrari">Bernardo Ferrari</a> &
           Rafael Ancara <br />
-          Mantido por Fernanda Yukari Kawasaki (IC voluntária), Natália Yada e Tamy Beppler (com financiamento da bolsa
-          CAPES para combate ao COVID-19) <br />
+          Mantido por Fernanda Yukari Kawasaki (IC voluntária), Natália Yada e
+          Tamy Beppler (com financiamento da bolsa CAPES para combate ao
+          COVID-19) <br />
           Administrado por André Grégio
         </Text>
       </div>

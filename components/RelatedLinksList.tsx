@@ -93,12 +93,6 @@ class RelatedLinksList extends Component {
       "/docs/arquivo-parana.pdf"
     ),
     new RelatedDocument(
-      "Scrutinizing the heterogeneous spreading of COVID-19 outbreak in Brazilian territory",
-      DocumentKind.Article,
-      "Silva,R.M., Mendes,C.F.O., Manchein,C.,2020",
-      "https://www.medrxiv.org/content/10.1101/2020.06.05.20123604v1"
-    ),
-    new RelatedDocument(
       "Cuidados com análises de dados da Covid19",
       DocumentKind.Info,
       "Bastos, L. (FIOCRUZ), 05/05/2020",

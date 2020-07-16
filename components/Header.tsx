@@ -32,7 +32,12 @@ const Header = (props) => {
         >
           <Box display="flex" alignItems="center">
             <a href="/">
-              <img height="12" width="96" src="/img_logo.png" alt="Portal" />
+              <img
+                height="12"
+                width="96"
+                src="/header_footer/img_logo.png"
+                alt="Portal"
+              />
             </a>
           </Box>
 
@@ -48,7 +53,12 @@ const Header = (props) => {
               <Button variant="ghost">Projeções</Button>
             </Link>
             <Link ml={marginX} href="https://www.ufpr.br/portalufpr/">
-              <img height="12" width="56" src="/img_ufpr.png" alt="UFPR" />
+              <img
+                height="12"
+                width="56"
+                src="/header_footer/img_ufpr.png"
+                alt="UFPR"
+              />
             </Link>
           </Flex>
         </Flex>

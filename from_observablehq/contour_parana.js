@@ -1,7 +1,7 @@
 // https://observablehq.com/@bernaferrari/parana-contour-cases-map-covid-19@1878
 import * as topojson from "topojson-client";
 import * as d3 from "d3";
-import { parseDataCityCovid, getDataCityCovid, getMapFrom } from "../utils/fetcher";
+import { getCitiesCSV, getMapFrom } from "../utils/fetcher";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -149,8 +149,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
         .x((d) => d[0])
         .y((d) => d[1])
         .size([w, h])
-        .cellSize(2)
-        .thresholds(12);
+        .cellSize(2);
     });
   main
     .variable(observer("geojson"))
@@ -325,85 +324,56 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
         return data;
       };
     });
-  main
-    .variable(observer("map3"))
-    .define(
-      "map3",
-      [
-        "d3",
-        "w",
-        "h",
-        "estado",
-        "path",
-        "temp_values_domain",
-        "contours",
-        "geojson",
-        "get_point_data",
-        "linearColorScale",
-        "html",
-      ],
-      function (
-        d3,
-        w,
-        h,
-        estado,
-        path,
-        temp_values_domain,
-        contours,
-        geojson,
-        get_point_data,
-        linearColorScale,
-        html
-      ) {
-        const svg = d3
-          .create("svg")
-          // .attr("width", w)
-          // .attr("height", h)
-          .attr("viewBox", [0, 0, w, h])
-          .attr("class", "italy");
+  main.variable(observer("map3")).define("map3", ["d3", "w", "h", "estado", "path", "temp_values_domain", "contours", "geojson", "get_point_data", "linearColorScale", "html"], function (d3, w, h, estado, path, temp_values_domain, contours, geojson, get_point_data, linearColorScale, html) {
+    const svg = d3
+      .create("svg")
+      // .attr("width", w)
+      // .attr("height", h)
+      .attr("viewBox", [0, 0, w, h])
+      .attr("class", "italy");
 
-        svg
-          .selectAll(".subunit")
-          .data(estado.features)
-          .enter()
-          .append("path")
-          .attr("class", function (d) {
-            return "subunit";
-          })
-          .attr("d", path);
+    svg
+      .selectAll(".subunit")
+      .data(estado.features)
+      .enter()
+      .append("path")
+      .attr("class", function (d) {
+        return "subunit";
+      })
+      .attr("d", path);
 
-        let pointScale = d3
-          .scaleSymlog()
-          .domain(temp_values_domain)
-          .range([0, 1]);
+    let pointScale = d3
+      .scaleSymlog()
+      .domain(temp_values_domain)
+      .range([0, 1]);
 
-        const g = svg
-          .append("g")
-          .selectAll(".contour")
-          .data(contours)
-          .join("g");
+    const g = svg
+      .append("g")
+      .selectAll(".contour")
+      .data(contours)
+      .join("g");
 
-        svg
-          .selectAll(".point")
-          .data(geojson)
-          .enter()
-          .append("path")
-          .attr("d", path)
-          .style("stroke", "#000")
-          .style("stroke-width", 0.1)
-          .style("fill", (d, i) => {
-            const value = get_point_data(d.geometry.coordinates, i);
-            // if the point isn't within our bounds, don't color it
-            if (value === null) return "none";
-            // otherwise, fill with the colorScale (but first, convert to [0,1] through a pointScale)
-            return linearColorScale(pointScale(value));
-          });
+    svg
+      .selectAll(".point")
+      .data(geojson)
+      .enter()
+      .append("path")
+      .attr("d", path)
+      .style("stroke", "#000")
+      .style("stroke-width", 0.1)
+      .style("fill", (d, i) => {
+        const value = get_point_data(d.geometry.coordinates, i);
+        // if the point isn't within our bounds, don't color it
+        if (value === null) return "none";
+        // otherwise, fill with the colorScale (but first, convert to [0,1] through a pointScale)
+        return linearColorScale(pointScale(value));
+      });
 
-        const wrapper = html`<div class="wrapper"></div>`;
-        wrapper.append(svg.node());
-        return wrapper;
-      }
-    );
+    const wrapper = html`<div class="wrapper"></div>`;
+    wrapper.append(svg.node());
+    return wrapper;
+  }
+  );
   main.variable(observer()).define(["html"], function (html) {
     const c = `rgb(255, 255, 255, 0.5)`;
     return html`<style>
@@ -449,28 +419,47 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main.variable(observer("h")).define("h", function () {
     return 500;
   });
-  main
-    .variable(observer("data"))
-    .define("data", ["data_city_covid"], async function (
+  main.variable(observer("recentData")).define("recentData", ["data_city_covid"], function (data_city_covid) {
+    return (
       data_city_covid
-    ) {
-      return await parseDataCityCovid(data_city_covid, false);
-    });
+    )
+  });
+  main.variable(observer("data_city_covid")).define("data_city_covid", ["data_covid", "data_city"], function (data_covid, data_city) {
+    return (
+      data_covid.map(d => {
+        let value = data_city.find(e => d.city_ibge_code === e.city_ibge_code);
+        return { ...d, ...value }
+      })
+    )
+  });
   main
-    .variable(observer("data_city_covid"))
-    .define("data_city_covid", [], async function () {
-      return await getDataCityCovid("41", "PR");
+    .variable(observer("data_city"))
+    .define("data_city", [], async function () {
+      return (await getCitiesCSV()).filter(d => d.codigo_uf === 41);
     });
-  main
-    .variable(observer("topCities"))
-    .define("topCities", ["recentData", "confirmed_or_deaths"], function (
-      recentData,
-      confirmed_or_deaths
-    ) {
-      return recentData
+  main.variable(observer("data_covid")).define("data_covid", ["d3"], async function (d3) {
+    return (
+      await d3.csv("/data/pr_heatmap.csv", (d) => {
+        return {
+          confirmed: +d.c,
+          // deaths: +d.deaths,
+          city_ibge_code: +d.z,
+        };
+      })
+    )
+  });
+  main.variable(observer("confirmed_or_deaths")).define("confirmed_or_deaths", function () {
+    return (
+      'confirmed'
+    )
+  });
+  main.variable(observer("topCities")).define("topCities", ["recentData", "confirmed_or_deaths"], function (recentData, confirmed_or_deaths) {
+    return (
+      recentData
         .sort((a, b) => b[confirmed_or_deaths] - a[confirmed_or_deaths])
-        .slice(0, 5);
-    });
+        .slice(0, 6)
+    )
+  });
   main
     .variable(observer("places"))
     .define("places", ["topCities", "estado"], function (topCities, estado) {
@@ -503,28 +492,6 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       };
     });
   main
-    .variable(observer("recentData"))
-    .define("recentData", ["data"], function (data) {
-      return data[data.length - 1];
-    });
-  main
-    .variable(observer("dates"))
-    .define("dates", ["data_covid", "parseDate"], function (
-      data_covid,
-      parseDate
-    ) {
-      return data_covid
-        .map(d => d.rawDate)
-        .filter((value, index, self) => self.indexOf(value) === index)
-        .map((d) => parseDate(d))
-        .reverse();
-    });
-  main
-    .variable(observer("parseDate"))
-    .define("parseDate", ["d3"], function (d3) {
-      return d3.timeParse("%Y-%m-%d");
-    });
-  main
     .variable(observer("estado"))
     .define("estado", ["topojson", "brasil"], function (topojson, brasil) {
       return topojson.feature(brasil, brasil.objects["41"]);
@@ -535,7 +502,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
       return d3.geoPath().projection(projection);
     });
   main.variable(observer("brasil")).define("brasil", async function () {
-    return await getMapFrom("pr");
+    return await getMapFrom("map_pr");
   });
   main.variable(observer("topojson")).define("topojson", topojson);
   main.variable(observer("d3")).define("d3", d3);

@@ -66,19 +66,19 @@ export default () => {
           <News />
         </Box>
       </Box>
-      {/* <GetCovidDataComp>
-        <Box bg="#f4f4f4" mx="auto" py={4}>
+      <GetCovidDataComp>
+        {/* <Box bg="#f4f4f4" mx="auto" py={4}>
           <Heading size="sm" textAlign="center">
             Evolução dos casos
           </Heading>
           <Box size={4} />
 
-          <Box maxW="3xl" mx="auto" textAlign="center">
-            <div id="externalDiv">
-              <TopGrowing />
-            </div>
-          </Box>
+        <Box maxW="3xl" mx="auto" textAlign="center">
+          <div id="externalDiv">
+            <TopGrowing />
+          </div>
         </Box>
+         </Box>  */}
 
         <Box maxW="3xl" mx="auto">
           <ParanaFilledInteractive />
@@ -91,14 +91,12 @@ export default () => {
         </Box>
 
         <Divider mt={4} />
+      </GetCovidDataComp>
 
-        <Box maxW="3xl" mx="auto">
-          <StatesLines />
-        </Box>
-
-        <Divider mt={4} />
-      </GetCovidDataComp> */}
-
+      <Box maxW="3xl" mx="auto">
+        <StatesLines />
+      </Box>
+      
       <Footer />
     </Box>
   );

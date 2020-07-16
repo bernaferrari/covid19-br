@@ -1,6 +1,5 @@
 // https://observablehq.com/@bernaferrari/covid-no-brasil-25-2-2020-5-4-2020@920
 import define1 from "./shared_d3/inputs.js";
-import { getCovidCSV } from "../utils/fetcher.ts";
 import * as d3 from "d3";
 import * as d3array from "d3-array";
 
@@ -80,9 +79,9 @@ Fonte: [covid19-br](https://brasil.io/api/dataset/covid19)`
     return svg.node();
   }
   );
-  main.variable(observer("data_from_csv")).define("data_from_csv", async function () {
+  main.variable(observer("data_from_csv")).define("data_from_csv", ["d3"], async function (d3) {
     return (
-      (await getCovidCSV()).filter(d => d.place_type === "s" || d.place_type === "state")
+      await d3.csv("/data/states.csv")
     )
   });
   main.variable(observer("data")).define("data", ["data_from_csv", "d3", "indicator"], function (data_from_csv, d3, indicator) {

@@ -2,9 +2,8 @@
 import define1 from "./shared_d3/scrubber.js";
 import define2 from "./shared_d3/inputs.js";
 import * as d3 from "d3";
-import * as d3array from "d3-array";
 import * as topojson from "topojson-client";
-import { getDataCityCovid, parseDataCityCovid, getMapFrom } from "../utils/fetcher.ts";
+import { getCitiesCSV, getMapFrom } from "../utils/fetcher.ts";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -21,10 +20,10 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     return (
       radio({
         options: [
-          { label: "casos", value: "confirmed" },
-          { label: "mortes", value: "deaths" },
+          { label: "casos", value: "c" },
+          { label: "mortes", value: "d" },
         ],
-        value: "deaths",
+        value: "c",
       })
     )
   });
@@ -51,7 +50,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     )
   });
   main.variable(observer("day")).define("day", ["Generators", "viewof day"], (G, _) => G.input(_));
-  main.variable(observer("map")).define("map", ["d3", "w", "h", "provinces", "path", "recentData", "confirmed_or_deaths", "scale", "projection", "colorScale", "radius", "breakpoint", "maxRadius", "legendRadii", "numFormat", "sFormat", "DOM", "showSubtitles", "places", "html", "delay", "data"], function (d3, w, h, provinces, path, recentData, confirmed_or_deaths, scale, projection, colorScale, radius, breakpoint, maxRadius, legendRadii, numFormat, sFormat, DOM, showSubtitles, places, html, delay, data) {
+  main.variable(observer("map")).define("map", ["d3", "w", "h", "provinces", "path", "recentData", "confirmed_or_deaths", "scale", "currentData", "projection", "colorScale", "radius", "breakpoint", "maxRadius", "legendRadii", "numFormat", "sFormat", "DOM", "showSubtitles", "places", "html"], function (d3, w, h, provinces, path, recentData, confirmed_or_deaths, scale, currentData, projection, colorScale, radius, breakpoint, maxRadius, legendRadii, numFormat, sFormat, DOM, showSubtitles, places, html) {
     const svg = d3
       .create("svg")
       .attr("viewBox", [0, 0, w, h])
@@ -72,7 +71,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     if (scale === "bolhas") {
       bubble = svg
         .selectAll(".bubble")
-        .data(recentData)
+        .data(currentData)
         .enter()
         .append("circle")
         .attr("transform", function (d) {
@@ -126,14 +125,17 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
 
       espinho = svg
         .selectAll("polyline")
-        .data(recentData)
+        .data(currentData)
         .enter()
         .append("polyline")
         .attr("class", "polyline")
         .attr("id", d => d.id)
         .attr("points", d => {
-          const _d = recentData.find(dd => dd.city_ibge_code === d.city_ibge_code);
+          const _d = currentData.find(dd => dd.city_ibge_code === d.city_ibge_code);
           const h = (_d !== undefined) ? yScale(_d[confirmed_or_deaths]) : 0;
+          if (h === 0) {
+            return null;
+          }
           const projectionxy = projection([d.longitude, d.latitude]);
           const x = projectionxy[0];
           const y = projectionxy[1];
@@ -196,68 +198,69 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           return d.geometry.coordinates[0] < -1 ? "start" : "end";
         });
 
-      label.append("tspan")
-        .attr("class", "additionalnum")
-        .style('font-weight', 'bold')
-        .attr("x", d => label.x)
-        .attr("y", d => label.y)
-        .text(d => {
-          return " (" + recentData.find(dd => dd.city === d.properties.name)[confirmed_or_deaths] + ")";
-        });
+      // label.append("tspan")
+      //   .attr("class", "additionalnum")
+      //   .style('font-weight', 'bold')
+      //   .attr("x", d => label.x)
+      //   .attr("y", d => label.y)
+      //   .text(d => {
+      //     return " (" + recentData.find(dd => dd.city === d.properties.name)[confirmed_or_deaths] + ")";
+      //   });
     }
 
     const wrapper = html`<div class="wrapper"></div>`;
     wrapper.append(svg.node());
+    return wrapper;
 
-    return Object.assign(wrapper, {
-      update(i) {
-        const t = svg
-          .transition()
-          .duration(i === 0 ? 0 : delay)
-          .ease(d3.easeLinear);
+    // return Object.assign(wrapper, {
+    //   update(i) {
+    //     const t = svg
+    //       .transition()
+    //       .duration(i === 0 ? 0 : delay)
+    //       .ease(d3.easeLinear);
 
-        let currentData = data[i];
+    //     let currentData = data[i];
 
-        if (showSubtitles) {
-          label.select("tspan")
-            .text(d => " (" + currentData.find(dd => dd.city === d.properties.name)[confirmed_or_deaths] + ")");
-        }
+    //     if (showSubtitles) {
+    //       label.select("tspan")
+    //         .text(d => " (" + currentData.find(dd => dd.city === d.properties.name)[confirmed_or_deaths] + ")");
+    //     }
 
-        if (scale === "bolhas") {
-          bubble
-            .data(currentData)
-            .call(b => {
-              b.transition(t)
-                .attr("fill", d => colorScale(d[confirmed_or_deaths]))
-                .attr("r", d => radius(d[confirmed_or_deaths]));
-            })
-            .select("title")
-            .text(
-              d =>
-                `${d.city}: ${numFormat(d[confirmed_or_deaths])}`
-            );
-        } else {
-          espinho
-            .data(currentData)
-            .call(b => {
-              b.transition(t)
-                .attr("points", d => {
-                  const _d = currentData.find(dd => dd.city_ibge_code === d.city_ibge_code);
-                  const h = (_d !== undefined) ? yScale(_d[confirmed_or_deaths]) : 0;
-                  const projectionxy = projection([d.longitude, d.latitude]);
-                  const x = projectionxy[0];
-                  const y = projectionxy[1];
-                  return `${x - 4},${y} ${x},${y - h} ${x + 4},${y}`
-                }).attr("display", d => d[confirmed_or_deaths] === 0 ? "none" : "inline");
-            })
-            .select("title")
-            .text(
-              d =>
-                `${d.city}: ${numFormat(+d[confirmed_or_deaths])} casos`
-            );
-        }
-      }
-    });
+    //     if (scale === "bolhas") {
+    //       bubble
+    //         .data(currentData)
+    //         .call(b => {
+    //           b.transition(t)
+    //             .attr("fill", d => colorScale(d[confirmed_or_deaths]))
+    //             .attr("r", d => radius(d[confirmed_or_deaths]));
+    //         })
+    //         .select("title")
+    //         .text(
+    //           d =>
+    //             `${d.city}: ${numFormat(d[confirmed_or_deaths])}`
+    //         );
+    //     } else {
+    //       espinho
+    //         .data(currentData)
+    //         .call(b => {
+    //           b.transition(t)
+    //             .attr("points", d => {
+    //               const _d = currentData.find(dd => dd.city_ibge_code === d.city_ibge_code);
+    //               const h = (_d !== undefined) ? yScale(_d[confirmed_or_deaths]) : 0;
+    //               const projectionxy = projection([d.longitude, d.latitude]);
+    //               const x = projectionxy[0];
+    //               const y = projectionxy[1];
+    //               return `${x - 4},${y} ${x},${y - h} ${x + 4},${y}`
+    //             }).attr("display", d => d[confirmed_or_deaths] === 0 ? "none" : "inline");
+    //         })
+    //         .select("title")
+    //         .text(
+    //           d =>
+    //             `${d.city}: ${numFormat(+d[confirmed_or_deaths])} casos`
+    //         );
+    //     }
+    //   }
+    // });
   }
   );
   main.variable(observer("style")).define("style", ["html"], function (html) {
@@ -319,6 +322,11 @@ form output {
       [maxCases / 8, maxCases / 4, maxCases / 2, maxCases].map(d => Math.round(d))
     )
   });
+  main.variable(observer("currentData")).define("currentData", ["data", "index"], function (data, index) {
+    return (
+      data[Object.keys(data)[Object.keys(data).length - 1 - index]]
+    )
+  });
   main.variable(observer("draw")).define("draw", ["map", "index"], function (map, index) {
     map.update(index);
   }
@@ -378,19 +386,36 @@ form output {
       200
     )
   });
-  main.variable(observer("maxCases")).define("maxCases", ["d3", "data_city_covid", "confirmed_or_deaths"], function (d3, data_city_covid, confirmed_or_deaths) {
+  main.variable(observer("maxCases")).define("maxCases", ["data", "d3", "confirmed_or_deaths"], function (data, d3, confirmed_or_deaths) {
+    var highestValue = 0; //keep track of highest value
+    //loop through array of objects
+    for (let key in data) {
+
+      var value = d3.max(data[key], d => d[confirmed_or_deaths]);
+
+      if (value > highestValue) {
+        highestValue = value;
+      }
+    }
+    return highestValue;
+  }
+  );
+  main.variable(observer("data")).define("data", ["d3", "data_city"], async function (d3, data_city) {
+    const dataTmp = await d3.json("/data/br_ndays.json")
+    Object.keys(dataTmp).forEach(key => {
+      dataTmp[key] = dataTmp[key].map(d => {
+        let value = data_city.find(e => d.z === e.city_ibge_code);
+        return { ...d, ...value }
+      })
+    });
+
+    return dataTmp;
+  }
+  );
+  main.variable(observer("data_city")).define("data_city", ["d3"], async function (d3) {
     return (
-      d3.max(data_city_covid.map(d => d[confirmed_or_deaths]))
+      await getCitiesCSV()
     )
-  });
-  main.variable(observer("data_city_covid")).define("data_city_covid", async function () {
-    return await getDataCityCovid(null, null);
-  });
-  main.variable(observer("data")).define("data", ["data_city_covid", "grouped_data"], async function (data_city_covid, grouped_data) {
-    return await parseDataCityCovid(data_city_covid, grouped_data);
-  });
-  main.variable(observer("grouped_data")).define("grouped_data", ["data_city_covid"], function (data_city_covid) {
-    return d3array.group(data_city_covid, (d) => d.rawDate);
   });
   main.variable(observer("breakpoint")).define("breakpoint", function () {
     return 500;
@@ -402,15 +427,15 @@ form output {
   });
   main.variable(observer("recentData")).define("recentData", ["data"], function (data) {
     return (
-      [...data[data.length - 1]]
+      data[Object.keys(data)[0]]
     )
   });
-  main.variable(observer("dates")).define("dates", ["grouped_data", "parseDate"], function (grouped_data, parseDate) {
-    let keys = [];
-    for (let [key] of grouped_data.entries()) {
-      keys.push(key);
-    }
-    return keys.map(d => parseDate(d)).reverse();
+  main.variable(observer("dates")).define("dates", ["data", "parseDate"], function (data, parseDate) {
+    return (
+      Object.keys(data)
+        .map(d => parseDate(d))
+        .reverse()
+    )
   });
   main.variable(observer("parseDate")).define("parseDate", ["d3"], function (d3) {
     return (
@@ -518,7 +543,7 @@ form output {
     )
   });
   main.variable(observer("brasil")).define("brasil", async function () {
-    return await getMapFrom("br");
+    return await getMapFrom("map_br");
   });
   const child1 = runtime.module(define1);
   main.import("Scrubber", child1);
