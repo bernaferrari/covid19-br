@@ -76,10 +76,10 @@ def retrieve_data_for_all_cities(state):
    return by_dates
 
 
-# In[170]:
+# In[195]:
 
 
-def retrieve_data_fixed(state):
+def retrieve_data_fixed(state, steps=-7):
   fixed_data = retrieve_data_for_all_cities(state)
   
   # add zero to first element. This will be propagated in the for loop.
@@ -108,7 +108,7 @@ def retrieve_data_fixed(state):
   return smaller_date         
 
 
-# In[171]:
+# In[196]:
 
 
 def to_csv(pr, name):
@@ -129,7 +129,7 @@ def to_csv(pr, name):
         outfile.write(a)
 
 
-# In[172]:
+# In[197]:
 
 
 def to_heatmap_csv(pr, name):
@@ -141,7 +141,7 @@ def to_heatmap_csv(pr, name):
     items = items.to_csv(name, index = False, header=True)
 
 
-# In[173]:
+# In[198]:
 
 
 to_csv(True, "../public/data/pr_ndays.csv")
@@ -149,12 +149,6 @@ to_csv(False, "../public/data/br_ndays.csv")
 
 to_heatmap_csv(True, "../public/data/pr_heatmap.csv")
 to_heatmap_csv(False, "../public/data/br_heatmap.csv")
-
-
-# In[192]:
-
-
-df.columns
 
 
 # In[191]:
@@ -182,7 +176,7 @@ df.columns
 # #     outfile.write(a)
 
 
-# In[194]:
+# In[199]:
 
 
 pr_df = retrieve_data_fixed(True, -1)
@@ -197,13 +191,7 @@ for i in range(len(pr_df)):
 
     a += items.to_csv(header= i==0, index=False)
     pr_df[i] = [date, items]
-print(a)
-# with open("../public/data/pr_topcities_alldays.csv", 'w') as outfile:
-    # outfile.write(a)
 
-
-# In[ ]:
-
-
-
+with open("../public/data/pr_topcities_alldays.csv", 'w') as outfile:
+    outfile.write(a)
 
