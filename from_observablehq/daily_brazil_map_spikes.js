@@ -401,7 +401,13 @@ form output {
   }
   );
   main.variable(observer("data")).define("data", ["d3", "data_city"], async function (d3, data_city) {
-    const dataTmp = await d3.json("/data/br_ndays.json")
+    const dataTmp = d3.nest().key(d => d.date).object(await d3.csv("/data/br_ndays.csv", d => {
+      d["z"] = +d["z"];
+      d["c"] = +d["c"];
+      d["d"] = +d["d"];
+      return d;
+    }));
+
     Object.keys(dataTmp).forEach(key => {
       dataTmp[key] = dataTmp[key].map(d => {
         let value = data_city.find(e => d.z === e.city_ibge_code);

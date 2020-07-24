@@ -67,7 +67,7 @@ export default () => {
         </Box>
       </Box>
       <GetCovidDataComp>
-        {/* <Box bg="#f4f4f4" mx="auto" py={4}>
+        <Box bg="#f4f4f4" mx="auto" py={4}>
           <Heading size="sm" textAlign="center">
             Evolução dos casos
           </Heading>
@@ -78,7 +78,7 @@ export default () => {
             <TopGrowing />
           </div>
         </Box>
-         </Box>  */}
+         </Box> 
 
         <Box maxW="3xl" mx="auto">
           <ParanaFilledInteractive />

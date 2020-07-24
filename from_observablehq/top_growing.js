@@ -2,7 +2,7 @@
 import define1 from "./shared_d3/syncviews.js";
 import * as d3 from "d3";
 import * as d3array from "d3-array";
-import { getCovidCSV, cityFromCode } from "../utils/fetcher";
+import { getCitiesCSV } from "../utils/fetcher";
 
 export default function define(runtime, observer) {
   const main = runtime.module();
@@ -115,8 +115,8 @@ export default function define(runtime, observer) {
     .variable(observer("table"))
     .define(
       "table",
-      ["width", "d3", "html", "dataFacets", "number", "drawChart", "drawStack"],
-      function (width, d3, html, dataFacets, number, drawChart, drawStack) {
+      ["width", "d3", "html", "dataFacets", "number", "drawChart", "drawStack", "cities"],
+      function (width, d3, html, dataFacets, number, drawChart, drawStack, cities) {
         let w = document.getElementById("externalDiv").clientWidth;
 
         const rows = w / 150 > 4 ? 4 : 2;
@@ -146,7 +146,9 @@ export default function define(runtime, observer) {
           .append("h4")
           .style("font-size", ".9em")
           .style("font-weight", "bold")
-          .html((d) => cityFromCode[d[d.length - 1].city_ibge_code]);
+          .html((d, i) => {
+            return cities.find(dd => dd.city_ibge_code === d[i].city_ibge_code).city;
+          });
 
         facets
           .append("p")
@@ -357,6 +359,11 @@ export default function define(runtime, observer) {
         .sort((a, b) => b.deaths - a.deaths);
     });
   main
+    .variable(observer("cities"))
+    .define("cities", async function () {
+      return await getCitiesCSV();
+    });
+  main
     .variable(observer("confirmedLatest"))
     .define("confirmedLatest", ["confirmedRaw"], function (confirmedRaw) {
       return confirmedRaw
@@ -369,21 +376,17 @@ export default function define(runtime, observer) {
       confirmedRaw,
       selectedState
     ) {
-      return confirmedRaw.map((d) =>
-        d.filter((dd) => dd.state === selectedState && dd.city_ibge_code > 100)
-      );
+      return confirmedRaw;
     });
   main
     .variable(observer("confirmedRaw"))
     .define("confirmedRaw", ["d3"], async function (d3) {
-      const dd = (await getCovidCSV()).filter(
-        (d) => (d.place_type === "c" || d.place_type === "city" || d.state === "PR") && d.city_ibge_code != ""
-      );
-
-      dd.forEach(function (d) {
-        d.confirmed = +d.confirmed;
-        d.deaths = +d.deaths;
-      });
+      const dd = (await d3.csv("/data/pr_topcities_alldays.csv", d => {
+        d.city_ibge_code = +d.z;
+        d.confirmed = +d.c;
+        d.deaths = +d.d;
+        return d;
+      }));
 
       let data_with_holes = Array.from(
         d3array.group(dd, (d) => d.date),
@@ -392,27 +395,7 @@ export default function define(runtime, observer) {
         .sort((a, b) => a.date - b.date)
         .reverse();
 
-      let mutableArray = [...data_with_holes].filter(function (el) {
-        return el != null;
-      });
-
-      for (let i = 1; i < data_with_holes.length; i++) {
-        for (let j = 0; j < mutableArray[i - 1].length; j++) {
-          let found = mutableArray[i].find(
-            (element) =>
-              element.city_ibge_code === mutableArray[i - 1][j].city_ibge_code
-          );
-          if (found !== undefined) {
-            continue;
-          }
-
-          let newCase = { ...data_with_holes[i - 1][j] };
-          newCase.date = data_with_holes[i][0].date;
-          mutableArray[i].push(newCase);
-        }
-      }
-
-      return mutableArray;
+      return data_with_holes;
     });
   main
     .variable(observer("confirmedByCountryLatestForTable"))

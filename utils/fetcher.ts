@@ -16,8 +16,6 @@ export const loadDataIntoCache = async (): Promise<any> => {
   return cached;
 };
 
-export let cityFromCode: Map<Number, String> = new Map();
-
 export const getCitiesCSV = async (): Promise<DSVRowArray> => {
   if (cached["cities"] !== undefined) {
     return cached["cities"];
