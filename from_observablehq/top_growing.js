@@ -431,7 +431,7 @@ Everything else is maps, chart-drawing functions, scales, formats and lookup lis
 
       const means = tArray.map((d, i) => {
         const w = i + window < data.length ? window : data.length - i;
-        const sums = d3.sum(data.slice(i, i + 7), (d) => d[accessor]);
+        const sums = d3.sum(data.slice(i - w, i), (d) => d[accessor]);
         const _d = data[i];
         _d.weeklyAvg = sums / w;
         return _d;

@@ -14,20 +14,20 @@ export const FooterContainer = (props) => (
   />
 );
 
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-flow: row wrap;
-  align-items: center;
-  min-height: "4rem";
-`;
-
 const Footer = (props) => {
   return (
     <div>
       <FooterContainer bg="white" {...props}>
         <div style={{ height: 2 }} />
-        <Container>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexFlow: "row wrap",
+            alignItems: "center",
+            minHeight: "4rem",
+          }}
+        >
           <a href="https://www.c3sl.ufpr.br/">
             <img
               height="12"
@@ -61,7 +61,7 @@ const Footer = (props) => {
             alt="Laboratório de Design 
 de Sistemas de Informação"
           />
-        </Container>
+        </div>
       </FooterContainer>
       <div style={{ marginTop: 4, textAlign: "center" }}>
         <Text fontSize="xs">

@@ -10,13 +10,6 @@ const StyledP = styled.p`
   min-width: 0;
 `;
 
-const StyledFlex = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-flow: row wrap;
-  align-items: center;
-`;
-
 enum DocumentKind {
   Article,
   Info,
@@ -168,7 +161,14 @@ class RelatedLinksList extends Component {
 
   render() {
     return (
-      <StyledFlex>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexFlow: "row wrap",
+          alignItems: "center",
+        }}
+      >
         {this.data.map((d) => (
           <Box
             width={[
@@ -186,7 +186,7 @@ class RelatedLinksList extends Component {
             </Box>
           </Box>
         ))}
-      </StyledFlex>
+      </div>
     );
   }
 }

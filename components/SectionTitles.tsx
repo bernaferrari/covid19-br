@@ -12,7 +12,8 @@ export const SectionTitleAbout = (props) => (
 export const SectionSubtitle = (props) => (
   <Heading
     fontSize="sm"
-    color="gray.500"
+    fontWeight="500"
+    color="#858585"
     textAlign="center"
     mx="4px"
     {...props}
