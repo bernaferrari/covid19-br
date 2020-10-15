@@ -93,6 +93,13 @@ export default () => {
             url="https://lineu96.github.io/covid19/"
           />
           <AccessOtherSite
+            title="Monitoramento do R(t)/Bayes"
+            subtitle="R(t) estimado por suavização Bayesiana."
+            access="Acessar site"
+            src="/elias_preview.jpg"
+            url="http://www.leg.ufpr.br/~elias/rtmaps/RtPR.html"
+          />
+          <AccessOtherSite
             title="Visualização temporal"
             subtitle="Visualização temporal de dados de COVID19."
             access="Acessar site"
