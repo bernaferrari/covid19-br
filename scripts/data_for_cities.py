@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[3]:
 
 
 # import requests
@@ -12,7 +12,7 @@
 #     f.write(r.content)
 
 
-# In[2]:
+# In[4]:
 
 
 # import gzip
@@ -22,7 +22,7 @@
 #         shutil.copyfileobj(f_in, f_out)
 
 
-# In[1]:
+# In[5]:
 
 
 import pandas as pd
@@ -34,7 +34,7 @@ df = df.astype({"city_ibge_code": int})
 print(df)
 
 
-# In[3]:
+# In[6]:
 
 
 import numpy as np
@@ -76,7 +76,7 @@ def retrieve_data_for_all_cities(state):
    return by_dates
 
 
-# In[41]:
+# In[7]:
 
 
 def retrieve_data_fixed(state, steps=-7):
@@ -109,7 +109,7 @@ def retrieve_data_fixed(state, steps=-7):
   return smaller_date
 
 
-# In[5]:
+# In[8]:
 
 
 def to_csv(pr, name):
@@ -130,7 +130,7 @@ def to_csv(pr, name):
         outfile.write(a)
 
 
-# In[6]:
+# In[9]:
 
 
 def to_heatmap_csv(pr, name):
@@ -142,7 +142,7 @@ def to_heatmap_csv(pr, name):
     items = items.to_csv(name, index = False, header=True)
 
 
-# In[42]:
+# In[10]:
 
 
 to_csv(True, "../public/data/pr_ndays.csv")
@@ -152,29 +152,29 @@ to_heatmap_csv(True, "../public/data/pr_heatmap.csv")
 to_heatmap_csv(False, "../public/data/br_heatmap.csv")
 
 
-# In[ ]:
+# In[12]:
 
 
-# pr_df = retrieve_data_fixed(True, -1)
-# test = df[df.place_type.eq("city")]
-# test = test[test.state.eq("PR")]
+pr_df = retrieve_data_fixed(True, -1)
+test = df[df.place_type.eq("city")]
+test = test[test.state.eq("PR")]
 
-# top_pr_cities = test.sort_values('confirmed', ascending=False).drop_duplicates('city_ibge_code').head(8).sort_values('confirmed', ascending=False)['city_ibge_code']
+top_pr_cities = test.sort_values('confirmed', ascending=False).drop_duplicates('city_ibge_code').head(8).sort_values('confirmed', ascending=False)['city_ibge_code']
 
-# by_dates = [city for city in test.groupby('date')]
+by_dates = [city for city in test.groupby('date')]
 
-# a = ""
-# for i in range(len(by_dates)):
-#     date, items = pr_df[i]
-#     items = items.rename(columns={"city_ibge_code": "z", "confirmed": "c", "deaths": "d"})
-#     items = items[["date", "z", "c", "d"]]
-#     items = items[items["z"].isin(top_pr_cities)]
+a = ""
+for i in range(len(by_dates)):
+    date, items = pr_df[i]
+    items = items.rename(columns={"city_ibge_code": "z", "confirmed": "c", "deaths": "d"})
+    items = items[["date", "z", "c", "d"]]
+    items = items[items["z"].isin(top_pr_cities)]
 
-#     a += items.to_csv(header= i==0, index=False)
-#     pr_df[i] = [date, items]
+    a += items.to_csv(header= i==0, index=False)
+    pr_df[i] = [date, items]
 
-# # with open("../public/data/pr_topcities_alldays.csv", 'w') as outfile:
-# #     outfile.write(a)
+with open("../public/data/pr_topcities_alldays.csv", 'w') as outfile:
+    outfile.write(a)
 
 
 # In[ ]:

@@ -1,0 +1,2 @@
+python3 download_from_source
+python3 generate_shrink.py data_for_cities.py getJHU.py state_lines.py
