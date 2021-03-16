@@ -22,7 +22,7 @@
 #         shutil.copyfileobj(f_in, f_out)
 
 
-# In[3]:
+# In[1]:
 
 
 import pandas as pd
@@ -34,7 +34,7 @@ df = df.astype({"city_ibge_code": int})
 print(df)
 
 
-# In[111]:
+# In[3]:
 
 
 import numpy as np
@@ -76,7 +76,7 @@ def retrieve_data_for_all_cities(state):
    return by_dates
 
 
-# In[195]:
+# In[41]:
 
 
 def retrieve_data_fixed(state, steps=-7):
@@ -88,27 +88,28 @@ def retrieve_data_fixed(state, steps=-7):
   for i in range(1, len(fixed_data)):
     date, items = fixed_data[i]
     prev_date, prev_items = fixed_data[i - 1]
-    
+
     # fill missing cities with previous value
-    items[items['confirmed'].isnull()] = prev_items
+    # items['confirmed'] = items['confirmed'].fillna(prev_items['confirmed'])
+    items = items.fillna(prev_items)
 
     # re-override the date column, since prev_items messed with it
     items["date"] = date
 
     # fill remaining with zero
     fixed_data[i] = [date, items]
-  
+
+
   smaller_date = []
   for i in range(len(fixed_data) - 1, -1, steps):
-    date, items = fixed_data[i]
-    items = items.astype({"confirmed": int, "deaths": int})
-    items = items.sort_values(by='city_ibge_code', ascending=True)
-    smaller_date.append([date, items])
+      date, items = fixed_data[i]
+      items = items.astype({"confirmed": int, "deaths": int})
+      items = items.sort_values(by='city_ibge_code', ascending=True)
+      smaller_date.append([date, items])
+  return smaller_date
 
-  return smaller_date         
 
-
-# In[196]:
+# In[5]:
 
 
 def to_csv(pr, name):
@@ -129,7 +130,7 @@ def to_csv(pr, name):
         outfile.write(a)
 
 
-# In[197]:
+# In[6]:
 
 
 def to_heatmap_csv(pr, name):
@@ -141,7 +142,7 @@ def to_heatmap_csv(pr, name):
     items = items.to_csv(name, index = False, header=True)
 
 
-# In[198]:
+# In[42]:
 
 
 to_csv(True, "../public/data/pr_ndays.csv")
@@ -151,7 +152,7 @@ to_heatmap_csv(True, "../public/data/pr_heatmap.csv")
 to_heatmap_csv(False, "../public/data/br_heatmap.csv")
 
 
-# In[191]:
+# In[ ]:
 
 
 # pr_df = retrieve_data_fixed(True, -1)
@@ -176,22 +177,8 @@ to_heatmap_csv(False, "../public/data/br_heatmap.csv")
 # #     outfile.write(a)
 
 
-# In[199]:
+# In[ ]:
 
 
-pr_df = retrieve_data_fixed(True, -1)
-top_pr_cities = pr_df[0][1].nlargest(8, 'confirmed')["city_ibge_code"].tolist()
-print(top_pr_cities)
-a = ""
-for i in range(len(pr_df)):
-    date, items = pr_df[i]
-    items = items.rename(columns={"city_ibge_code": "z", "confirmed": "c", "deaths": "d"})
-    items = items[["date", "z", "c", "d"]]
-    items = items[items["z"].isin(top_pr_cities)]
 
-    a += items.to_csv(header= i==0, index=False)
-    pr_df[i] = [date, items]
-
-with open("../public/data/pr_topcities_alldays.csv", 'w') as outfile:
-    outfile.write(a)
 
