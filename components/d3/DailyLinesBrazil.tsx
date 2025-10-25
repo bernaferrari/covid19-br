@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { Runtime, Inspector } from "@observablehq/runtime";
-import { Flex, Box } from "@chakra-ui/core";
+import type { Runtime } from "@observablehq/runtime";
+import { Inspector } from "@observablehq/inspector";
+import { Box, Flex } from "@chakra-ui/react";
 import notebook from "../../from_observablehq/daily_lines";
 import styled from "@emotion/styled";
+import { createRuntime } from "../../utils/observableRuntime";
 
 const Container = styled.div`
   display: flex;
@@ -12,8 +14,11 @@ const Container = styled.div`
 `;
 
 export default class Map extends Component {
+  private runtime?: Runtime;
+
   componentDidMount() {
-    new Runtime().module(notebook, (name: string) => {
+    this.runtime = createRuntime();
+    this.runtime.module(notebook, (name: string) => {
       if (name === "viewof indicator")
         return Inspector.into(
           "#observablehq-65e7d81f .observablehq-viewof-indicator"
@@ -21,6 +26,10 @@ export default class Map extends Component {
       if (name === "chart")
         return Inspector.into("#observablehq-65e7d81f .observablehq-chart")();
     });
+  }
+
+  componentWillUnmount() {
+    this.runtime?.dispose();
   }
 
   render() {

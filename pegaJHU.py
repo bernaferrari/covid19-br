@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 
 import csv
-import requests
 import json
 import os
+import sys
+
+import requests
 
 # this script is going to fetch data from John Hopkins University,
 # split between Brazil and World, and add the date to the World.
@@ -12,10 +14,17 @@ import os
 
 url1 = "https://api.covid19api.com/summary"
 
-download1 = requests.get(url1, stream=True)
-decoded1 = download1.content.decode("UTF-8")
-
-jsonFile = json.loads(decoded1)
+try:
+    download1 = requests.get(url1, stream=True, timeout=30)
+    download1.raise_for_status()
+    decoded1 = download1.content.decode("UTF-8")
+    jsonFile = json.loads(decoded1)
+except requests.exceptions.RequestException:
+    sys.stderr.write(
+        "Warning: Unable to reach api.covid19api.com (service appears to be offline). "
+        "Existing current_*.csv and history_*.csv files were kept unchanged.\n"
+    )
+    sys.exit(0)
 
 # Monta dados Brasil
 def br():

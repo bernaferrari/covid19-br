@@ -69,7 +69,7 @@ def retrieve_data_for_all_cities(state):
       new_data = pd.DataFrame(simple_list, columns=['city_ibge_code', 'date', 'confirmed', 'deaths'])
 
       # merge together both DataFrames
-      items = items.append(new_data, ignore_index=True)
+      items = pd.concat([items, new_data], ignore_index=True)
 
       # save back the values
       by_dates[i] = [date, items]
@@ -178,7 +178,6 @@ with open("../public/data/pr_topcities_alldays.csv", 'w') as outfile:
 
 
 # In[ ]:
-
 
 
 

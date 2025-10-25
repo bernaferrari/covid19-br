@@ -1,78 +1,129 @@
-import React from "react";
-import { Box, Stat, StatLabel, StatGroup } from "@chakra-ui/core";
-import styled from "@emotion/styled";
-import * as d3 from "d3";
+import { Box, Link, SimpleGrid, Text } from "@chakra-ui/react";
+import { timeParse } from "d3";
+import type { DSVRowString } from "d3";
+import { useEffect, useMemo, useState } from "react";
 
-const StyledText = styled.p`
-  font-family: sans-serif;
-  font-size: 2em;
-  font-weight: bold;
-`;
+type SnapshotRow = {
+  state: string;
+  date: string;
+  confirmed: number;
+  deaths: number;
+};
 
-class OverallInfo extends React.Component {
-  state = { data: null };
+const parseDate = timeParse("%Y-%m-%d");
 
-  componentDidMount() {
-    d3.csv("/caso_shrink.csv").then((d) => this.setState({ data: d }));
-  }
+const normalizeRow = (row: DSVRowString<string>): SnapshotRow => ({
+  state: row.state ?? "",
+  date: row.date ?? "",
+  confirmed: Number(row.confirmed ?? 0),
+  deaths: Number(row.deaths ?? 0),
+});
 
-  render() {
-    const data = this.state["data"];
+const formatNumber = (value: number) =>
+  value.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
 
-    if (data === null) {
-      return <Box p={6} flex="1" rounded="10px"></Box>;
+const OverallInfo = () => {
+  const [data, setData] = useState<SnapshotRow[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    import("d3").then(({ csv }) => {
+      void csv("/caso_shrink.csv").then((rows) => {
+        if (!isMounted) return;
+        setData(rows.map(normalizeRow));
+      });
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const stats = useMemo(() => {
+    if (data.length === 0) {
+      return null;
     }
 
-    const brazil = data;
-
-    const casesBrazil = brazil
-      .map((d) => +d.confirmed)
-      .reduce((total, num) => total + num);
-    const deathsBrazil = brazil
-      .map((d) => +d.deaths)
-      .reduce((total, num) => total + num);
-
-    // efficient, instead of re-filtering the full list
-    const parana = brazil.filter((d) => d.state === "PR");
-    const casesParana = parana[0].confirmed;
-    const deathsParana = parana[0].deaths;
-
-    const lastUpdated = brazil[0].date;
-    const parser = d3.timeParse("%Y-%m-%d");
-    const date = parser(lastUpdated);
-
-    return (
-      <Box p={6} flex="1" rounded="10px">
-        <StatGroup rounded="8px" borderWidth="1px" p={4} mt={2}>
-          <Stat>
-            <StatLabel>Casos no Brasil</StatLabel>
-            <StyledText style={{ color: "#ff9500" }}>{casesBrazil}</StyledText>
-          </Stat>
-
-          <Stat>
-            <StatLabel>Óbitos no Brasil</StatLabel>
-            <StyledText style={{ color: "#c9166a" }}>{deathsBrazil}</StyledText>
-          </Stat>
-        </StatGroup>
-        <StatGroup rounded="8px" borderWidth="1px" p={4} mt={2}>
-          <Stat>
-            <StatLabel>Casos no Paraná</StatLabel>
-            <StyledText style={{ color: "#ff9500" }}>{casesParana}</StyledText>
-          </Stat>
-
-          <Stat>
-            <StatLabel>Óbitos no Paraná</StatLabel>
-            <StyledText style={{ color: "#c9166a" }}>{deathsParana}</StyledText>
-          </Stat>
-        </StatGroup>
-        <StatLabel pt={2} style={{ textAlign: "center" }}>
-          <a href="https://brasil.io/dataset/covid19/">
-            última atualização: {date.toLocaleDateString("pt-BR")} (fonte)
-          </a>
-        </StatLabel>
-      </Box>
+    const brazilTotals = data.reduce(
+      (acc, row) => {
+        acc.confirmed += row.confirmed;
+        acc.deaths += row.deaths;
+        return acc;
+      },
+      { confirmed: 0, deaths: 0 }
     );
+
+    const parana = data.find((row) => row.state === "PR");
+
+    return {
+      brazilConfirmed: brazilTotals.confirmed,
+      brazilDeaths: brazilTotals.deaths,
+      paranaConfirmed: parana?.confirmed ?? 0,
+      paranaDeaths: parana?.deaths ?? 0,
+      lastDate: data[0]?.date ?? "",
+    };
+  }, [data]);
+
+  if (!stats) {
+    return <Box p={6} flex="1" rounded="lg" borderWidth="1px" minH="196px" />;
   }
-}
+
+  const parsed = parseDate?.(stats.lastDate);
+  const formattedDate = parsed
+    ? parsed.toLocaleDateString("pt-BR")
+    : stats.lastDate;
+
+  const cards = [
+    {
+      label: "Casos no Brasil",
+      value: formatNumber(stats.brazilConfirmed),
+      color: "orange.400",
+    },
+    {
+      label: "Óbitos no Brasil",
+      value: formatNumber(stats.brazilDeaths),
+      color: "pink.500",
+    },
+    {
+      label: "Casos no Paraná",
+      value: formatNumber(stats.paranaConfirmed),
+      color: "orange.400",
+    },
+    {
+      label: "Óbitos no Paraná",
+      value: formatNumber(stats.paranaDeaths),
+      color: "pink.500",
+    },
+  ];
+
+  return (
+    <Box p={6} flex="1" rounded="lg" borderWidth="1px" bg="white">
+      <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+        {cards.map((card) => (
+          <Box key={card.label} borderWidth="1px" rounded="md" p={4} bg="gray.50">
+            <Text fontSize="sm" color="gray.600">
+              {card.label}
+            </Text>
+            <Text fontSize="2xl" fontWeight="bold" color={card.color} mt={1}>
+              {card.value}
+            </Text>
+          </Box>
+        ))}
+      </SimpleGrid>
+
+      <Text textAlign="center" mt={4} fontSize="xs">
+        <Link
+          href="https://brasil.io/dataset/covid19/"
+          color="purple.500"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          última atualização: {formattedDate} (fonte Brasil.IO)
+        </Link>
+      </Text>
+    </Box>
+  );
+};
 
 export default OverallInfo;

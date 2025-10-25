@@ -1,21 +1,25 @@
-import { Heading } from "@chakra-ui/core";
+import { Heading } from "@chakra-ui/react";
+import type { ComponentProps } from "react";
 
-export const SectionTitle = (props) => (
-  <Heading fontSize="md" textAlign="center" mx="4px" {...props} />
+type HeadingProps = ComponentProps<typeof Heading>;
+
+export const SectionTitle = (props: HeadingProps) => (
+  <Heading fontSize="md" textAlign="center" mx={1} {...props} />
 );
 
 // [SectionTitleAbout] doesn't have subtitle, so the title can be larger.
-export const SectionTitleAbout = (props) => (
-  <Heading fontSize="lg" textAlign="center" mx="4px" {...props} />
+export const SectionTitleAbout = (props: HeadingProps) => (
+  <Heading fontSize="lg" textAlign="center" mx={1} {...props} />
 );
 
-export const SectionSubtitle = (props) => (
+export const SectionSubtitle = (props: HeadingProps) => (
   <Heading
     fontSize="sm"
     fontWeight="500"
-    color="#858585"
+    color="gray.500"
     textAlign="center"
-    mx="4px"
+    mx={1}
     {...props}
   />
 );
+

@@ -1,152 +1,170 @@
-import React, { Component } from "react";
-import styled from "@emotion/styled";
-import * as d3 from "d3";
-import { Box } from "@chakra-ui/core";
+import { Box, Text, chakra } from "@chakra-ui/react";
+import { timeParse } from "d3";
+import type { DSVRowString } from "d3";
+import { useEffect, useState } from "react";
 
-// gray.300
-const color = "#CBD5E0";
+const Table = chakra("table");
+const Caption = chakra("caption");
+const Thead = chakra("thead");
+const Tbody = chakra("tbody");
+const Tr = chakra("tr");
+const Th = chakra("th");
+const Td = chakra("td");
 
-const Styles = styled.div`
-  padding: 1rem;
-  overflow-x: auto;
-  /* align-items: center; */
+const parseDate = timeParse("%Y-%m-%d");
 
-  table {
-    padding: 1rem;
-    border-spacing: 0;
-    border: 1px solid ${color};
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    background: white;
+const formatDate = (value: string | undefined) => {
+  if (!value) return "--";
+  const parsed = parseDate?.(value);
+  if (!parsed) return value;
+  return parsed.toLocaleDateString("pt-BR", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+};
 
-    tr {
-      :last-child {
-        td {
-          border-bottom: 0;
-        }
+type SourceStats = {
+  label: string;
+  href: string;
+  cases: string;
+  deaths: string;
+  recovered: string;
+  updated: string;
+};
+
+const RelatedLinksList = () => {
+  const [rows, setRows] = useState<SourceStats[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const load = async () => {
+      const [{ csv }] = await Promise.all([import("d3")]);
+
+      const [jhuBr, brio] = await Promise.all([
+        csv("/current_BR.csv").catch(() => [] as DSVRowString<string>[]),
+        csv("/caso_shrink.csv").catch(() => [] as DSVRowString<string>[]),
+      ]);
+
+      if (!isMounted) return;
+
+      const table: SourceStats[] = [];
+
+      const jhuRow = jhuBr.at(0);
+      if (jhuRow) {
+        table.push({
+          label: "Johns Hopkins",
+          href: "https://coronavirus.jhu.edu/map.html",
+          cases: Number(jhuRow.TotalConfirmed ?? 0).toLocaleString("pt-BR"),
+          deaths: Number(jhuRow.TotalDeaths ?? 0).toLocaleString("pt-BR"),
+          recovered: Number(jhuRow.TotalRecovered ?? 0).toLocaleString("pt-BR"),
+          updated: formatDate((jhuRow.Date ?? "").slice(0, 10)),
+        });
       }
-    }
 
-    th,
-    td {
-      margin: 0;
-      padding: 0.5rem;
-      border-bottom: 1px solid ${color};
-      border-right: 1px solid ${color};
+      if (brio.length > 0) {
+        const totals = brio.reduce(
+          (acc, row) => {
+            acc.cases += Number(row.confirmed ?? 0);
+            acc.deaths += Number(row.deaths ?? 0);
+            return acc;
+          },
+          { cases: 0, deaths: 0 }
+        );
 
-      :last-child {
-        border-right: 0;
+        table.push({
+          label: "Brasil.IO",
+          href: "https://brasil.io/dataset/covid19/",
+          cases: totals.cases.toLocaleString("pt-BR"),
+          deaths: totals.deaths.toLocaleString("pt-BR"),
+          recovered: "---",
+          updated: formatDate(brio[0].date),
+        });
       }
-    }
-  }
-`;
 
-class RelatedLinksList extends Component {
-  state = {
-    jhuBrCases: 0,
-    jhuBrDeaths: 0,
-    jhuBrRecovered: 0,
-    jhuBrDate: "",
-    jhuGlCases: 0,
-    jhuGlDeaths: 0,
-    jhuGlRecovered: 0,
-    brioCases: 0,
-    brioDeaths: 0,
-    brioDate: "",
-  };
+      setRows(table);
+    };
 
-  async componentDidMount() {
-    const jhuBr = await d3.csv("/current_BR.csv");
-    const jhuGl = await d3.csv("/current_GL.csv");
-    const brIO = await d3.csv("/caso_shrink.csv");
+    void load();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-    const parser = d3.timeParse("%Y-%m-%d");
-
-    const brIOCases = brIO
-      .map((d) => +d.confirmed)
-      .reduce((total, num) => total + num);
-    const brIODeaths = brIO
-      .map((d) => +d.deaths)
-      .reduce((total, num) => total + num);
-
-    this.setState({
-      jhuBrCases: +jhuBr[0]["TotalConfirmed"],
-      jhuBrDeaths: +jhuBr[0]["TotalDeaths"],
-      jhuBrRecovered: +jhuBr[0]["TotalRecovered"],
-      jhuBrDate: parser(
-        jhuBr[0]["Date"].slice(0, 10)
-      ).toLocaleDateString("pt-br", { month: "long", day: "numeric" }),
-      jhuGlCases: +jhuGl[0]["TotalConfirmed"],
-      jhuGlDeaths: +jhuGl[0]["TotalDeaths"],
-      jhuGlRecovered: +jhuGl[0]["TotalRecovered"],
-      brioCases: brIOCases,
-      brioDeaths: brIODeaths,
-      brioDate: parser(brIO[0]["date"]).toLocaleDateString("pt-br", {
-        month: "long",
-        day: "numeric",
-      }),
-    });
-  }
-
-  render() {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-        // https://stackoverflow.com/questions/47826359/using-overflow-x-scroll-with-justify-content-center-hides-the-earlier-blocks
+  return (
+    <Box overflowX="auto" py={4}>
+      <Table
+        w="full"
+        maxW="720px"
+        mx="auto"
+        borderWidth="1px"
+        borderColor="gray.200"
+        borderRadius="md"
+        borderCollapse="collapse"
+        bg="white"
+        fontSize="sm"
       >
-        <Styles>
-          <Box
-            display="inline-block"
-            // https://stackoverflow.com/questions/10054870/when-a-child-element-overflows-horizontally-why-is-the-right-padding-of-the-par
-          >
-            <table>
-              <thead>
-                <tr>
-                  <th>Dados no Brasil</th>
-                  <th>Casos</th>
-                  <th>Mortes</th>
-                  <th>Recuperados</th>
-                  <th>Última atualização</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>
-                    <a href="https://coronavirus.jhu.edu/map.html">
-                      John Hopkins
-                    </a>
-                  </th>
-                  <td>{this.state.jhuBrCases}</td>
-                  <td>{this.state.jhuBrDeaths}</td>
-                  <td>{this.state.jhuBrRecovered}</td>
-                  <td>{this.state.jhuBrDate}</td>
-                </tr>
-                <tr>
-                  <th>
-                    <a href="https://brasil.io/dataset/covid19/">Brasil.io</a>
-                  </th>
-                  <td>{this.state.brioCases}</td>
-                  <td>{this.state.brioDeaths}</td>
-                  <td>---</td>
-                  <td>{this.state.brioDate}</td>
-                </tr>
-                {/* <tr>
-              <th>Outro</th>
-              <td>cell2</td>
-              <td>cell3</td>
-              <td>cell4</td>
-            </tr> */}
-              </tbody>
-            </table>
-          </Box>
-        </Styles>
-      </div>
-    );
-  }
-}
+        <Caption textAlign="center" fontSize="xs" color="gray.600" p={2}>
+          Séries históricas preservadas para consulta; valores refletem um momento intermediário da pandemia.
+        </Caption>
+        <Thead bg="gray.50">
+          <Tr>
+            <Th p={3} borderWidth="1px" borderColor="gray.200" textAlign="left">
+              Fonte
+            </Th>
+            <Th p={3} borderWidth="1px" borderColor="gray.200" textAlign="right">
+              Casos
+            </Th>
+            <Th p={3} borderWidth="1px" borderColor="gray.200" textAlign="right">
+              Óbitos
+            </Th>
+            <Th p={3} borderWidth="1px" borderColor="gray.200" textAlign="right">
+              Recuperados
+            </Th>
+            <Th p={3} borderWidth="1px" borderColor="gray.200" textAlign="left">
+              Atualização
+            </Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {rows.map((row, index) => (
+            <Tr key={row.label} bg={index % 2 === 0 ? "white" : "gray.25"}>
+              <Td p={3} borderWidth="1px" borderColor="gray.100" minW="160px">
+                <a href={row.href} target="_blank" rel="noopener noreferrer">
+                  {row.label}
+                </a>
+              </Td>
+              <Td p={3} borderWidth="1px" borderColor="gray.100" textAlign="right">
+                {row.cases}
+              </Td>
+              <Td p={3} borderWidth="1px" borderColor="gray.100" textAlign="right">
+                {row.deaths}
+              </Td>
+              <Td p={3} borderWidth="1px" borderColor="gray.100" textAlign="right">
+                {row.recovered}
+              </Td>
+              <Td p={3} borderWidth="1px" borderColor="gray.100">
+                {row.updated}
+              </Td>
+            </Tr>
+          ))}
+          {rows.length === 0 && (
+            <Tr>
+              <Td p={3} borderWidth="1px" borderColor="gray.100" textAlign="center" colSpan={5}>
+                Dados não disponíveis.
+              </Td>
+            </Tr>
+          )}
+        </Tbody>
+      </Table>
+      {rows.length === 0 && (
+        <Text fontSize="xs" color="gray.500" textAlign="center" mt={2}>
+          Arquivo CSV ausente ou inválido.
+        </Text>
+      )}
+    </Box>
+  );
+};
 
 export default RelatedLinksList;

@@ -1,33 +1,32 @@
-import React, { useState, Fragment, useEffect } from "react";
+import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
+import type { PropsWithChildren } from "react";
+import { useEffect, useState } from "react";
 import { loadDataIntoCache } from "../utils/fetcher";
-import { Box, Flex, Spinner, Text } from "@chakra-ui/core";
 
-const GetCovidDataComp = (props) => {
-  const [data, setData] = useState(null);
+const GetCovidDataComp = ({ children }: PropsWithChildren) => {
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    loadDataIntoCache().then((d) => setData(d));
-  });
+    void loadDataIntoCache()
+      .then(() => setIsReady(true))
+      .catch(() => setIsReady(true));
+  }, []);
 
-  if (data === null) {
+  if (!isReady) {
     return (
-      <Flex w="100%" minH="512px" rounded="10px">
-        <Flex mx="auto" my="auto" direction="column">
-          <Spinner
-            size="xl"
-            speed="1s"
-            mx="auto"
-            thickness="2px"
-            color="purple.500"
-          />
-          <Box size="16px" />
-          <Text fontSize="sm">carregando os dados...</Text>
+      <Flex w="100%" minH="512px" rounded="lg">
+        <Flex mx="auto" my="auto" direction="column" align="center">
+          <Spinner size="xl" colorPalette="purple" />
+          <Box h="16px" />
+          <Text fontSize="sm" color="gray.600">
+            carregando os dados...
+          </Text>
         </Flex>
       </Flex>
     );
   }
 
-  return <Fragment>{props.children}</Fragment>;
+  return <>{children}</>;
 };
 
 export default GetCovidDataComp;

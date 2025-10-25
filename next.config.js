@@ -1,7 +1,17 @@
-module.exports = {
-  webpack: (config, options) => {
-    config.resolve.extensions = ['.ts', '.tsx', '.js']
+const path = require("path");
 
-    return config;
+/** @type {import("next").NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "hitcounter.pythonanywhere.com",
+      },
+    ],
   },
+  outputFileTracingRoot: path.join(__dirname, "./"),
 };
+
+module.exports = nextConfig;

@@ -401,12 +401,18 @@ form output {
   }
   );
   main.variable(observer("data")).define("data", ["d3", "data_city"], async function (d3, data_city) {
-    const dataTmp = d3.nest().key(d => d.date).object(await d3.csv("/data/br_ndays.csv", d => {
+    const rows = await d3.csv("/data/br_ndays.csv", d => {
       d["z"] = +d["z"];
       d["c"] = +d["c"];
       d["d"] = +d["d"];
       return d;
-    }));
+    });
+
+    const dataTmp = rows.reduce((acc, row) => {
+      if (!acc[row.date]) acc[row.date] = [];
+      acc[row.date].push(row);
+      return acc;
+    }, {});
 
     Object.keys(dataTmp).forEach(key => {
       dataTmp[key] = dataTmp[key].map(d => {

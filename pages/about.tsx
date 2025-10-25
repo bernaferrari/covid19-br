@@ -1,8 +1,18 @@
-import { Box, Divider, Image, Text } from "@chakra-ui/core";
-import Header from "../components/Header";
+import {
+  Box,
+  Container,
+  Image,
+  Link,
+  Separator,
+  Text,
+} from "@chakra-ui/react";
+import type { ComponentProps } from "react";
+import type { NextPage } from "next";
+import ArchiveBanner from "../components/ArchiveBanner";
 import Footer from "../components/Footer";
-import ContourParana from "../components/d3/ContourParana";
+import Header from "../components/Header";
 import ContourBrazil from "../components/d3/ContourBrazil";
+import ContourParana from "../components/d3/ContourParana";
 import GetCovidDataComp from "../components/GetCovidDataComp";
 import {
   SectionTitle,
@@ -11,170 +21,184 @@ import {
 } from "../components/SectionTitles";
 import StyledFlex from "../components/StyledFlex";
 
-const TextImageContainer = (props) => (
-  <Box maxW="3xl" mx="auto" py="1rem" {...props} />
+const TextImageContainer = (props: ComponentProps<typeof Box>) => (
+  <Container maxW="3xl" py={4} {...props} />
 );
 
-const Contribution = (props) => (
-  <Text fontSize="12px" mx="4px" textAlign="center" {...props} />
+const Contribution = (props: ComponentProps<typeof Text>) => (
+  <Text fontSize="xs" mx={1} textAlign="center" {...props} />
 );
 
-const CenteredImage = (props) => <Image mx="auto" {...props} />;
+const CenteredImage = ({ alt, ...props }: ComponentProps<typeof Image>) => (
+  <Image mx="auto" alt={alt ?? ""} {...props} />
+);
 
-const AdaptiveBox = (props) => (
+const AdaptiveBox = (props: ComponentProps<typeof Box>) => (
   <Box
-    width={[
-      "100%", // base
-      "50%", // 480px upwards
-    ]}
-    py="1rem"
+    width={{ base: "100%", md: "50%" }}
+    py={4}
     {...props}
   />
 );
 
-export default () => {
-  return (
-    <Box mb={8}>
-      <Header />
-      <Box size="64px" />
-
-      <Box maxW="xl" mx="auto" mt="16px">
-        <SectionTitleAbout>Fale conosco</SectionTitleAbout>
-        <Box size={4} />
-        <Box as="p" mx="8px" textAlign="center">
-          Se há algo que possamos ajudar, veja o contato dos pesquisadores nos
-          sites dos laboratórios:{" "}
-          <a
-            style={{ color: "#9f7aea", fontWeight: "bold" }}
-            href="https://www.c3sl.ufpr.br"
-          >
-            C3SL
-          </a>{" "}
-          e{" "}
-          <a
-            style={{ color: "#9f7aea", fontWeight: "bold" }}
-            href="http://web.leg.ufpr.br/"
-          >
-            LEG
-          </a>
-          !
-        </Box>
+const AboutPage: NextPage = () => (
+  <Box pb={16}>
+    <Header />
+    <Box as="main">
+      <Box pt={{ base: 24, md: 40 }}>
+        <ArchiveBanner />
       </Box>
 
-      <Divider />
+      <Container maxW="xl" mt={4}>
+      <SectionTitleAbout>Fale conosco</SectionTitleAbout>
+      <Box h={4} />
+      <Text textAlign="center" mx={2}>
+        Se há algo que possamos ajudar, veja o contato dos pesquisadores nos
+        sites dos laboratórios{" "}
+        <Link href="https://www.c3sl.ufpr.br" color="purple.500" fontWeight="bold">
+          C3SL
+        </Link>{" "}
+        e{" "}
+        <Link href="http://web.leg.ufpr.br/" color="purple.500" fontWeight="bold">
+          LEG
+        </Link>
+        .
+      </Text>
+    </Container>
 
-      <TextImageContainer>
-        <SectionTitle>Curva de casos</SectionTitle>
-        <SectionSubtitle>Estados do Brasil</SectionSubtitle>
-        <Box size={4} />
-        <CenteredImage src="/figs/animacao_corona.gif" />
-        <Box as="p" mx="8px" textAlign="center">
-          Contribuição: Prof. Marco Antonio Leonel Caetano (INSPER/SP)
-        </Box>
-      </TextImageContainer>
+    <Separator my={6} />
 
-      <Divider my={4} />
+    <TextImageContainer>
+      <SectionTitle>Curva de casos</SectionTitle>
+      <SectionSubtitle>Estados do Brasil</SectionSubtitle>
+      <Box h={4} />
+      <CenteredImage src="/figs/animacao_corona.gif" alt="Curva de casos" />
+      <Text mt={2} textAlign="center">
+        Contribuição: Prof. Marco Antonio Leonel Caetano (INSPER/SP)
+      </Text>
+    </TextImageContainer>
 
+    <Separator my={6} />
+
+    <TextImageContainer>
+      <StyledFlex>
+        <AdaptiveBox>
+          <SectionTitle>Evolução do número de casos e óbitos.</SectionTitle>
+          <SectionSubtitle>Municípios</SectionSubtitle>
+          <Box h={4} />
+          <CenteredImage src="/figs/brasil-maiscasos.png" alt="Casos por município" />
+        </AdaptiveBox>
+
+        <AdaptiveBox>
+          <SectionTitle>Taxa de casos por 100 mil habitantes.</SectionTitle>
+          <SectionSubtitle>Municípios</SectionSubtitle>
+          <Box h={4} />
+          <CenteredImage
+            src="/figs/brasil-maiscasos-taxas.png"
+            alt="Taxa de casos por 100 mil habitantes"
+          />
+        </AdaptiveBox>
+      </StyledFlex>
+    </TextImageContainer>
+
+    <Separator my={6} />
+
+    <TextImageContainer>
+      <SectionTitle>Evolução da taxa de óbitos por casos.</SectionTitle>
+      <SectionSubtitle>Regiões do Brasil</SectionSubtitle>
+      <Box h={4} />
+      <CenteredImage src="/figs/letalidade-regioes.png" alt="Taxa de óbitos por casos" />
+    </TextImageContainer>
+
+    <Separator my={6} />
+
+    <TextImageContainer>
+      <SectionTitle>Evolução do número de casos.</SectionTitle>
+      <SectionSubtitle>Estados e regiões do Brasil</SectionSubtitle>
+      <Box h={4} />
+      <CenteredImage
+        src="/figs/data-casos-obitos-estado-regiao.png"
+        alt="Evolução do número de casos"
+      />
+    </TextImageContainer>
+
+    <Box bg="black" py={8}>
       <TextImageContainer>
         <StyledFlex>
           <AdaptiveBox>
-            <SectionTitle>Evolução do número de casos e óbitos.</SectionTitle>
-            <SectionSubtitle>munícipios</SectionSubtitle>
-            <Box size={4} />
-            <CenteredImage src="/figs/brasil-maiscasos.png" />
+            <SectionTitle color="white">Previsão do número casos.</SectionTitle>
+            <SectionSubtitle color="white">
+              Brasil (acumulado e diário)
+            </SectionSubtitle>
+            <Box h={4} />
+            <CenteredImage
+              src="/figs/Projec_casos_140420.JPG"
+              alt="Previsão de casos"
+            />
           </AdaptiveBox>
 
           <AdaptiveBox>
-            <SectionTitle>Taxa de casos por 100mil habitantes.</SectionTitle>
-            <SectionSubtitle>munícipios</SectionSubtitle>
-            <Box size={4} />
-            <CenteredImage src="/figs/brasil-maiscasos-taxas.png" />
+            <SectionTitle color="white">Previsão do número de óbitos.</SectionTitle>
+            <SectionSubtitle color="white">
+              Brasil (acumulado e diário)
+            </SectionSubtitle>
+            <Box h={4} />
+            <CenteredImage
+              src="/figs/Projec_mortes_140420.JPG"
+              alt="Previsão de óbitos"
+            />
           </AdaptiveBox>
         </StyledFlex>
+        <Contribution color="white" mt={2}>
+          Contribuição: Prof. Marco Antonio Leonel Caetano (Insper-SP)
+        </Contribution>
       </TextImageContainer>
-
-      <Divider />
-
-      <TextImageContainer>
-        <SectionTitle>Evolução da taxa de óbitos por casos.</SectionTitle>
-        <SectionSubtitle>regiões do Brasil</SectionSubtitle>
-        <Box size={4} />
-        <CenteredImage src="/figs/letalidade-regioes.png" />
-      </TextImageContainer>
-
-      <Divider />
-
-      <TextImageContainer>
-        <SectionTitle>Evolução do número de casos.</SectionTitle>
-        <SectionSubtitle>estados e regiões do Brasil</SectionSubtitle>
-        <Box size={4} />
-        <CenteredImage src="/figs/data-casos-obitos-estado-regiao.png" />
-      </TextImageContainer>
-
-      <Box bg="black" pb="8px">
-        <TextImageContainer>
-          <StyledFlex>
-            <AdaptiveBox>
-              <SectionTitle color="white">
-                Previsão do número casos.
-              </SectionTitle>
-              <SectionSubtitle>Brasil (acumulado e diário)</SectionSubtitle>
-              <Box size={4} />
-              <CenteredImage src="/figs/Projec_casos_140420.JPG" />
-            </AdaptiveBox>
-
-            <AdaptiveBox>
-              <SectionTitle color="white">
-                Previsão do número de óbitos.
-              </SectionTitle>
-              <SectionSubtitle>Brasil (acumulado e diário)</SectionSubtitle>
-              <Box size={4} />
-              <CenteredImage src="/figs/Projec_mortes_140420.JPG" />
-            </AdaptiveBox>
-          </StyledFlex>
-          <Contribution color="white" mt="4px">
-            Contribuição: Prof. Marco Antonio Leonel Caetano (Insper-SP)
-          </Contribution>
-        </TextImageContainer>
-      </Box>
-
-      <TextImageContainer>
-        <SectionTitle>Evolução do número de casos e óbitos.</SectionTitle>
-        <SectionSubtitle>Brasil e outros países</SectionSubtitle>
-        <Box size={4} />
-        <CenteredImage src="/figs/world-country-data.png" />
-      </TextImageContainer>
-
-      <Divider />
-
-      <TextImageContainer>
-        <SectionTitle>
-          Taxa de óbitos vs número de testes por casos.
-        </SectionTitle>
-        <SectionSubtitle>países com 50 óbitos ou mais</SectionSubtitle>
-        <Box size={4} />
-        <CenteredImage src="/figs/dispersion-death-tests.png" />
-      </TextImageContainer>
-
-      <Divider my={4} />
-
-      <GetCovidDataComp>
-        <Box maxW="3xl" mx="auto">
-          <SectionTitleAbout>Casos no Brasil</SectionTitleAbout>
-          <Box size={4} />
-          <ContourBrazil />
-        </Box>
-
-        <Divider my={4} />
-
-        <Box maxW="3xl" mx="auto">
-          <SectionTitleAbout>Casos no Paraná</SectionTitleAbout>
-          <Box size={4} />
-          <ContourParana />
-        </Box>
-      </GetCovidDataComp>
-
-      <Footer />
     </Box>
-  );
-};
+
+    <TextImageContainer>
+      <SectionTitle>Evolução do número de casos e óbitos.</SectionTitle>
+      <SectionSubtitle>Brasil e outros países</SectionSubtitle>
+      <Box h={4} />
+      <CenteredImage
+        src="/figs/world-country-data.png"
+        alt="Casos e óbitos Brasil e outros países"
+      />
+    </TextImageContainer>
+
+    <Separator my={6} />
+
+    <TextImageContainer>
+      <SectionTitle>Taxa de óbitos vs número de testes por casos.</SectionTitle>
+      <SectionSubtitle>Países com 50 óbitos ou mais</SectionSubtitle>
+      <Box h={4} />
+      <CenteredImage
+        src="/figs/dispersion-death-tests.png"
+        alt="Taxa de óbitos vs número de testes"
+      />
+    </TextImageContainer>
+
+    <Separator my={6} />
+
+    <GetCovidDataComp>
+      <Container maxW="3xl" py={4}>
+        <SectionTitleAbout>Casos no Brasil</SectionTitleAbout>
+        <Box h={4} />
+        <ContourBrazil />
+      </Container>
+
+      <Separator my={6} />
+
+      <Container maxW="3xl" py={4}>
+        <SectionTitleAbout>Casos no Paraná</SectionTitleAbout>
+        <Box h={4} />
+        <ContourParana />
+      </Container>
+    </GetCovidDataComp>
+
+    </Box>
+
+    <Footer />
+  </Box>
+);
+
+export default AboutPage;

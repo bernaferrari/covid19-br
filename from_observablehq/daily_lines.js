@@ -218,10 +218,26 @@ Fonte: [covid19-br](https://brasil.io/api/dataset/covid19)`
           dot.select("text").text(`${s.name}: ${indicatorValue}`);
         }
 
-        function moved() {
-          d3.event.preventDefault();
-          const ym = y.invert(d3.event.offsetY);  // for some reason this is need. LayerY might be 800 (if view is down). Offset works.
-          const xm = x.invert(d3.event.offsetX);
+        function moved(event) {
+          const nativeEvent = event || (typeof window !== "undefined" ? window.event : undefined);
+
+          if (nativeEvent && typeof nativeEvent.preventDefault === "function") {
+            nativeEvent.preventDefault();
+          }
+          const yOffset =
+            nativeEvent && typeof nativeEvent.offsetY === "number"
+              ? nativeEvent.offsetY
+              : nativeEvent && typeof nativeEvent.layerY === "number"
+                ? nativeEvent.layerY
+                : 0;
+          const xOffset =
+            nativeEvent && typeof nativeEvent.offsetX === "number"
+              ? nativeEvent.offsetX
+              : nativeEvent && typeof nativeEvent.layerX === "number"
+                ? nativeEvent.layerX
+                : 0;
+          const ym = y.invert(yOffset);  // for some reason this is need. LayerY might be 800 (if view is down). Offset works.
+          const xm = x.invert(xOffset);
           const i1 = d3.bisectLeft(data.dates, xm, 1);
           const i0 = i1 - 1;
           const i = xm - data.dates[i0] > data.dates[i1] - xm ? i1 : i0;

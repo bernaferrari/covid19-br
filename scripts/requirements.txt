@@ -1,0 +1,26 @@
+# Lockfile curated manually to keep pins compatible with currently published wheels.
+#    uv pip compile scripts/requirements.in --output-file scripts/requirements.txt
+certifi==2024.8.30
+    # via requests
+charset-normalizer==3.3.2
+    # via requests
+idna==3.7
+    # via requests
+numpy==2.0.2
+    # via
+    #   -r scripts/requirements.in
+    #   pandas
+pandas==2.2.2
+    # via -r scripts/requirements.in
+python-dateutil==2.9.0.post0
+    # via pandas
+pytz==2024.1
+    # via pandas
+requests==2.32.3
+    # via -r scripts/requirements.in
+six==1.16.0
+    # via python-dateutil
+tzdata==2024.1
+    # via pandas
+urllib3==2.2.2
+    # via requests

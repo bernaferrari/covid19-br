@@ -1,15 +1,24 @@
 import React, { Component } from "react";
-import { Runtime, Inspector } from "@observablehq/runtime";
+import type { Runtime } from "@observablehq/runtime";
+import { Inspector } from "@observablehq/inspector";
 import notebook from "../../from_observablehq/contour_parana";
+import { createRuntime } from "../../utils/observableRuntime";
 
 class ContourParana extends Component {
+  private runtime?: Runtime;
+
   componentDidMount() {
-    new Runtime().module(notebook, (name: string) => {
+    this.runtime = createRuntime();
+    this.runtime.module(notebook, (name: string) => {
       if (name === "map")
         return Inspector.into(
           "#observablehq-contour-state .observablehq-map"
         )();
     });
+  }
+
+  componentWillUnmount() {
+    this.runtime?.dispose();
   }
 
   render() {

@@ -274,12 +274,18 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     return (await getCitiesCSV()).filter(d => d.codigo_uf === 41);
   });
   main.variable(observer("data")).define("data", ["d3"], async function (d3) {
-    return d3.nest().key(d => d.date).object(await d3.csv("/data/pr_ndays.csv", d => {
+    const rows = await d3.csv("/data/pr_ndays.csv", d => {
       d["z"] = +d["z"];
       d["c"] = +d["c"];
       d["d"] = +d["d"];
       return d;
-    }));
+    });
+
+    return rows.reduce((acc, row) => {
+      if (!acc[row.date]) acc[row.date] = [];
+      acc[row.date].push(row);
+      return acc;
+    }, {});
   });
   main.variable(observer("breakpoint")).define("breakpoint", function () {
     return 500;

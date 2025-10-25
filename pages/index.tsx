@@ -1,103 +1,102 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
-
-import ParanaFilledInteractive from "../components/d3/DailyMapFilledParana";
-import TopGrowing from "../components/d3/TopGrowing";
-import BrazilInteractive from "../components/d3/DailyMapSpikesBrazil";
-import StatesLines from "../components/d3/DailyLinesBrazil";
-import OverallInfo from "../components/OverallInfo";
-import GetCovidDataComp from "../components/GetCovidDataComp";
-
 import {
   Box,
-  Button,
-  ButtonGroup,
+  Container,
+  Flex,
   Heading,
+  Separator,
   Text,
-  Divider,
-  Link,
-} from "@chakra-ui/core";
-import {} from "react-icons";
-import Header from "../components/Header";
+} from "@chakra-ui/react";
+import type { NextPage } from "next";
+import ArchiveBanner from "../components/ArchiveBanner";
 import Footer from "../components/Footer";
+import GetCovidDataComp from "../components/GetCovidDataComp";
+import Header from "../components/Header";
 import News from "../components/News";
+import OverallInfo from "../components/OverallInfo";
+import BrazilInteractive from "../components/d3/DailyMapSpikesBrazil";
+import ParanaFilledInteractive from "../components/d3/DailyMapFilledParana";
+import StatesLines from "../components/d3/DailyLinesBrazil";
+import TopGrowing from "../components/d3/TopGrowing";
 
-export const Container = (props) => (
-  <Box width="full" maxWidth="1280px" mx="auto" px={6} {...props} />
-);
+const IndexPage: NextPage = () => (
+  <Box pb={16}>
+    <Header />
 
-export default () => {
-  return (
-    <Box mb={8}>
-      <Header />
-      <Box mx="auto" maxW="3xl" pt={40} pb={16}>
-        <Box d={{ md: "flex" }} alignItems="flex-start">
-          <Box p={6} flex="1">
+    <Box as="main">
+      <Container maxW="3xl" pt={{ base: 24, md: 40 }} pb={16}>
+        <ArchiveBanner />
+
+        <Flex
+          align="flex-start"
+          direction={{ base: "column", md: "row" }}
+          gap={{ base: 8, md: 12 }}
+        >
+          <Box flex="1" p={{ base: 0, md: 6 }}>
             <Heading as="h1" size="xl" fontWeight="semibold">
-              Portal COVID-19 no
+              Portal COVID-19 no{" "}
               <Box as="span" color="purple.500">
-                {" "}
                 Paraná
               </Box>
-              <Box size={4} />
             </Heading>
-            <Heading as="h4" size="sm" fontSize={12} fontWeight="normal">
-              <p>
-                Este portal tem por objetivo agregar informações atualizadas,
-                modelos estatísticos, visualizações de dados e links úteis sobre
-                a pandemia COVID19 no Brasil, mais especialmente no Estado do
-                Paraná.
-              </p>
-              <Box size={2} />
-              <p>
-                O conteúdo disponibilizado é um esforço conjunto de
-                pesquisadores dos Departamentos de Estatística, Informática,
-                Física, Matemática, Design e Saúde da Universidade Federal do
-                Paraná e pesquisador do Insper-SP, com o apoio da Direção do
-                Setor de Ciências Exatas da UFPR.
-              </p>
-            </Heading>
-          </Box>
-          <Box size={8} />
-          <OverallInfo />
-        </Box>
 
-        <Box mx="auto" py={4}>
+            <Text mt={4} fontSize="sm" lineHeight="tall">
+              Este portal tem por objetivo agregar informações atualizadas,
+              modelos estatísticos, visualizações de dados e links úteis sobre a
+              pandemia COVID-19 no Brasil, especialmente no Estado do Paraná.
+            </Text>
+
+            <Text mt={3} fontSize="sm" lineHeight="tall">
+              O conteúdo disponibilizado é um esforço conjunto de pesquisadores
+              dos Departamentos de Estatística, Informática, Física, Matemática,
+              Design e Saúde da Universidade Federal do Paraná e pesquisador do
+              Insper-SP, com o apoio da Direção do Setor de Ciências Exatas da
+              UFPR.
+            </Text>
+          </Box>
+
+          <OverallInfo />
+        </Flex>
+
+        <Box mt={10}>
           <News />
         </Box>
-      </Box>
+      </Container>
+
       <GetCovidDataComp>
-        <Box bg="#f4f4f4" mx="auto" py={4}>
-          <Heading size="sm" textAlign="center">
-            Evolução dos casos
-          </Heading>
-          <Box size={4} />
+        <Box bg="gray.50" py={8}>
+          <Container maxW="3xl">
+            <Heading size="sm" textAlign="center">
+              Evolução dos casos
+            </Heading>
 
-        <Box maxW="3xl" mx="auto" textAlign="center">
-          <div id="externalDiv">
-            <TopGrowing />
-          </div>
+            <Box mt={6} textAlign="center">
+              <div id="externalDiv">
+                <TopGrowing />
+              </div>
+            </Box>
+          </Container>
         </Box>
-         </Box> 
 
-        <Box maxW="3xl" mx="auto">
+        <Container maxW="3xl" py={10}>
           <ParanaFilledInteractive />
-        </Box>
+        </Container>
 
-        <Divider mt={4} />
+        <Separator my={4} />
 
-        <Box maxW="3xl" mx="auto">
+        <Container maxW="3xl" py={10}>
           <BrazilInteractive />
-        </Box>
+        </Container>
 
-        <Divider mt={4} />
+        <Separator my={4} />
       </GetCovidDataComp>
 
-      <Box maxW="3xl" mx="auto">
+      <Container maxW="3xl" py={10}>
         <StatesLines />
-      </Box>
-      
-      <Footer />
+      </Container>
     </Box>
-  );
-};
+
+    <Footer />
+  </Box>
+);
+
+export default IndexPage;

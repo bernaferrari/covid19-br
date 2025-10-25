@@ -1,10 +1,15 @@
 import React, { Component } from "react";
-import { Runtime, Inspector } from "@observablehq/runtime";
+import type { Runtime } from "@observablehq/runtime";
+import { Inspector } from "@observablehq/inspector";
 import notebook from "../../from_observablehq/top_growing";
+import { createRuntime } from "../../utils/observableRuntime";
 
 class TopGrowing extends Component {
+  private runtime?: Runtime;
+
   componentDidMount() {
-    new Runtime().module(notebook, (name: string) => {
+    this.runtime = createRuntime();
+    this.runtime.module(notebook, (name: string) => {
       if (name === "table")
         return Inspector.into("#observablehq-b9b69f31 .observablehq-table")();
       if (name === "confirmedMovingAvg")
@@ -12,6 +17,10 @@ class TopGrowing extends Component {
           "#observablehq-b9b69f31 .observablehq-confirmedMovingAvg"
         )();
     });
+  }
+
+  componentWillUnmount() {
+    this.runtime?.dispose();
   }
 
   render() {

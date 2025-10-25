@@ -1,70 +1,73 @@
-/** @jsx jsx */
-import { Box, Button, Flex, Link } from "@chakra-ui/core";
-import { jsx } from "@emotion/core";
-import { Container } from "../pages";
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Link as ChakraLink,
+} from "@chakra-ui/react";
+import Image from "next/image";
+import NextLink from "next/link";
+import type { ComponentProps } from "react";
 
-const HeaderContainer = (props) => (
+type HeaderProps = ComponentProps<typeof Box>;
+
+const Header = (props: HeaderProps) => (
   <Box
-    pos="fixed"
     as="header"
-    top="0"
-    zIndex="4"
-    left="0"
-    right="0"
+    position="fixed"
+    top={0}
+    left={0}
+    right={0}
+    zIndex={10}
     borderBottomWidth="1px"
-    width="full"
-    height="4rem"
+    bg="white"
     {...props}
-  />
-);
-
-const marginX = 1;
-
-const Header = (props) => {
-  return (
-    <HeaderContainer bg="white" {...props}>
-      <Container h="100%">
-        <Flex
-          size="100%"
-          px={["0", "0", "6"]}
-          align="center"
-          justify="space-between"
+  >
+    <Container maxW="6xl" py={2}>
+      <Flex align="center" justify="space-between">
+        <ChakraLink
+          as={NextLink}
+          href="/"
+          display="inline-flex"
+          alignItems="center"
         >
-          <Box display="flex" alignItems="center">
-            <a href="/">
-              <img
-                height="12"
-                width="96"
-                src="/header_footer/img_logo.png"
-                alt="Portal"
-              />
-            </a>
-          </Box>
+          <Image
+            src="/header_footer/img_logo.png"
+            alt="Portal COVID-19 Paraná"
+            width={120}
+            height={32}
+          />
+        </ChakraLink>
 
-          <Flex align="center" color="gray.500">
-            <Link
-              mx={marginX}
-              href="/evolution"
-              style={{ textDecoration: "none" }}
-            >
-              <Button variant="ghost">Monitoramento</Button>
-            </Link>
-            <Link mx={marginX} href="/about" style={{ textDecoration: "none" }}>
-              <Button variant="ghost">Projeções</Button>
-            </Link>
-            <Link ml={marginX} href="https://www.ufpr.br/portalufpr/">
-              <img
-                height="12"
-                width="56"
-                src="/header_footer/img_ufpr.png"
-                alt="UFPR"
-              />
-            </Link>
-          </Flex>
+        <Flex align="center" color="gray.600" gap={2}>
+          <NextLink href="/evolution" passHref legacyBehavior>
+            <Button as="a" variant="ghost">
+              Monitoramento
+            </Button>
+          </NextLink>
+          <NextLink href="/about" passHref legacyBehavior>
+            <Button as="a" variant="ghost">
+              Projeções
+            </Button>
+          </NextLink>
+          <ChakraLink
+            href="https://www.ufpr.br/portalufpr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            display="inline-flex"
+            alignItems="center"
+          >
+            <Image
+              src="/header_footer/img_ufpr.png"
+              alt="UFPR"
+              width={80}
+              height={24}
+            />
+          </ChakraLink>
         </Flex>
-      </Container>
-    </HeaderContainer>
-  );
-};
+      </Flex>
+    </Container>
+  </Box>
+);
 
 export default Header;

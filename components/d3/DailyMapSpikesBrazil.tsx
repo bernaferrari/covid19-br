@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { Runtime, Inspector } from "@observablehq/runtime";
+import type { Runtime } from "@observablehq/runtime";
+import { Inspector } from "@observablehq/inspector";
 import notebook from "../../from_observablehq/daily_brazil_map_spikes";
 import styled from "@emotion/styled";
-import { Box, Flex } from "@chakra-ui/core";
+import { Flex } from "@chakra-ui/react";
+import { createRuntime } from "../../utils/observableRuntime";
 
 const Container = styled.div`
   display: flex;
@@ -12,8 +14,11 @@ const Container = styled.div`
 `;
 
 export default class Map extends Component {
+  private runtime?: Runtime;
+
   componentDidMount() {
-    new Runtime().module(notebook, (name: string) => {
+    this.runtime = createRuntime();
+    this.runtime.module(notebook, (name: string) => {
       if (name === "viewof confirmed_or_deaths")
         return Inspector.into(
           "#observablehq-3176bb0d .observablehq-viewof-confirmed_or_deaths"
@@ -37,6 +42,10 @@ export default class Map extends Component {
           "#observablehq-3176bb0d .observablehq-indexSetter"
         )();
     });
+  }
+
+  componentWillUnmount() {
+    this.runtime?.dispose();
   }
 
   render() {

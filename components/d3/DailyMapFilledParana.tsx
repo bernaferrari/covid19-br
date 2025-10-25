@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { Runtime, Inspector } from "@observablehq/runtime";
-import { Box, Flex } from "@chakra-ui/core";
+import type { Runtime } from "@observablehq/runtime";
+import { Inspector } from "@observablehq/inspector";
+import { Flex } from "@chakra-ui/react";
 import notebook from "../../from_observablehq/daily_parana_map_filled";
 import styled from "@emotion/styled";
+import { createRuntime } from "../../utils/observableRuntime";
 
 const Container = styled.div`
   display: flex;
@@ -13,8 +15,11 @@ const Container = styled.div`
 `;
 
 export default class App extends Component {
+  private runtime?: Runtime;
+
   componentDidMount() {
-    new Runtime().module(notebook, (name: string) => {
+    this.runtime = createRuntime();
+    this.runtime.module(notebook, (name: string) => {
       if (name === "viewof confirmed_or_deaths")
         return Inspector.into(
           "#observablehq-cf886714 .observablehq-viewof-confirmed_or_deaths"
@@ -38,6 +43,10 @@ export default class App extends Component {
           "#observablehq-cf886714 .observablehq-indexSetter"
         )();
     });
+  }
+
+  componentWillUnmount() {
+    this.runtime?.dispose();
   }
 
   render() {
