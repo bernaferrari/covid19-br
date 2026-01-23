@@ -24,7 +24,7 @@ const ArchiveBanner = () => (
           (2020-2021). Os dados não são mais atualizados e os serviços estão indisponíveis.{" "}
           Para saber mais sobre o contexto e as limitações atuais, consulte o{" "}
           <Link
-            href="https://github.com/bernardoferrari/portal_covid"
+            href="https://github.com/bernaferrari/covid19-br"
             target="_blank"
             rel="noopener noreferrer"
             fontWeight="semibold"
