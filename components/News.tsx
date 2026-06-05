@@ -1,11 +1,4 @@
-import {
-  Box,
-  Heading,
-  Link,
-  Separator,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Heading, Link, Separator, Stack, Text } from "@chakra-ui/react";
 import { FiExternalLink } from "react-icons/fi";
 
 const News = () => {
@@ -16,8 +9,8 @@ const News = () => {
       </Heading>
       <Separator my={2} />
       <Text fontSize="xs" color="gray.500" my={2} textAlign="center">
-        Registros históricos do projeto no início da pandemia (2020-2021). Links
-        externos podem estar desativados.
+        Registros históricos do projeto no início da pandemia (2020-2021). Links externos podem
+        estar desativados.
       </Text>
       <Stack gap={2} mt={2}>
         <Link
@@ -25,8 +18,8 @@ const News = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          • Scrutinizing the heterogeneous spreading of COVID-19 outbreak in
-          Brazilian territory <Box as={FiExternalLink} display="inline" mx="4px" />
+          • Scrutinizing the heterogeneous spreading of COVID-19 outbreak in Brazilian territory{" "}
+          <Box as={FiExternalLink} display="inline" mx="4px" />
         </Link>
         <Link
           href="https://ricmais.com.br/videos/parana-no-ar/diagnostico-do-coronavirus-exame-de-raio-x-identifica-doenca/"
@@ -41,7 +34,8 @@ const News = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          • Painel da SBF: Físicos e a Pandemia <Box as={FiExternalLink} display="inline" mx="4px" />
+          • Painel da SBF: Físicos e a Pandemia{" "}
+          <Box as={FiExternalLink} display="inline" mx="4px" />
         </Link>
         <Link
           href="https://www.insper.edu.br/noticias/covid-19-portal-marco-antonio/"

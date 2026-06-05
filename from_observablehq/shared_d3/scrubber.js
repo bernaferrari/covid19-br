@@ -7,7 +7,8 @@ export default function define(runtime, observer) {
     return md`
 # Scrubber
 
-This reusable input is intended to drive animations while providing the reader interactive control on demand: the animation pauses when the user interacts with the slider, but can be resumed by clicking the play button. For examples, see [Bar Chart Race](/@mbostock/bar-chart-race-with-scrubber), [The Wealth & Health of Nations](/@mbostock/the-wealth-health-of-nations), [Solar Path](/@mbostock/solar-path), or [Animated Treemap](/@d3/animated-treemap).`;
+This reusable input is intended to drive animations while providing the reader interactive control on demand: the animation pauses when the user interacts with the slider, but can be resumed by clicking the play button. For examples, see [Bar Chart Race](/@mbostock/bar-chart-race-with-scrubber), [The Wealth & Health of Nations](/@mbostock/the-wealth-health-of-nations), [Solar Path](/@mbostock/solar-path), or [Animated Treemap](/@d3/animated-treemap).
+    `;
   });
   main.variable(observer()).define(["md"], function (md) {
     return md`
@@ -15,16 +16,15 @@ To use in your notebook:
 
 ~~~js
 import { Scrubber } from "@mbostock/scrubber";
-~~~`;
+~~~
+    `;
   });
   main
     .variable(observer("viewof i"))
     .define("viewof i", ["Scrubber", "numbers"], function (Scrubber, numbers) {
       return Scrubber(numbers);
     });
-  main
-    .variable(observer("i"))
-    .define("i", ["Generators", "viewof i"], (G, _) => G.input(_));
+  main.variable(observer("i")).define("i", ["Generators", "viewof i"], (G, _) => G.input(_));
   main.variable(observer("numbers")).define("numbers", function () {
     return Array.from({ length: 256 }, (_, i) => i);
   });
@@ -33,51 +33,52 @@ import { Scrubber } from "@mbostock/scrubber";
   });
   main.variable(observer()).define(["md"], function (md) {
     return md`
-Given an array of _values_ representing the discrete frames of the animation, such as an array of numbers or dates, Scrubber returns a [view-compatible input](/@observablehq/introduction-to-views). (It uses the [disposal promise](/@mbostock/disposal) to stop the animation automatically on invalidation.)`;
+Given an array of _values_ representing the discrete frames of the animation, such as an array of numbers or dates, Scrubber returns a [view-compatible input](/@observablehq/introduction-to-views). (It uses the [disposal promise](/@mbostock/disposal) to stop the animation automatically on invalidation.)
+    `;
   });
   main.variable(observer()).define(["md"], function (md) {
     return md`
 ## Options
 
-Scrubber has several options which you can pass as the second argument.`;
+Scrubber has several options which you can pass as the second argument.
+    `;
   });
   main.variable(observer("autoplay")).define("autoplay", ["md"], function (md) {
     return md`
-The _autoplay_ option, which defaults to true, specifies whether the animation plays automatically. Set it to false to require the reader to click on the play button.`;
+The _autoplay_ option, which defaults to true, specifies whether the animation plays automatically. Set it to false to require the reader to click on the play button.
+    `;
   });
-  main
-    .variable(observer())
-    .define(["Scrubber", "numbers"], function (Scrubber, numbers) {
-      return Scrubber(numbers, { autoplay: false });
-    });
+  main.variable(observer()).define(["Scrubber", "numbers"], function (Scrubber, numbers) {
+    return Scrubber(numbers, { autoplay: false });
+  });
   main.variable(observer("loop")).define("loop", ["md"], function (md) {
     return md`
-The _loop_ option, which defaults to true, specifies whether the animation should automatically restart from the beginning after the end is reached. Set it to false to require the reader to click the play button to restart the animation after it ends.`;
+The _loop_ option, which defaults to true, specifies whether the animation should automatically restart from the beginning after the end is reached. Set it to false to require the reader to click the play button to restart the animation after it ends.
+    `;
   });
-  main
-    .variable(observer())
-    .define(["Scrubber", "numbers"], function (Scrubber, numbers) {
-      return Scrubber(numbers, { loop: false });
-    });
+  main.variable(observer()).define(["Scrubber", "numbers"], function (Scrubber, numbers) {
+    return Scrubber(numbers, { loop: false });
+  });
   main.variable(observer()).define(["md"], function (md) {
     return md`
-The _alternate_ option, which defaults to false, specifies whether the animation should reverse direction when it reaches the end, rather than repeat from the start.`;
+The _alternate_ option, which defaults to false, specifies whether the animation should reverse direction when it reaches the end, rather than repeat from the start.
+    `;
   });
-  main
-    .variable(observer())
-    .define(["Scrubber", "numbers"], function (Scrubber, numbers) {
-      return Scrubber(numbers, { loop: false, alternate: true });
-    });
+  main.variable(observer()).define(["Scrubber", "numbers"], function (Scrubber, numbers) {
+    return Scrubber(numbers, { loop: false, alternate: true });
+  });
   main.variable(observer("delay")).define("delay", ["md"], function (md) {
     return md`
-The _delay_ option, which defaults to null, specifies how long to wait between frames in milliseconds. A null value means to use [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame), which typically means sixty times per second (about 17ms). Non-null delays use [setInterval](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval).`;
+The _delay_ option, which defaults to null, specifies how long to wait between frames in milliseconds. A null value means to use [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame), which typically means sixty times per second (about 17ms). Non-null delays use [setInterval](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval).
+    `;
   });
   main.variable(observer()).define(["Scrubber"], function (Scrubber) {
     return Scrubber(["red", "green", "blue"], { delay: 1000 });
   });
   main.variable(observer("format")).define("format", ["md"], function (md) {
     return md`
-The _format_ option, which defaults to the identity function, specifies how to display the currently-selected value. The _format_ function is passed the current value, the current (zero-based) index, and the values array.`;
+The _format_ option, which defaults to the identity function, specifies how to display the currently-selected value. The _format_ function is passed the current value, the current (zero-based) index, and the values array.
+    `;
   });
   main.variable(observer("dates")).define("dates", function () {
     return Array.from({ length: 365 }, (_, i) => {
@@ -91,8 +92,7 @@ The _format_ option, which defaults to the identity function, specifies how to d
     .define("viewof date", ["Scrubber", "dates"], function (Scrubber, dates) {
       return Scrubber(dates, {
         autoplay: false,
-        format: (date) =>
-          date.toLocaleString("en", { month: "long", day: "numeric" }),
+        format: (date) => date.toLocaleString("en", { month: "long", day: "numeric" }),
       });
     });
   main
@@ -100,13 +100,15 @@ The _format_ option, which defaults to the identity function, specifies how to d
     .define("date", ["Generators", "viewof date"], (G, _) => G.input(_));
   main.variable(observer()).define(["md"], function (md) {
     return md`
-If you have suggestions for other options you’d like to see, please let me know!`;
+If you have suggestions for other options you’d like to see, please let me know!
+    `;
   });
   main.variable(observer()).define(["md"], function (md) {
     return md`
 ---
 
-## Implementation`;
+## Implementation
+    `;
   });
   main
     .variable(observer("Scrubber"))
@@ -120,17 +122,13 @@ If you have suggestions for other options you’d like to see, please let me kno
           autoplay = true,
           loop = true,
           alternate = false,
-        } = {}
+        } = {},
       ) {
         values = Array.from(values);
         const form = html`<form
           style="font: 12px var(--sans-serif); font-variant-numeric: tabular-nums; display: flex; height: 33px; align-items: center;"
         >
-          <button
-            name="b"
-            type="button"
-            style="margin-right: 0.4em; width: 5em;"
-          ></button>
+          <button name="b" type="button" style="margin-right: 0.4em; width: 5em;"></button>
           <label style="display: flex; align-items: center;">
             <input
               name="i"
@@ -148,10 +146,7 @@ If you have suggestions for other options you’d like to see, please let me kno
         let direction = 1;
         function start() {
           form.b.textContent = "Pause";
-          timer =
-            delay === null
-              ? requestAnimationFrame(tick)
-              : setInterval(tick, delay);
+          timer = delay === null ? requestAnimationFrame(tick) : setInterval(tick, delay);
         }
         function stop() {
           form.b.textContent = "Play";
@@ -162,14 +157,12 @@ If you have suggestions for other options you’d like to see, please let me kno
         function tick() {
           if (delay === null) timer = requestAnimationFrame(tick);
           if (
-            form.i.valueAsNumber ===
-            (direction > 0 ? values.length - 1 : direction < 0 ? 0 : NaN)
+            form.i.valueAsNumber === (direction > 0 ? values.length - 1 : direction < 0 ? 0 : NaN)
           ) {
             if (!loop) return stop();
             if (alternate) direction = -direction;
           }
-          form.i.valueAsNumber =
-            (form.i.valueAsNumber + direction + values.length) % values.length;
+          form.i.valueAsNumber = (form.i.valueAsNumber + direction + values.length) % values.length;
           form.i.dispatchEvent(new CustomEvent("input", { bubbles: true }));
         }
         form.i.oninput = (event) => {
@@ -179,10 +172,8 @@ If you have suggestions for other options you’d like to see, please let me kno
         };
         form.b.onclick = () => {
           if (timer) return stop();
-          direction =
-            alternate && form.i.valueAsNumber === values.length - 1 ? -1 : 1;
-          form.i.valueAsNumber =
-            (form.i.valueAsNumber + direction) % values.length;
+          direction = alternate && form.i.valueAsNumber === values.length - 1 ? -1 : 1;
+          form.i.valueAsNumber = (form.i.valueAsNumber + direction) % values.length;
           form.i.dispatchEvent(new CustomEvent("input", { bubbles: true }));
           start();
         };

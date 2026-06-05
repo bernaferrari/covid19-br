@@ -20,11 +20,8 @@ export default class Map extends Component {
     this.runtime = createRuntime();
     this.runtime.module(notebook, (name: string) => {
       if (name === "viewof indicator")
-        return Inspector.into(
-          "#observablehq-65e7d81f .observablehq-viewof-indicator"
-        )();
-      if (name === "chart")
-        return Inspector.into("#observablehq-65e7d81f .observablehq-chart")();
+        return Inspector.into("#observablehq-65e7d81f .observablehq-viewof-indicator")();
+      if (name === "chart") return Inspector.into("#observablehq-65e7d81f .observablehq-chart")();
     });
   }
 
@@ -49,11 +46,7 @@ export default class Map extends Component {
             />
           </Container>
 
-          <Box
-            h={400}
-            id="externalDivForDaily"
-            className="observablehq-chart"
-          />
+          <Box h={400} id="externalDivForDaily" className="observablehq-chart" />
         </div>
       </div>
     );

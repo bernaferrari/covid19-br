@@ -20,27 +20,16 @@ export default class Map extends Component {
     this.runtime = createRuntime();
     this.runtime.module(notebook, (name: string) => {
       if (name === "viewof confirmed_or_deaths")
-        return Inspector.into(
-          "#observablehq-3176bb0d .observablehq-viewof-confirmed_or_deaths"
-        )();
+        return Inspector.into("#observablehq-3176bb0d .observablehq-viewof-confirmed_or_deaths")();
       if (name === "viewof scale")
-        return Inspector.into(
-          "#observablehq-3176bb0d .observablehq-viewof-scale"
-        )();
+        return Inspector.into("#observablehq-3176bb0d .observablehq-viewof-scale")();
       if (name === "viewof day")
-        return Inspector.into(
-          "#observablehq-3176bb0d .observablehq-viewof-day"
-        )();
-      if (name === "map")
-        return Inspector.into("#observablehq-3176bb0d .observablehq-map")();
-      if (name === "style")
-        return Inspector.into("#observablehq-3176bb0d .observablehq-style")();
-      if (name === "draw")
-        return Inspector.into("#observablehq-3176bb0d .observablehq-draw")();
+        return Inspector.into("#observablehq-3176bb0d .observablehq-viewof-day")();
+      if (name === "map") return Inspector.into("#observablehq-3176bb0d .observablehq-map")();
+      if (name === "style") return Inspector.into("#observablehq-3176bb0d .observablehq-style")();
+      if (name === "draw") return Inspector.into("#observablehq-3176bb0d .observablehq-draw")();
       if (name === "indexSetter")
-        return Inspector.into(
-          "#observablehq-3176bb0d .observablehq-indexSetter"
-        )();
+        return Inspector.into("#observablehq-3176bb0d .observablehq-indexSetter")();
     });
   }
 
@@ -88,10 +77,7 @@ export default class Map extends Component {
           <div className="observablehq-map"></div>
           <div className="observablehq-style" style={{ display: "none" }}></div>
           <div className="observablehq-draw" style={{ display: "none" }}></div>
-          <div
-            className="observablehq-indexSetter"
-            style={{ display: "none" }}
-          ></div>
+          <div className="observablehq-indexSetter" style={{ display: "none" }}></div>
         </div>
       </div>
     );

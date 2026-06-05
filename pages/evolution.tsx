@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Image,
-  Link,
-  Separator,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Image, Link, Separator, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import ArchiveBanner from "../components/ArchiveBanner";
 import Footer from "../components/Footer";
@@ -24,13 +15,7 @@ type AccessOtherSiteProps = {
   url: string;
 };
 
-const AccessOtherSite = ({
-  title,
-  subtitle,
-  access,
-  src,
-  url,
-}: AccessOtherSiteProps) => (
+const AccessOtherSite = ({ title, subtitle, access, src, url }: AccessOtherSiteProps) => (
   <Box p={2} w={{ base: "100%", md: "50%" }}>
     <Box
       display="inline-flex"
@@ -81,61 +66,53 @@ const EvolutionPage: NextPage = () => (
         <ArchiveBanner />
       </Box>
 
-    <Box bg="gray.50" py={10}>
-      <Flex
-        maxW="3xl"
-        mx="auto"
-        px={2}
-        wrap="wrap"
-        justify="center"
-        align="stretch"
-      >
-        <AccessOtherSite
-          title="Monitoramento do R(t)"
-          subtitle="Monitoramento estatístico no Brasil e Paraná."
-          access="Acessar site"
-          src="/wagner_preview.jpg"
-          url="http://leg.ufpr.br/~wagner/covid/"
-        />
-        <AccessOtherSite
-          title="Monitoramento geral"
-          subtitle="Monitoramento geral no Brasil e Paraná"
-          access="Acessar site"
-          src="/monitoramento_preview.jpg"
-          url="https://lineu96.github.io/covid19/"
-        />
-        <AccessOtherSite
-          title="Monitoramento do R(t)/Bayes"
-          subtitle="R(t) estimado por suavização Bayesiana."
-          access="Acessar site"
-          src="/elias_preview.jpg"
-          url="http://www.leg.ufpr.br/~elias/rtmaps/RtPR.html"
-        />
-        <AccessOtherSite
-          title="Visualização temporal"
-          subtitle="Visualização temporal de dados de COVID-19."
-          access="Acessar site"
-          src="/elias_preview.jpg"
-          url="http://shiny.leg.ufpr.br/elias/covid19time/"
-        />
-      </Flex>
+      <Box bg="gray.50" py={10}>
+        <Flex maxW="3xl" mx="auto" px={2} wrap="wrap" justify="center" align="stretch">
+          <AccessOtherSite
+            title="Monitoramento do R(t)"
+            subtitle="Monitoramento estatístico no Brasil e Paraná."
+            access="Acessar site"
+            src="/wagner_preview.jpg"
+            url="http://leg.ufpr.br/~wagner/covid/"
+          />
+          <AccessOtherSite
+            title="Monitoramento geral"
+            subtitle="Monitoramento geral no Brasil e Paraná"
+            access="Acessar site"
+            src="/monitoramento_preview.jpg"
+            url="https://lineu96.github.io/covid19/"
+          />
+          <AccessOtherSite
+            title="Monitoramento do R(t)/Bayes"
+            subtitle="R(t) estimado por suavização Bayesiana."
+            access="Acessar site"
+            src="/elias_preview.jpg"
+            url="http://www.leg.ufpr.br/~elias/rtmaps/RtPR.html"
+          />
+          <AccessOtherSite
+            title="Visualização temporal"
+            subtitle="Visualização temporal de dados de COVID-19."
+            access="Acessar site"
+            src="/elias_preview.jpg"
+            url="http://shiny.leg.ufpr.br/elias/covid19time/"
+          />
+        </Flex>
 
-      <Separator my={8} color="gray.300" />
+        <Separator my={8} color="gray.300" />
 
-      <Container maxW="3xl">
-        <SectionTitleAbout>Outras Fontes</SectionTitleAbout>
-        <OtherSources />
-      </Container>
+        <Container maxW="3xl">
+          <SectionTitleAbout>Outras Fontes</SectionTitleAbout>
+          <OtherSources />
+        </Container>
 
-      <Separator my={8} color="gray.300" />
+        <Separator my={8} color="gray.300" />
 
-      <Container maxW="3xl">
-        <SectionTitleAbout>Documentos e Links</SectionTitleAbout>
-        <Box h={4} />
-        <RelatedLinksList />
-      </Container>
-    </Box>
-
+        <Container maxW="3xl">
+          <SectionTitleAbout>Documentos e Links</SectionTitleAbout>
+          <Box h={4} />
+          <RelatedLinksList />
+        </Container>
+      </Box>
     </Box>
 
     <Box h="16px" />

@@ -1,10 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Link as ChakraLink,
-} from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Link as ChakraLink } from "@chakra-ui/react";
 import Image from "next/image";
 import NextLink from "next/link";
 import type { ComponentProps } from "react";
@@ -25,31 +19,23 @@ const Header = (props: HeaderProps) => (
   >
     <Container maxW="6xl" py={2}>
       <Flex align="center" justify="space-between">
-        <ChakraLink
-          as={NextLink}
-          href="/"
-          display="inline-flex"
-          alignItems="center"
-        >
+        <ChakraLink as={NextLink} href="/" display="inline-flex" alignItems="center">
           <Image
             src="/header_footer/img_logo.png"
             alt="Portal COVID-19 Paraná"
-            width={120}
-            height={32}
+            width={216}
+            height={107}
+            style={{ width: 120, height: "auto" }}
           />
         </ChakraLink>
 
         <Flex align="center" color="gray.600" gap={2}>
-          <NextLink href="/evolution" passHref legacyBehavior>
-            <Button as="a" variant="ghost">
-              Monitoramento
-            </Button>
-          </NextLink>
-          <NextLink href="/about" passHref legacyBehavior>
-            <Button as="a" variant="ghost">
-              Projeções
-            </Button>
-          </NextLink>
+          <Button asChild variant="ghost">
+            <NextLink href="/evolution">Monitoramento</NextLink>
+          </Button>
+          <Button asChild variant="ghost">
+            <NextLink href="/about">Projeções</NextLink>
+          </Button>
           <ChakraLink
             href="https://www.ufpr.br/portalufpr/"
             target="_blank"
@@ -60,8 +46,9 @@ const Header = (props: HeaderProps) => (
             <Image
               src="/header_footer/img_ufpr.png"
               alt="UFPR"
-              width={80}
-              height={24}
+              width={182}
+              height={118}
+              style={{ width: 80, height: "auto" }}
             />
           </ChakraLink>
         </Flex>

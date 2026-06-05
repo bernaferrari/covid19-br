@@ -19,8 +19,7 @@ const normalizeRow = (row: DSVRowString<string>): SnapshotRow => ({
   deaths: Number(row.deaths ?? 0),
 });
 
-const formatNumber = (value: number) =>
-  value.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
+const formatNumber = (value: number) => value.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
 
 const OverallInfo = () => {
   const [data, setData] = useState<SnapshotRow[]>([]);
@@ -51,7 +50,7 @@ const OverallInfo = () => {
         acc.deaths += row.deaths;
         return acc;
       },
-      { confirmed: 0, deaths: 0 }
+      { confirmed: 0, deaths: 0 },
     );
 
     const parana = data.find((row) => row.state === "PR");
@@ -70,9 +69,7 @@ const OverallInfo = () => {
   }
 
   const parsed = parseDate?.(stats.lastDate);
-  const formattedDate = parsed
-    ? parsed.toLocaleDateString("pt-BR")
-    : stats.lastDate;
+  const formattedDate = parsed ? parsed.toLocaleDateString("pt-BR") : stats.lastDate;
 
   const cards = [
     {

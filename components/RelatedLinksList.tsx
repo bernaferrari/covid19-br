@@ -97,8 +97,7 @@ const documents: RelatedDocument[] = [
     url: "http://covid.c3sl.ufpr.br/docs/rascunhocorona.pdf",
   },
   {
-    title:
-      "Scrutinizing the heterogeneous spreading of COVID-19 outbreak in Brazilian territory",
+    title: "Scrutinizing the heterogeneous spreading of COVID-19 outbreak in Brazilian territory",
     kind: "article",
     author: "Silva,R.M., Mendes,C.F.O., Manchein,C.,2020",
     url: "https://www.medrxiv.org/content/10.1101/2020.06.05.20123604v1",
@@ -163,7 +162,13 @@ const RelatedLinksList = () => (
                 >
                   {label}
                 </Badge>
-                <Heading as="h3" fontSize="md" lineHeight="short" fontWeight="semibold" lineClamp={3}>
+                <Heading
+                  as="h3"
+                  fontSize="md"
+                  lineHeight="short"
+                  fontWeight="semibold"
+                  lineClamp={3}
+                >
                   <LinkOverlay
                     href={document.url}
                     target={isExternal ? "_blank" : undefined}

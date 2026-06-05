@@ -13,13 +13,5 @@ export const SectionTitleAbout = (props: HeadingProps) => (
 );
 
 export const SectionSubtitle = (props: HeadingProps) => (
-  <Heading
-    fontSize="sm"
-    fontWeight="500"
-    color="gray.500"
-    textAlign="center"
-    mx={1}
-    {...props}
-  />
+  <Heading fontSize="sm" fontWeight="500" color="gray.500" textAlign="center" mx={1} {...props} />
 );
-

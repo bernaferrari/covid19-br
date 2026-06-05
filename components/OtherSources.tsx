@@ -70,7 +70,7 @@ const RelatedLinksList = () => {
             acc.deaths += Number(row.deaths ?? 0);
             return acc;
           },
-          { cases: 0, deaths: 0 }
+          { cases: 0, deaths: 0 },
         );
 
         table.push({
@@ -106,7 +106,8 @@ const RelatedLinksList = () => {
         fontSize="sm"
       >
         <Caption textAlign="center" fontSize="xs" color="gray.600" p={2}>
-          Séries históricas preservadas para consulta; valores refletem um momento intermediário da pandemia.
+          Séries históricas preservadas para consulta; valores refletem um momento intermediário da
+          pandemia.
         </Caption>
         <Thead bg="gray.50">
           <Tr>

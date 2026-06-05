@@ -11,7 +11,12 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <ChakraProvider value={theme}>
-      <Head>{defaultSeoTags}</Head>
+      <Head>
+        {defaultSeoTags}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.png" type="image/png" sizes="1024x1024" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
+      </Head>
       <Component {...pageProps} />
     </ChakraProvider>
   );

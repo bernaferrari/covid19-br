@@ -27,17 +27,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
         "statesInner",
         "html",
       ],
-      function (
-        d3,
-        w,
-        h,
-        statesOuter,
-        path,
-        contours,
-        thresholdColorScale,
-        statesInner,
-        html
-      ) {
+      function (d3, w, h, statesOuter, path, contours, thresholdColorScale, statesInner, html) {
         const svg = d3
           .create("svg")
           // .attr("width", w)
@@ -60,11 +50,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           .append("use")
           .attr("xlink:href", "#prPath");
 
-        const g = svg
-          .append("g")
-          .selectAll(".contour")
-          .data(contours)
-          .join("g");
+        const g = svg.append("g").selectAll(".contour").data(contours).join("g");
 
         g.append("path")
           .attr("clip-path", "url(#contourParanaClipPath)")
@@ -86,19 +72,17 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
         const wrapper = html`<div class="wrapper"></div>`;
         wrapper.append(svg.node());
         return wrapper;
-      }
+      },
     );
-  main
-    .variable(observer("rawPoints"))
-    .define("rawPoints", ["d3"], function (d3) {
-      const lats = d3.range(-26.804461, -22.359125, 0.25);
+  main.variable(observer("rawPoints")).define("rawPoints", ["d3"], function (d3) {
+    const lats = d3.range(-26.804461, -22.359125, 0.25);
 
-      // range latitudes from -130 (W) to -60 (E) for every 1 degree
-      const lons = d3.range(-54.666145, -48.201728, 0.25);
+    // range latitudes from -130 (W) to -60 (E) for every 1 degree
+    const lons = d3.range(-54.666145, -48.201728, 0.25);
 
-      // long / lat points in order from west to east, then north to south, like a wrap
-      return lons.map((lon, i) => lats.map((lat) => [lon, lat])).flat();
-    });
+    // long / lat points in order from west to east, then north to south, like a wrap
+    return lons.map((lon, i) => lats.map((lat) => [lon, lat])).flat();
+  });
   main.variable(observer("between")).define("between", function () {
     return function between(num, a, b) {
       var min = Math.min(a, b),
@@ -116,7 +100,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           const results = recentData.filter(
             (dd) =>
               between(dd["longitude"], d[0] - 0.25, d[0] + 0.25) &&
-              between(dd["latitude"], d[1] - 0.25, d[1] + 0.25)
+              between(dd["latitude"], d[1] - 0.25, d[1] + 0.25),
           );
 
           if (results.length === 0) {
@@ -125,48 +109,40 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
             return results.reduce((acc, data) => acc + data.confirmed, 0);
           }
         });
-      }
+      },
     );
   main
     .variable(observer("voronoiLookup"))
-    .define("voronoiLookup", ["filtered_raw_pointer"], function (
-      filtered_raw_pointer
-    ) {
+    .define("voronoiLookup", ["filtered_raw_pointer"], function (filtered_raw_pointer) {
       return new Map(filtered_raw_pointer.map((d, i) => [i, d]));
     });
   main
     .variable(observer("maxValue"))
-    .define("maxValue", ["filtered_raw_pointer"], function (
-      filtered_raw_pointer
-    ) {
+    .define("maxValue", ["filtered_raw_pointer"], function (filtered_raw_pointer) {
       return Math.max.apply(Math, filtered_raw_pointer);
     });
-  main
-    .variable(observer("contour"))
-    .define("contour", ["d3", "w", "h"], function (d3, w, h) {
-      return d3
-        .contourDensity()
-        .x((d) => d[0])
-        .y((d) => d[1])
-        .size([w, h])
-        .cellSize(2);
+  main.variable(observer("contour")).define("contour", ["d3", "w", "h"], function (d3, w, h) {
+    return d3
+      .contourDensity()
+      .x((d) => d[0])
+      .y((d) => d[1])
+      .size([w, h])
+      .cellSize(2);
+  });
+  main.variable(observer("geojson")).define("geojson", ["rawPoints"], function (rawPoints) {
+    return rawPoints.map((d, i) => {
+      return {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: d,
+        },
+        properties: {
+          index: i,
+        },
+      };
     });
-  main
-    .variable(observer("geojson"))
-    .define("geojson", ["rawPoints"], function (rawPoints) {
-      return rawPoints.map((d, i) => {
-        return {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: d,
-          },
-          properties: {
-            index: i,
-          },
-        };
-      });
-    });
+  });
   main
     .variable(observer("gridPoints"))
     .define(
@@ -179,14 +155,11 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
             data: get_point_data(point, i),
           }))
           .filter((d) => d.centroid !== null && d.data !== null);
-      }
+      },
     );
   main
     .variable(observer("newscale"))
-    .define("newscale", ["d3", "temp_values_domain"], function (
-      d3,
-      temp_values_domain
-    ) {
+    .define("newscale", ["d3", "temp_values_domain"], function (d3, temp_values_domain) {
       return d3.scaleSymlog().domain(temp_values_domain).range([0, 1]);
     });
   main
@@ -204,10 +177,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     });
   main
     .variable(observer("contours"))
-    .define("contours", ["contour", "contour_data"], function (
-      contour,
-      contour_data
-    ) {
+    .define("contours", ["contour", "contour_data"], function (contour, contour_data) {
       return contour(contour_data);
     });
   main.variable(observer("colors")).define("colors", function () {
@@ -234,27 +204,20 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     .define("density_thresholds", ["contours"], function (contours) {
       return contours.map((d) => +d.value);
     });
-  main
-    .variable(observer("zero_estimation_index"))
-    .define("zero_estimation_index", function () {
-      return 0;
-    });
+  main.variable(observer("zero_estimation_index")).define("zero_estimation_index", function () {
+    return 0;
+  });
   main
     .variable(observer("quantz"))
     .define(
       "quantz",
       ["d3", "linearColorScale", "density_thresholds", "zero_estimation_index"],
-      function (
-        d3,
-        linearColorScale,
-        density_thresholds,
-        zero_estimation_index
-      ) {
+      function (d3, linearColorScale, density_thresholds, zero_estimation_index) {
         return d3.quantize(
           linearColorScale,
-          (density_thresholds.length - zero_estimation_index) * 2
+          (density_thresholds.length - zero_estimation_index) * 2,
         );
-      }
+      },
     );
   main
     .variable(observer("thresholdColorScale"))
@@ -266,7 +229,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           .scaleOrdinal()
           .domain(density_thresholds)
           .range(quantz.slice(-threshold_index_domain.length));
-      }
+      },
     );
   main
     .variable(observer("threshold_index_domain"))
@@ -277,9 +240,9 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
         return d3.range(
           -zero_estimation_index,
           density_thresholds.length - zero_estimation_index,
-          1
+          1,
         );
-      }
+      },
     );
   main
     .variable(observer("linearColorScale"))
@@ -307,73 +270,95 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     });
   main
     .variable(observer("get_point_data"))
-    .define("get_point_data", ["d3", "estado", "voronoiLookup"], function (
-      d3,
-      estado,
-      voronoiLookup
-    ) {
-      return (d, i) => {
-        let data = null;
+    .define(
+      "get_point_data",
+      ["d3", "estado", "voronoiLookup"],
+      function (d3, estado, voronoiLookup) {
+        return (d, i) => {
+          let data = null;
 
-        // this limits the data to the regions in or close to the US.
-        if (d3.geoContains(estado, d)) {
-          let voronoi = voronoiLookup.get(i);
-          data = voronoi;
-        }
+          // this limits the data to the regions in or close to the US.
+          if (d3.geoContains(estado, d)) {
+            let voronoi = voronoiLookup.get(i);
+            data = voronoi;
+          }
 
-        return data;
-      };
-    });
-  main.variable(observer("map3")).define("map3", ["d3", "w", "h", "estado", "path", "temp_values_domain", "contours", "geojson", "get_point_data", "linearColorScale", "html"], function (d3, w, h, estado, path, temp_values_domain, contours, geojson, get_point_data, linearColorScale, html) {
-    const svg = d3
-      .create("svg")
-      // .attr("width", w)
-      // .attr("height", h)
-      .attr("viewBox", [0, 0, w, h])
-      .attr("class", "italy");
+          return data;
+        };
+      },
+    );
+  main
+    .variable(observer("map3"))
+    .define(
+      "map3",
+      [
+        "d3",
+        "w",
+        "h",
+        "estado",
+        "path",
+        "temp_values_domain",
+        "contours",
+        "geojson",
+        "get_point_data",
+        "linearColorScale",
+        "html",
+      ],
+      function (
+        d3,
+        w,
+        h,
+        estado,
+        path,
+        temp_values_domain,
+        contours,
+        geojson,
+        get_point_data,
+        linearColorScale,
+        html,
+      ) {
+        const svg = d3
+          .create("svg")
+          // .attr("width", w)
+          // .attr("height", h)
+          .attr("viewBox", [0, 0, w, h])
+          .attr("class", "italy");
 
-    svg
-      .selectAll(".subunit")
-      .data(estado.features)
-      .enter()
-      .append("path")
-      .attr("class", function (d) {
-        return "subunit";
-      })
-      .attr("d", path);
+        svg
+          .selectAll(".subunit")
+          .data(estado.features)
+          .enter()
+          .append("path")
+          .attr("class", function (d) {
+            return "subunit";
+          })
+          .attr("d", path);
 
-    let pointScale = d3
-      .scaleSymlog()
-      .domain(temp_values_domain)
-      .range([0, 1]);
+        let pointScale = d3.scaleSymlog().domain(temp_values_domain).range([0, 1]);
 
-    const g = svg
-      .append("g")
-      .selectAll(".contour")
-      .data(contours)
-      .join("g");
+        const g = svg.append("g").selectAll(".contour").data(contours).join("g");
 
-    svg
-      .selectAll(".point")
-      .data(geojson)
-      .enter()
-      .append("path")
-      .attr("d", path)
-      .style("stroke", "#000")
-      .style("stroke-width", 0.1)
-      .style("fill", (d, i) => {
-        const value = get_point_data(d.geometry.coordinates, i);
-        // if the point isn't within our bounds, don't color it
-        if (value === null) return "none";
-        // otherwise, fill with the colorScale (but first, convert to [0,1] through a pointScale)
-        return linearColorScale(pointScale(value));
-      });
+        svg
+          .selectAll(".point")
+          .data(geojson)
+          .enter()
+          .append("path")
+          .attr("d", path)
+          .style("stroke", "#000")
+          .style("stroke-width", 0.1)
+          .style("fill", (d, i) => {
+            const value = get_point_data(d.geometry.coordinates, i);
+            // if the point isn't within our bounds, don't color it
+            if (value === null) return "none";
+            // otherwise, fill with the colorScale (but first, convert to [0,1] through a pointScale)
+            return linearColorScale(pointScale(value));
+          });
 
-    const wrapper = html`<div class="wrapper"></div>`;
-    wrapper.append(svg.node());
-    return wrapper;
-  }
-  );
+        const wrapper = html`<div class="wrapper"></div>`;
+        wrapper.append(svg.node());
+        return wrapper;
+      },
+    );
   main.variable(observer()).define(["html"], function (html) {
     const c = `rgb(255, 255, 255, 0.5)`;
     return html`<style>
@@ -399,18 +384,13 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   });
   main
     .variable(observer("projection"))
-    .define("projection", ["d3", "w", "h", "estado"], function (
-      d3,
-      w,
-      h,
-      estado
-    ) {
+    .define("projection", ["d3", "w", "h", "estado"], function (d3, w, h, estado) {
       return d3.geoMercator().fitExtent(
         [
           [20, 0],
           [w - 20, h],
         ],
-        estado
+        estado,
       );
     });
   main.variable(observer("w")).define("w", ["width"], function (width) {
@@ -419,56 +399,52 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
   main.variable(observer("h")).define("h", function () {
     return 500;
   });
-  main.variable(observer("recentData")).define("recentData", ["data_city_covid"], function (data_city_covid) {
-    return (
-      data_city_covid
-    )
-  });
-  main.variable(observer("data_city_covid")).define("data_city_covid", ["data_covid", "data_city"], function (data_covid, data_city) {
-    return (
-      data_covid.map(d => {
-        let value = data_city.find(e => d.city_ibge_code === e.city_ibge_code);
-        return { ...d, ...value }
-      })
-    )
-  });
   main
-    .variable(observer("data_city"))
-    .define("data_city", [], async function () {
-      return (await getCitiesCSV()).filter(d => d.codigo_uf === 41);
+    .variable(observer("recentData"))
+    .define("recentData", ["data_city_covid"], function (data_city_covid) {
+      return data_city_covid;
     });
+  main
+    .variable(observer("data_city_covid"))
+    .define("data_city_covid", ["data_covid", "data_city"], function (data_covid, data_city) {
+      return data_covid.map((d) => {
+        let value = data_city.find((e) => d.city_ibge_code === e.city_ibge_code);
+        return { ...d, ...value };
+      });
+    });
+  main.variable(observer("data_city")).define("data_city", [], async function () {
+    return (await getCitiesCSV()).filter((d) => d.codigo_uf === 41);
+  });
   main.variable(observer("data_covid")).define("data_covid", ["d3"], async function (d3) {
-    return (
-      await d3.csv("/data/pr_heatmap.csv", (d) => {
-        return {
-          confirmed: +d.c,
-          // deaths: +d.deaths,
-          city_ibge_code: +d.z,
-        };
-      })
-    )
+    return await d3.csv("/data/pr_heatmap.csv", (d) => {
+      return {
+        confirmed: +d.c,
+        // deaths: +d.deaths,
+        city_ibge_code: +d.z,
+      };
+    });
   });
   main.variable(observer("confirmed_or_deaths")).define("confirmed_or_deaths", function () {
-    return (
-      'confirmed'
-    )
+    return "confirmed";
   });
-  main.variable(observer("topCities")).define("topCities", ["recentData", "confirmed_or_deaths"], function (recentData, confirmed_or_deaths) {
-    return (
-      recentData
-        .sort((a, b) => b[confirmed_or_deaths] - a[confirmed_or_deaths])
-        .slice(0, 6)
-    )
-  });
+  main
+    .variable(observer("topCities"))
+    .define(
+      "topCities",
+      ["recentData", "confirmed_or_deaths"],
+      function (recentData, confirmed_or_deaths) {
+        return recentData
+          .sort((a, b) => b[confirmed_or_deaths] - a[confirmed_or_deaths])
+          .slice(0, 6);
+      },
+    );
   main
     .variable(observer("places"))
     .define("places", ["topCities", "estado"], function (topCities, estado) {
       let topCitiesFlat = topCities.map((d) => d.city_ibge_code);
       let updatedArray = [];
       for (var i = 0; i < estado.features.length; i++) {
-        let flatIndex = topCitiesFlat.indexOf(
-          estado.features[i].properties.cod
-        );
+        let flatIndex = topCitiesFlat.indexOf(estado.features[i].properties.cod);
         if (flatIndex > -1) {
           let features = { ...estado.features[i] };
           features.properties = {
@@ -477,10 +453,7 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
           };
           features.geometry = {
             type: "Point",
-            coordinates: [
-              topCities[flatIndex].longitude,
-              topCities[flatIndex].latitude,
-            ],
+            coordinates: [topCities[flatIndex].longitude, topCities[flatIndex].latitude],
           };
           updatedArray.push(features);
         }
@@ -496,11 +469,9 @@ Dados entre: ${dates[0].toLocaleDateString()} e ${dates[dates.length - 1].toLoca
     .define("estado", ["topojson", "brasil"], function (topojson, brasil) {
       return topojson.feature(brasil, brasil.objects["41"]);
     });
-  main
-    .variable(observer("path"))
-    .define("path", ["d3", "projection"], function (d3, projection) {
-      return d3.geoPath().projection(projection);
-    });
+  main.variable(observer("path")).define("path", ["d3", "projection"], function (d3, projection) {
+    return d3.geoPath().projection(projection);
+  });
   main.variable(observer("brasil")).define("brasil", async function () {
     return await getMapFrom("map_pr");
   });

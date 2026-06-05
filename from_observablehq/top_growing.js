@@ -8,38 +8,25 @@ export default function define(runtime, observer) {
   const main = runtime.module();
   main.variable(observer()).define(["md"], function (md) {
     return md`
-# COVID-19 nas cidades no Brasil`;
+# COVID-19 nas cidades no Brasil
+    `;
   });
   main
     .variable(observer())
-    .define(["md", "confirmedByCountryLatestForTable"], function (
-      md,
-      confirmedByCountryLatestForTable
-    ) {
-      return md`Situação até ${new Date(
-        confirmedByCountryLatestForTable[0].date
-      ).toLocaleDateString()}.`;
-    });
+    .define(
+      ["md", "confirmedByCountryLatestForTable"],
+      function (md, confirmedByCountryLatestForTable) {
+        return md`Situação até ${new Date(
+          confirmedByCountryLatestForTable[0].date,
+        ).toLocaleDateString()}.`;
+      },
+    );
   main
     .variable(observer("overall"))
     .define(
       "overall",
-      [
-        "d3",
-        "html",
-        "width",
-        "confirmedByCountryLatestForTable",
-        "colors",
-        "number",
-      ],
-      function (
-        d3,
-        html,
-        width,
-        confirmedByCountryLatestForTable,
-        colors,
-        number
-      ) {
+      ["d3", "html", "width", "confirmedByCountryLatestForTable", "colors", "number"],
+      function (d3, html, width, confirmedByCountryLatestForTable, colors, number) {
         const container = d3
           .select(html`<div></div>`)
           .style("font-family", "sans-serif")
@@ -78,21 +65,18 @@ export default function define(runtime, observer) {
           // .style('border-right','1px dotted #BDBDBD')
           .html((d) => {
             return `<span style="font-weight:bold;font-size:1.5em;color:${colors(
-              d.key
+              d.key,
             )}">${number(d.value)}</span><br/> ${d.label}`;
           });
 
         return container.node();
-      }
+      },
     );
   main
     .variable(observer("viewof selectedState"))
-    .define("viewof selectedState", ["html", "confirmedRaw"], function (
-      html,
-      confirmedRaw
-    ) {
-      return html`<select
-        >${Array.from(new Set(confirmedRaw.flat().map((row) => row.state)))
+    .define("viewof selectedState", ["html", "confirmedRaw"], function (html, confirmedRaw) {
+      return html`<select>
+        ${Array.from(new Set(confirmedRaw.flat().map((row) => row.state)))
           .sort()
           .map(
             (state) =>
@@ -102,15 +86,13 @@ export default function define(runtime, observer) {
               (state === "PR" ? " selected" : "") +
               ">" +
               state +
-              "</option>"
+              "</option>",
           )}
       </select>`;
     });
   main
     .variable(observer("selectedState"))
-    .define("selectedState", ["Generators", "viewof selectedState"], (G, _) =>
-      G.input(_)
-    );
+    .define("selectedState", ["Generators", "viewof selectedState"], (G, _) => G.input(_));
   main
     .variable(observer("table"))
     .define(
@@ -124,9 +106,7 @@ export default function define(runtime, observer) {
         const chartWidth = w / rows - padding * 2;
         const chartHeight = chartWidth * 0.25;
 
-        const container = d3
-          .select(html`<div></div>`)
-          .style("font-family", "sans-serif");
+        const container = d3.select(html`<div></div>`).style("font-family", "sans-serif");
 
         const facets = container
           .selectAll("div")
@@ -137,17 +117,14 @@ export default function define(runtime, observer) {
           .style("text-align", "left")
           .style("background", "#fff")
           .style("margin", `0 ${padding}px ${padding}px 0`)
-          .style(
-            "padding",
-            `${padding * 2}px ${padding}px ${padding}px ${padding}px`
-          );
+          .style("padding", `${padding * 2}px ${padding}px ${padding}px ${padding}px`);
 
         facets
           .append("h4")
           .style("font-size", ".9em")
           .style("font-weight", "bold")
           .html((d, i) => {
-            return cities.find(dd => dd.city_ibge_code === d[i].city_ibge_code).city;
+            return cities.find((dd) => dd.city_ibge_code === d[i].city_ibge_code).city;
           });
 
         facets
@@ -158,8 +135,8 @@ export default function define(runtime, observer) {
           .html(
             (d) =>
               `<span style="font-size:1.2em;font-weight:bold;color:#ff9500">${number(
-                d[d.length - 1].confirmed
-              )}</span> casos confirmados`
+                d[d.length - 1].confirmed,
+              )}</span> casos confirmados`,
           );
 
         facets
@@ -170,31 +147,19 @@ export default function define(runtime, observer) {
           .html(
             (d) =>
               `<span style="font-size:1.2em;font-weight:bold;color:#c9166a">${number(
-                d[d.length - 1].deaths
-              )}</span> mortes`
+                d[d.length - 1].deaths,
+              )}</span> mortes`,
           );
 
         const chartsTop = facets
           .append("svg")
-          .attr("viewBox", [
-            0,
-            -1,
-            chartWidth,
-            2 * chartHeight + padding * 2 + 12,
-          ]);
+          .attr("viewBox", [0, -1, chartWidth, 2 * chartHeight + padding * 2 + 12]);
 
         const chartsConf = chartsTop.append("g");
 
         const chartsDR = chartsTop.append("g");
 
-        drawChart(
-          chartsConf,
-          "confirmed",
-          "#ff9500",
-          chartWidth,
-          2 * chartHeight,
-          padding
-        );
+        drawChart(chartsConf, "confirmed", "#ff9500", chartWidth, 2 * chartHeight, padding);
         drawStack(chartsDR, chartWidth, 2 * chartHeight, padding);
 
         // facets.append('p')
@@ -209,14 +174,7 @@ export default function define(runtime, observer) {
           .append("svg")
           .attr("viewBox", [0, -1, chartWidth, chartHeight + padding * 2 + 12]);
 
-        drawChart(
-          chartsNew,
-          "new",
-          "#808080",
-          chartWidth,
-          chartHeight,
-          padding
-        );
+        drawChart(chartsNew, "new", "#808080", chartWidth, chartHeight, padding);
 
         facets
           .append("p")
@@ -226,11 +184,11 @@ export default function define(runtime, observer) {
           .style("line-height", 1.2)
           .html(
             (d) =>
-              `A <span style="color:#505050; font-weight: bold">linha cinza grossa</span> mostra a média semanal dos casos diários`
+              `A <span style="color:#505050; font-weight: bold">linha cinza grossa</span> mostra a média semanal dos casos diários`,
           );
 
         return container.node();
-      }
+      },
     );
   main.variable(observer("colors")).define("colors", ["d3"], function (d3) {
     return d3
@@ -240,10 +198,7 @@ export default function define(runtime, observer) {
   });
   main
     .variable(observer("dataFacets"))
-    .define("dataFacets", ["allTimeseries", "order"], function (
-      allTimeseries,
-      order
-    ) {
+    .define("dataFacets", ["allTimeseries", "order"], function (allTimeseries, order) {
       const obj = {};
 
       var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -279,10 +234,8 @@ export default function define(runtime, observer) {
       "stackedDeathsAndRecovered",
       ["confirmedByCountryTimeseries", "d3"],
       function (confirmedByCountryTimeseries, d3) {
-        return confirmedByCountryTimeseries.map((d) =>
-          d3.stack().keys(["deaths"])(d)
-        );
-      }
+        return confirmedByCountryTimeseries.map((d) => d3.stack().keys(["deaths"])(d));
+      },
     );
   main
     .variable(observer("allTimeseries"))
@@ -292,12 +245,10 @@ export default function define(runtime, observer) {
       function (confirmedByCountryTimeseries, stackedDeathsAndRecovered) {
         return confirmedByCountryTimeseries.map((d) => {
           const city = d[0].city_ibge_code;
-          d.stack = stackedDeathsAndRecovered.find(
-            (d) => d[0][0].data.city_ibge_code === city
-          );
+          d.stack = stackedDeathsAndRecovered.find((d) => d[0][0].data.city_ibge_code === city);
           return d;
         });
-      }
+      },
     );
   main
     .variable(observer("confirmedMovingAvg"))
@@ -306,7 +257,7 @@ export default function define(runtime, observer) {
       ["confirmedByCountryTimeseries", "movAvg"],
       function (confirmedByCountryTimeseries, movAvg) {
         return confirmedByCountryTimeseries.map((d) => movAvg(d, "new"));
-      }
+      },
     );
   main
     .variable(observer("confirmedByCountryTimeseries"))
@@ -318,28 +269,25 @@ export default function define(runtime, observer) {
 
         const byCountry = Array.from(
           d3array.group(confirmedWithNew.flat(), (d) => `${d.city_ibge_code}`),
-          ([key, value]) => value
+          ([key, value]) => value,
         );
 
         let addNew = byCountry.map((d) =>
           d.map((dd, i) => {
             dd.new = i > 0 ? dd.confirmed - d[i - 1].confirmed : 0;
             return dd;
-          })
+          }),
         );
 
         return addNew.map((d) => d.sort((a, b) => a.date - b.date));
-      }
+      },
     );
   main
     .variable(observer("confirmedUSLatest"))
-    .define("confirmedUSLatest", ["d3", "confirmedRaw"], function (
-      d3,
-      confirmedRaw
-    ) {
+    .define("confirmedUSLatest", ["d3", "confirmedRaw"], function (d3, confirmedRaw) {
       const data = Array.from(
         d3array.group(confirmedRaw, (d) => d.date),
-        ([key, value]) => value
+        ([key, value]) => value,
       )
         .sort((a, b) => b.date - a.date)
         .reverse();
@@ -354,49 +302,42 @@ export default function define(runtime, observer) {
   main
     .variable(observer("deathsLatest"))
     .define("deathsLatest", ["confirmedRaw"], function (confirmedRaw) {
-      return confirmedRaw
-        .map((d) => d[d.length - 1])
-        .sort((a, b) => b.deaths - a.deaths);
+      return confirmedRaw.map((d) => d[d.length - 1]).sort((a, b) => b.deaths - a.deaths);
     });
-  main
-    .variable(observer("cities"))
-    .define("cities", async function () {
-      return await getCitiesCSV();
-    });
+  main.variable(observer("cities")).define("cities", async function () {
+    return await getCitiesCSV();
+  });
   main
     .variable(observer("confirmedLatest"))
     .define("confirmedLatest", ["confirmedRaw"], function (confirmedRaw) {
-      return confirmedRaw
-        .map((d) => d[d.length - 1])
-        .sort((a, b) => b.confirmed - a.confirmed);
+      return confirmedRaw.map((d) => d[d.length - 1]).sort((a, b) => b.confirmed - a.confirmed);
     });
   main
     .variable(observer("confirmedWithNew"))
-    .define("confirmedWithNew", ["confirmedRaw", "selectedState"], function (
-      confirmedRaw,
-      selectedState
-    ) {
-      return confirmedRaw;
+    .define(
+      "confirmedWithNew",
+      ["confirmedRaw", "selectedState"],
+      function (confirmedRaw, selectedState) {
+        return confirmedRaw;
+      },
+    );
+  main.variable(observer("confirmedRaw")).define("confirmedRaw", ["d3"], async function (d3) {
+    const dd = await d3.csv("/data/pr_topcities_alldays.csv", (d) => {
+      d.city_ibge_code = +d.z;
+      d.confirmed = +d.c;
+      d.deaths = +d.d;
+      return d;
     });
-  main
-    .variable(observer("confirmedRaw"))
-    .define("confirmedRaw", ["d3"], async function (d3) {
-      const dd = (await d3.csv("/data/pr_topcities_alldays.csv", d => {
-        d.city_ibge_code = +d.z;
-        d.confirmed = +d.c;
-        d.deaths = +d.d;
-        return d;
-      }));
 
-      let data_with_holes = Array.from(
-        d3array.group(dd, (d) => d.date),
-        ([key, value]) => value
-      )
-        .sort((a, b) => a.date - b.date)
-        .reverse();
+    let data_with_holes = Array.from(
+      d3array.group(dd, (d) => d.date),
+      ([key, value]) => value,
+    )
+      .sort((a, b) => a.date - b.date)
+      .reverse();
 
-      return data_with_holes;
-    });
+    return data_with_holes;
+  });
   main
     .variable(observer("confirmedByCountryLatestForTable"))
     .define(
@@ -404,24 +345,24 @@ export default function define(runtime, observer) {
       ["confirmedByCountryTimeseries"],
       function (confirmedByCountryTimeseries) {
         return confirmedByCountryTimeseries.map((d) => d[d.length - 1]);
-      }
+      },
     );
   main.variable(observer()).define(["md"], function (md) {
     return md`
 ### Libraries and utility functions
 
-We used **D3** for the data transformations and visualization, and **topojson** for all map-related operations.`;
+We used **D3** for the data transformations and visualization, and **topojson** for all map-related operations.
+    `;
   });
   main.variable(observer("d3")).define("d3", d3);
   main.variable(observer()).define(["md"], function (md) {
     return md`
-Everything else is maps, chart-drawing functions, scales, formats and lookup lists to keep country names consistent.`;
+Everything else is maps, chart-drawing functions, scales, formats and lookup lists to keep country names consistent.
+    `;
   });
-  main
-    .variable(observer("viewof order"))
-    .define("viewof order", ["View"], function (View) {
-      return new View("confirmed cases");
-    });
+  main.variable(observer("viewof order")).define("viewof order", ["View"], function (View) {
+    return new View("confirmed cases");
+  });
   main
     .variable(observer("order"))
     .define("order", ["Generators", "viewof order"], (G, _) => G.input(_));
@@ -472,16 +413,11 @@ Everything else is maps, chart-drawing functions, scales, formats and lookup lis
             })
             .attr("fill", ({ key }) => colors(key));
         };
-      }
+      },
     );
   main
     .variable(observer("drawChart"))
-    .define("drawChart", ["yScale", "xScale", "d3", "date"], function (
-      yScale,
-      xScale,
-      d3,
-      date
-    ) {
+    .define("drawChart", ["yScale", "xScale", "d3", "date"], function (yScale, xScale, d3, date) {
       return function drawChart(svg, data, color, w, h, padding) {
         yScale.range([h, 0]);
         xScale.range([0, w]);
@@ -511,24 +447,15 @@ Everything else is maps, chart-drawing functions, scales, formats and lookup lis
 
         g.append("path")
           .attr("d", (d) => {
-            yScale.domain([
-              0,
-              d3.max(d, (d) => d[data === "new" ? "new" : "confirmed"]),
-            ]);
+            yScale.domain([0, d3.max(d, (d) => d[data === "new" ? "new" : "confirmed"])]);
             return area(d);
           })
           .attr("fill", color)
-          .attr(
-            "fill-opacity",
-            data === "new" || data === "confirmed" ? 0.2 : 1
-          );
+          .attr("fill-opacity", data === "new" || data === "confirmed" ? 0.2 : 1);
 
         g.append("path")
           .attr("d", (d) => {
-            yScale.domain([
-              0,
-              d3.max(d, (d) => d[data === "new" ? "new" : "confirmed"]),
-            ]);
+            yScale.domain([0, d3.max(d, (d) => d[data === "new" ? "new" : "confirmed"])]);
             return line(d);
           })
           .attr("stroke", color)
@@ -545,10 +472,7 @@ Everything else is maps, chart-drawing functions, scales, formats and lookup lis
             .attr("fill", "none");
         }
 
-        const xa = g
-          .append("g")
-          .call(xAxis)
-          .attr("transform", `translate(${0},${h})`);
+        const xa = g.append("g").call(xAxis).attr("transform", `translate(${0},${h})`);
 
         xa.select(".domain").remove();
 
@@ -560,20 +484,12 @@ Everything else is maps, chart-drawing functions, scales, formats and lookup lis
   main
     .variable(observer("yScale"))
     .define("yScale", ["d3", "confirmedRaw"], function (d3, confirmedRaw) {
-      return d3
-        .scaleLinear()
-        .domain([0, d3.max(confirmedRaw.flat(), (d) => d.confirmed)]);
+      return d3.scaleLinear().domain([0, d3.max(confirmedRaw.flat(), (d) => d.confirmed)]);
     });
   main
     .variable(observer("xScale"))
-    .define("xScale", ["d3", "confirmedWithNew", "date"], function (
-      d3,
-      confirmedWithNew,
-      date
-    ) {
-      return d3
-        .scaleTime()
-        .domain(d3.extent(confirmedWithNew.flat(), (d) => date(d.date)));
+    .define("xScale", ["d3", "confirmedWithNew", "date"], function (d3, confirmedWithNew, date) {
+      return d3.scaleTime().domain(d3.extent(confirmedWithNew.flat(), (d) => date(d.date)));
     });
   main.variable(observer("number")).define("number", ["d3"], function (d3) {
     return d3.format(",.2~f");
@@ -581,14 +497,12 @@ Everything else is maps, chart-drawing functions, scales, formats and lookup lis
   main.variable(observer("date")).define("date", ["d3"], function (d3) {
     return d3.utcParse("%Y-%m-%d");
   });
-  main
-    .variable(observer("threshOrder"))
-    .define("threshOrder", ["d3"], function (d3) {
-      return d3
-        .scaleOrdinal()
-        .domain(["confirmed cases", "new daily cases", "deaths"])
-        .range([1, 10, 40]);
-    });
+  main.variable(observer("threshOrder")).define("threshOrder", ["d3"], function (d3) {
+    return d3
+      .scaleOrdinal()
+      .domain(["confirmed cases", "new daily cases", "deaths"])
+      .range([1, 10, 40]);
+  });
   const child1 = runtime.module(define1);
   main.import("View", child1);
   return main;

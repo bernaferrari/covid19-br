@@ -1,10 +1,4 @@
-import {
-  Box,
-  Container,
-  Link as ChakraLink,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Container, Link as ChakraLink, Stack, Text } from "@chakra-ui/react";
 import Image from "next/image";
 
 const partners = [
@@ -12,45 +6,50 @@ const partners = [
     href: "https://www.c3sl.ufpr.br/",
     src: "/header_footer/img_c3sl.png",
     alt: "C3SL",
+    width: 347,
+    height: 196,
   },
   {
     href: "http://www.exatas.ufpr.br/portal/en/",
     src: "/header_footer/img_exatas.png",
     alt: "Setor de Ciências Exatas UFPR",
+    width: 333,
+    height: 188,
   },
   {
     href: "http://web.leg.ufpr.br/",
     src: "/header_footer/img_leg.png",
     alt: "Laboratório de Estatística e Geoinformação",
+    width: 333,
+    height: 188,
   },
   {
     href: undefined,
     src: "/header_footer/img_labdsi.png",
     alt: "Laboratório de Design de Sistemas de Informação",
+    width: 110,
+    height: 85,
   },
 ];
 
 const Footer = () => (
   <Box as="footer" borderTopWidth="1px" bg="white" py={6}>
     <Container maxW="6xl">
-      <Stack
-        direction={{ base: "column", md: "row" }}
-        justify="center"
-        align="center"
-        gap={8}
-      >
-        {partners.map(({ href, src, alt }) => {
+      <Stack direction={{ base: "column", md: "row" }} justify="center" align="center" gap={8}>
+        {partners.map(({ href, src, alt, width, height }) => {
           const logo = (
-            <Image src={src} alt={alt} width={120} height={40} priority />
+            <Image
+              src={src}
+              alt={alt}
+              width={width}
+              height={height}
+              priority
+              style={{ width: 120, height: "auto" }}
+            />
           );
 
           return href ? (
-            <ChakraLink
-              key={alt}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <ChakraLink key={alt} href={href} target="_blank" rel="noopener noreferrer">
               {logo}
             </ChakraLink>
           ) : (
@@ -71,9 +70,8 @@ const Footer = () => (
           </ChakraLink>{" "}
           &amp; Rafael Ancara.
           <br />
-          Mantido por Fernanda Yukari Kawasaki (IC voluntária), Natália Yada e
-          Tamy Beppler (com financiamento da bolsa CAPES para combate ao
-          COVID-19).
+          Mantido por Fernanda Yukari Kawasaki (IC voluntária), Natália Yada e Tamy Beppler (com
+          financiamento da bolsa CAPES para combate ao COVID-19).
           <br />
           Administrado por André Grégio.
         </Text>

@@ -10,10 +10,7 @@ class ContourParana extends Component {
   componentDidMount() {
     this.runtime = createRuntime();
     this.runtime.module(notebook, (name: string) => {
-      if (name === "map")
-        return Inspector.into(
-          "#observablehq-contour-state .observablehq-map"
-        )();
+      if (name === "map") return Inspector.into("#observablehq-contour-state .observablehq-map")();
     });
   }
 

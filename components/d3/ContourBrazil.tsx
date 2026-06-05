@@ -10,10 +10,8 @@ class ContourBrazil extends Component {
   componentDidMount() {
     this.runtime = createRuntime();
     this.runtime.module(notebook, (name: string) => {
-      if (name === "map")
-        return Inspector.into("#observablehq-c65430d5 .observablehq-map")();
-      if (name === "style")
-        return Inspector.into("#observablehq-c65430d5 .observablehq-style")();
+      if (name === "map") return Inspector.into("#observablehq-c65430d5 .observablehq-map")();
+      if (name === "style") return Inspector.into("#observablehq-c65430d5 .observablehq-style")();
     });
   }
 

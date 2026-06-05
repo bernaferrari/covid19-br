@@ -1,11 +1,4 @@
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  Separator,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Separator, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import ArchiveBanner from "../components/ArchiveBanner";
 import Footer from "../components/Footer";
@@ -40,17 +33,16 @@ const IndexPage: NextPage = () => (
             </Heading>
 
             <Text mt={4} fontSize="sm" lineHeight="tall">
-              Este portal tem por objetivo agregar informações atualizadas,
-              modelos estatísticos, visualizações de dados e links úteis sobre a
-              pandemia COVID-19 no Brasil, especialmente no Estado do Paraná.
+              Este portal tem por objetivo agregar informações atualizadas, modelos estatísticos,
+              visualizações de dados e links úteis sobre a pandemia COVID-19 no Brasil,
+              especialmente no Estado do Paraná.
             </Text>
 
             <Text mt={3} fontSize="sm" lineHeight="tall">
-              O conteúdo disponibilizado é um esforço conjunto de pesquisadores
-              dos Departamentos de Estatística, Informática, Física, Matemática,
-              Design e Saúde da Universidade Federal do Paraná e pesquisador do
-              Insper-SP, com o apoio da Direção do Setor de Ciências Exatas da
-              UFPR.
+              O conteúdo disponibilizado é um esforço conjunto de pesquisadores dos Departamentos de
+              Estatística, Informática, Física, Matemática, Design e Saúde da Universidade Federal
+              do Paraná e pesquisador do Insper-SP, com o apoio da Direção do Setor de Ciências
+              Exatas da UFPR.
             </Text>
           </Box>
 

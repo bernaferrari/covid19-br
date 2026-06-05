@@ -16,12 +16,17 @@ const ArchiveBanner = () => (
     >
       <Alert.Indicator boxSize={5} />
       <Alert.Content>
-        <Alert.Title fontSize="sm" fontWeight="semibold" textTransform="uppercase" letterSpacing="wide">
+        <Alert.Title
+          fontSize="sm"
+          fontWeight="semibold"
+          textTransform="uppercase"
+          letterSpacing="wide"
+        >
           Portal arquivado
         </Alert.Title>
         <Alert.Description fontSize="sm" color="gray.700">
-          Mantemos este site como registro histórico da mobilização coletiva nos primeiros anos da pandemia
-          (2020-2021). Os dados não são mais atualizados e os serviços estão indisponíveis.{" "}
+          Mantemos este site como registro histórico da mobilização coletiva nos primeiros anos da
+          pandemia (2020-2021). Os dados não são mais atualizados e os serviços estão indisponíveis.{" "}
           Para saber mais sobre o contexto e as limitações atuais, consulte o{" "}
           <Link
             href="https://github.com/bernaferrari/covid19-br"

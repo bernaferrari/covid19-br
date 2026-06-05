@@ -21,27 +21,16 @@ export default class App extends Component {
     this.runtime = createRuntime();
     this.runtime.module(notebook, (name: string) => {
       if (name === "viewof confirmed_or_deaths")
-        return Inspector.into(
-          "#observablehq-cf886714 .observablehq-viewof-confirmed_or_deaths"
-        )();
+        return Inspector.into("#observablehq-cf886714 .observablehq-viewof-confirmed_or_deaths")();
       if (name === "viewof day")
-        return Inspector.into(
-          "#observablehq-cf886714 .observablehq-viewof-day"
-        )();
+        return Inspector.into("#observablehq-cf886714 .observablehq-viewof-day")();
       if (name === "colorlegend")
-        return Inspector.into(
-          "#observablehq-cf886714 .observablehq-colorlegend"
-        )();
+        return Inspector.into("#observablehq-cf886714 .observablehq-colorlegend")();
       if (name === "map_spike")
-        return Inspector.into(
-          "#observablehq-cf886714 .observablehq-map_spike"
-        )();
-      if (name === "style")
-        return Inspector.into("#observablehq-cf886714 .observablehq-style")();
+        return Inspector.into("#observablehq-cf886714 .observablehq-map_spike")();
+      if (name === "style") return Inspector.into("#observablehq-cf886714 .observablehq-style")();
       if (name === "indexSetter")
-        return Inspector.into(
-          "#observablehq-cf886714 .observablehq-indexSetter"
-        )();
+        return Inspector.into("#observablehq-cf886714 .observablehq-indexSetter")();
     });
   }
 
@@ -84,10 +73,7 @@ export default class App extends Component {
           </div>
           <div className="observablehq-map_spike"></div>
           <div className="observablehq-style" style={{ display: "none" }}></div>
-          <div
-            className="observablehq-indexSetter"
-            style={{ display: "none" }}
-          ></div>
+          <div className="observablehq-indexSetter" style={{ display: "none" }}></div>
         </div>
       </div>
     );
