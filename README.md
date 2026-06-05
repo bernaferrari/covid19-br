@@ -24,13 +24,13 @@ O desenvolvimento desta plataforma serviu de base para estudos em Interação Hu
 
 - **Dashboards Interativos:** Séries temporais, mapas de calor e tabelas focadas no estado do Paraná.
 - **Visões Abrangentes:** Extensões para dados nacionais e globais.
-- **Integração Observable:** Incorporação de notebooks do Observable para visualizações complexas.
+- **Visualizações Interativas:** Gráficos e mapas preservados como componentes D3.
 - **Dados Históricos:** Pipeline (originalmente Brasil.IO e JHU) preservado para referência.
 
 ## 🚀 Tecnologias
 
 - **Frontend:** Next.js, TypeScript, Chakra UI.
-- **Visualização de Dados:** D3.js, Observable Runtime, TopoJSON.
+- **Visualização de Dados:** D3.js, TopoJSON.
 - **Backend/Data Pipeline:** Python (scripts históricos em `scripts/`).
 
 ## 🛠️ Como Rodar Localmente
@@ -54,7 +54,7 @@ pnpm export
 ## 📂 Estrutura do Repositório
 
 - `pages/` & `components/`: Interface do usuário construída com Chakra UI.
-- `components/d3/` & `from_observablehq/`: Visualizações e lógica de notebooks Observable.
+- `components/d3/`: Visualizações em D3.
 - `public/`: Ativos estáticos e snapshots de dados (CSVs).
 - `scripts/`: Scripts Python utilizados historicamente para coleta e processamento (JHU, Brasil.IO).
 

@@ -1,10 +1,14 @@
-import React, { Component } from "react";
-import type { Runtime } from "@observablehq/runtime";
-import { Inspector } from "@observablehq/inspector";
-import notebook from "../../from_observablehq/daily_brazil_map_spikes";
-import styled from "@emotion/styled";
 import { Flex } from "@chakra-ui/react";
-import { createRuntime } from "../../utils/observableRuntime";
+import styled from "@emotion/styled";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type DailyMapData,
+  loadBrazilDailyMapData,
+  renderBrazilSpikeMap,
+} from "./dailyMapRenderers";
+import { DateScrubber, type CaseMetric, metricOptions, RadioGroup } from "./mapControls";
+
+type ScaleType = "bolhas" | "espinhos";
 
 const Container = styled.div`
   display: flex;
@@ -13,73 +17,97 @@ const Container = styled.div`
   align-items: center;
 `;
 
-export default class Map extends Component {
-  private runtime?: Runtime;
+const scaleOptions: { label: string; value: ScaleType }[] = [
+  { label: "bolhas", value: "bolhas" },
+  { label: "espinhos", value: "espinhos" },
+];
 
-  componentDidMount() {
-    this.runtime = createRuntime();
-    this.runtime.module(notebook, (name: string) => {
-      if (name === "viewof confirmed_or_deaths")
-        return Inspector.into("#observablehq-3176bb0d .observablehq-viewof-confirmed_or_deaths")();
-      if (name === "viewof scale")
-        return Inspector.into("#observablehq-3176bb0d .observablehq-viewof-scale")();
-      if (name === "viewof day")
-        return Inspector.into("#observablehq-3176bb0d .observablehq-viewof-day")();
-      if (name === "map") return Inspector.into("#observablehq-3176bb0d .observablehq-map")();
-      if (name === "style") return Inspector.into("#observablehq-3176bb0d .observablehq-style")();
-      if (name === "draw") return Inspector.into("#observablehq-3176bb0d .observablehq-draw")();
-      if (name === "indexSetter")
-        return Inspector.into("#observablehq-3176bb0d .observablehq-indexSetter")();
+export default function DailyMapSpikesBrazil() {
+  const [metric, setMetric] = useState<CaseMetric>("c");
+  const [scaleType, setScaleType] = useState<ScaleType>("espinhos");
+  const [index, setIndex] = useState(0);
+  const [mapData, setMapData] = useState<DailyMapData | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  const handleIndexChange = useCallback((value: number) => setIndex(value), []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    loadBrazilDailyMapData().then((data) => {
+      if (isMounted) setMapData(data);
     });
-  }
 
-  componentWillUnmount() {
-    this.runtime?.dispose();
-  }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-  render() {
-    return (
-      <div className="Map">
-        <div id="observablehq-3176bb0d">
-          <Container>
-            <Flex
-              rounded={8}
-              borderWidth="1px"
-              pl={4}
-              m={2}
-              minH={10}
-              className="observablehq-viewof-confirmed_or_deaths"
-              align="center"
-            />
-            <Flex
-              rounded={8}
-              borderWidth="1px"
-              pl={4}
-              m={2}
-              minH={10}
-              className="observablehq-viewof-scale"
-              align="center"
-            />
-          </Container>
-          <Container>
-            <Flex
-              w={380}
-              h={10}
-              rounded={8}
-              mt={2}
-              mb={8}
-              align="center"
-              borderWidth="1px"
-              className="observablehq-viewof-day"
-            />
-          </Container>
+  useEffect(() => {
+    if (mapRef.current && mapData) {
+      renderBrazilSpikeMap(mapRef.current, mapData, metric, scaleType, index);
+    }
+  }, [index, mapData, metric, scaleType]);
 
-          <div className="observablehq-map"></div>
-          <div className="observablehq-style" style={{ display: "none" }}></div>
-          <div className="observablehq-draw" style={{ display: "none" }}></div>
-          <div className="observablehq-indexSetter" style={{ display: "none" }}></div>
-        </div>
+  return (
+    <div className="Map">
+      <div id="observablehq-3176bb0d">
+        <Container>
+          <Flex
+            rounded={8}
+            borderWidth="1px"
+            pl={4}
+            m={2}
+            minH={10}
+            className="observablehq-viewof-confirmed_or_deaths"
+            align="center"
+          >
+            <RadioGroup
+              name="confirmed_or_deaths"
+              options={metricOptions}
+              value={metric}
+              onChange={setMetric}
+            />
+          </Flex>
+          <Flex
+            rounded={8}
+            borderWidth="1px"
+            pl={4}
+            m={2}
+            minH={10}
+            className="observablehq-viewof-scale"
+            align="center"
+          >
+            <RadioGroup
+              name="scale"
+              options={scaleOptions}
+              value={scaleType}
+              onChange={setScaleType}
+            />
+          </Flex>
+        </Container>
+        <Container>
+          <Flex
+            w={380}
+            h={10}
+            rounded={8}
+            mt={2}
+            mb={8}
+            align="center"
+            borderWidth="1px"
+            className="observablehq-viewof-day"
+          >
+            {mapData ? (
+              <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
+            ) : null}
+          </Flex>
+        </Container>
+
+        <div ref={mapRef} className="observablehq-map" />
+        <div className="observablehq-style" style={{ display: "none" }} />
+        <div className="observablehq-draw" style={{ display: "none" }} />
+        <div className="observablehq-indexSetter" style={{ display: "none" }} />
       </div>
-    );
-  }
+    </div>
+  );
 }

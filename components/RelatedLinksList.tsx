@@ -1,6 +1,5 @@
 import {
   Badge,
-  Box,
   Flex,
   Heading,
   Icon,
@@ -123,7 +122,6 @@ const RelatedLinksList = () => (
         <LinkBox
           key={document.url}
           as="article"
-          role="group"
           h="full"
           borderWidth="1px"
           borderColor="gray.200"

@@ -1,30 +1,26 @@
-import React, { Component } from "react";
-import type { Runtime } from "@observablehq/runtime";
-import { Inspector } from "@observablehq/inspector";
-import notebook from "../../from_observablehq/contour_parana";
-import { createRuntime } from "../../utils/observableRuntime";
+import { useEffect, useRef } from "react";
+import { renderContourMap } from "./contourMap";
 
-class ContourParana extends Component {
-  private runtime?: Runtime;
+export default function ContourParana() {
+  const mapRef = useRef<HTMLDivElement>(null);
 
-  componentDidMount() {
-    this.runtime = createRuntime();
-    this.runtime.module(notebook, (name: string) => {
-      if (name === "map") return Inspector.into("#observablehq-contour-state .observablehq-map")();
-    });
-  }
+  useEffect(() => {
+    let isMounted = true;
 
-  componentWillUnmount() {
-    this.runtime?.dispose();
-  }
+    if (mapRef.current) {
+      renderContourMap(mapRef.current, "parana").then(() => {
+        if (!isMounted) mapRef.current?.replaceChildren();
+      });
+    }
 
-  render() {
-    return (
-      <div id="observablehq-contour-state">
-        <div className="observablehq-map" />
-      </div>
-    );
-  }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  return (
+    <div id="observablehq-contour-state">
+      <div ref={mapRef} className="observablehq-map" />
+    </div>
+  );
 }
-
-export default ContourParana;

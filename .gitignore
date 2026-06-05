@@ -21,6 +21,7 @@ coverage
 # test output
 test/**/out*
 test/**/next-env.d.ts
+tsconfig.tsbuildinfo
 .DS_Store
 
 # Editors
