@@ -21,7 +21,7 @@ const links = [
 ];
 
 const News = () => (
-  <section className="mx-auto max-w-3xl rounded-lg bg-white p-4 shadow-md">
+  <section className="mx-auto max-w-3xl rounded-lg border bg-card p-4 shadow-sm">
     <h2 className="text-center text-sm font-semibold">Novidades</h2>
     <Separator className="my-2" />
     <p className="my-2 text-center text-xs text-gray-500">
@@ -35,7 +35,7 @@ const News = () => (
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-primary hover:underline"
+          className="text-sm text-foreground hover:underline"
         >
           • {link.label} <FiExternalLink className="mx-1 inline" />
         </a>

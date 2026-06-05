@@ -3,10 +3,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const ArchiveBanner = () => (
   <div className="mx-auto max-w-3xl px-4 py-4 md:px-6">
-    <Alert className="items-start gap-3 border-primary/30 px-4 py-4 shadow-sm md:px-5 md:py-5">
+    <Alert className="items-start gap-3 border-primary/25 bg-primary/5 p-4 shadow-sm md:p-4">
       <Info className="mt-0.5 size-5 text-primary" />
       <div>
-        <AlertTitle className="text-sm font-semibold uppercase tracking-wide">
+        <AlertTitle className="mb-1 text-sm font-semibold uppercase tracking-wide">
           Portal arquivado
         </AlertTitle>
         <AlertDescription className="text-sm text-gray-700">
