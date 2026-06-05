@@ -15,7 +15,7 @@ const links = [
     label: "Painel da SBF: Físicos e a Pandemia",
   },
   {
-    href: "https://www.insper.edu.br/noticias/covid-19-portal-marco-antonio/",
+    href: "https://www.insper.edu.br/pt/noticias/2020/4/professor-do-insper-colabora-com-a-ufpr-em-portal-sobre-a-covid-",
     label: "Professor do Insper colabora com a UFPR em portal sobre a Covid-19",
   },
 ];

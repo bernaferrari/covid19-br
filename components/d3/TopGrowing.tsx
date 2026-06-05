@@ -24,6 +24,56 @@ type DeathsStack = d3.Series<TopCityRow, string> & {
 
 const number = d3.format(",.2~f");
 const parseDate = d3.utcParse("%Y-%m-%d");
+const monthFormat = d3
+  .timeFormatLocale({
+    dateTime: "%A, %e de %B de %Y, %X",
+    date: "%d/%m/%Y",
+    time: "%H:%M:%S",
+    periods: ["AM", "PM"],
+    days: [
+      "domingo",
+      "segunda-feira",
+      "terça-feira",
+      "quarta-feira",
+      "quinta-feira",
+      "sexta-feira",
+      "sábado",
+    ],
+    shortDays: ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"],
+    months: [
+      "janeiro",
+      "fevereiro",
+      "março",
+      "abril",
+      "maio",
+      "junho",
+      "julho",
+      "agosto",
+      "setembro",
+      "outubro",
+      "novembro",
+      "dezembro",
+    ],
+    shortMonths: [
+      "jan",
+      "fev",
+      "mar",
+      "abr",
+      "mai",
+      "jun",
+      "jul",
+      "ago",
+      "set",
+      "out",
+      "nov",
+      "dez",
+    ],
+  })
+  .format("%B");
+const formatMonthTick = (value: Date | d3.NumberValue) => {
+  const label = monthFormat(value instanceof Date ? value : new Date(value.valueOf()));
+  return label.charAt(0).toUpperCase() + label.slice(1);
+};
 const colors = d3
   .scaleOrdinal<string, string>()
   .domain(["recovered", "deaths", "confirmed", "new"])
@@ -102,7 +152,7 @@ const drawChart = (
     .x((row) => xScale(date(row.date)))
     .y((row) => yScale(row.weeklyAvg ?? 0))
     .curve(d3.curveCardinal);
-  const xAxis = d3.axisBottom(xScale).ticks(3);
+  const xAxis = d3.axisBottom(xScale).ticks(3).tickFormat(formatMonthTick);
   const group = svg.append("g");
 
   group

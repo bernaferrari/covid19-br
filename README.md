@@ -1,13 +1,10 @@
 # Portal COVID-19 Paraná
 
-![Portal COVID-19 Paraná Header](assets/header.png)
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-111111?style=flat&logo=shadcnui&logoColor=white)](https://ui.shadcn.com/)
+[![Portal COVID-19 Paraná Header](assets/header.png)](https://covid19-br-ebon.now.sh)
 
 O **Portal COVID-19 Paraná** reúne visualizações interativas, modelos estatísticos e dados históricos sobre a pandemia no Paraná e no Brasil. Este projeto é fruto de um esforço multidisciplinar de pesquisadores da **Universidade Federal do Paraná (UFPR)**, abrangendo os departamentos de Estatística, Informática, Física, Matemática, Design e Saúde, com apoio de parceiros externos como o Insper-SP.
+
+A versão final do website pode ser acessada em [covid19-br-ebon.now.sh](https://covid19-br-ebon.now.sh).
 
 ## 📄 Pesquisa e Publicações
 
