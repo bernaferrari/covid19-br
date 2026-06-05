@@ -24,7 +24,7 @@ export type DailyMapData = {
 
 const parseDate = d3.utcParse("%Y-%m-%d");
 const numFormat = d3.format(",");
-const shortFormat = d3.format(".1s");
+const shortFormat = d3.format(".2~s");
 
 const readDailyCsv = (path: string) =>
   d3.csv(path, (row) => ({
@@ -118,7 +118,9 @@ const makeSequentialLegend = (
     .attr("transform", `translate(0,${height - marginBottom})`)
     .call(d3.axisBottom(x).ticks(3).tickSize(6))
     .call((group) => group.select(".domain").remove())
-    .call((group) =>
+    .call((group) => {
+      if (!title) return;
+
       group
         .append("text")
         .attr("x", 0)
@@ -126,8 +128,8 @@ const makeSequentialLegend = (
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
         .attr("font-weight", "bold")
-        .text(title),
-    );
+        .text(title);
+    });
 
   container.replaceChildren(svg.node() as SVGSVGElement);
 };
@@ -235,7 +237,7 @@ export const renderBrazilSpikeMap = (
     legend
       .append("text")
       .attr("class", "legend-title")
-      .text("No. casos confirmados")
+      .text(metric === "c" ? "Nº de casos confirmados" : "Nº de óbitos")
       .attr("dy", -maxRadius * 3.0);
     let margin = 0;
     const bubbles = legend.selectAll("g").data(legendRadii).join("g");
@@ -252,7 +254,9 @@ export const renderBrazilSpikeMap = (
     bubbles
       .append("text")
       .attr("dy", "1.3em")
-      .text(width > breakpoint ? numFormat : shortFormat);
+      .attr("text-anchor", "middle")
+      .attr("font-size", 13)
+      .text(shortFormat);
   } else {
     const gradientId = `spike-gradient-${Math.random().toString(36).slice(2)}`;
     const gradientColors = d3.scaleOrdinal<number, string>([100, 0], ["#f3f3f3", "#cc0000"]);
@@ -368,11 +372,7 @@ export const renderParanaFilledMap = (
     });
 
   if (legendContainer) {
-    makeSequentialLegend(
-      legendContainer,
-      colorScale,
-      metric === "c" ? "Casos confirmados" : "Mortes",
-    );
+    makeSequentialLegend(legendContainer, colorScale, "");
   }
 
   wrapper.append(svg.node() as SVGSVGElement);

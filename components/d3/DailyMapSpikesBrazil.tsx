@@ -40,11 +40,14 @@ export default function DailyMapSpikesBrazil() {
     }
   }, [index, mapData, metric, scaleType]);
 
+  const title = metric === "c" ? "Casos confirmados no Brasil" : "Óbitos no Brasil";
+
   return (
     <div>
       <div>
-        <div className="flex flex-row flex-wrap items-center justify-center">
-          <div className="m-2 flex h-8 items-center">
+        <h2 className="mb-5 text-center text-sm font-semibold">{title}</h2>
+        <div className="mb-8 flex flex-row flex-wrap items-center justify-center gap-3">
+          <div className="flex h-8 items-center">
             <TabsGroup
               label="Selecionar métrica"
               options={metricOptions}
@@ -52,7 +55,7 @@ export default function DailyMapSpikesBrazil() {
               onChange={setMetric}
             />
           </div>
-          <div className="m-2 flex h-8 items-center">
+          <div className="flex h-8 items-center">
             <TabsGroup
               label="Selecionar escala do mapa"
               options={scaleOptions}
@@ -60,9 +63,7 @@ export default function DailyMapSpikesBrazil() {
               onChange={setScaleType}
             />
           </div>
-        </div>
-        <div className="flex flex-row flex-wrap items-center justify-center">
-          <div className="mt-2 mb-8 flex h-8 w-fit items-center rounded-lg border">
+          <div className="flex h-8 w-full max-w-sm items-center rounded-lg border">
             {mapData ? (
               <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
             ) : null}

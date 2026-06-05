@@ -64,11 +64,11 @@ export const DateScrubber = ({
   const lastIndex = Math.max(dates.length - 1, 0);
 
   return (
-    <div className="flex w-full items-center gap-2 text-xs [font-variant-numeric:tabular-nums]">
+    <div className="flex w-full min-w-0 items-center gap-2 text-xs [font-variant-numeric:tabular-nums]">
       <Button
         type="button"
         variant="ghost"
-        className="w-[5.25rem]"
+        className="w-16 sm:w-[5.25rem]"
         onClick={() => {
           if (isPlaying) {
             setIsPlaying(false);
@@ -83,7 +83,7 @@ export const DateScrubber = ({
         {isPlaying ? "Pause" : "Play"}
       </Button>
 
-      <div className="w-[180px]">
+      <div className="min-w-20 flex-1 sm:w-[180px] sm:flex-none">
         <Slider
           aria-label="Selecionar data"
           min={0}
@@ -100,7 +100,9 @@ export const DateScrubber = ({
         />
       </div>
 
-      <output className="min-w-[4.75rem]">{selectedDate?.toLocaleDateString()}</output>
+      <output className="min-w-16 text-right sm:min-w-[4.75rem]">
+        {selectedDate?.toLocaleDateString()}
+      </output>
     </div>
   );
 };

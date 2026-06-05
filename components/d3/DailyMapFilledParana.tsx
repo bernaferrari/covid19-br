@@ -33,11 +33,14 @@ export default function DailyMapFilledParana() {
     }
   }, [index, mapData, metric]);
 
+  const title = metric === "c" ? "Casos confirmados no Paraná" : "Óbitos no Paraná";
+
   return (
     <div>
       <div>
-        <div className="m-3 flex flex-row flex-wrap items-center justify-center">
-          <div className="m-4 flex h-8 items-center">
+        <h2 className="mb-5 text-center text-sm font-semibold">{title}</h2>
+        <div className="mb-3 flex flex-row flex-wrap items-center justify-center gap-3">
+          <div className="flex h-8 items-center">
             <TabsGroup
               label="Selecionar métrica"
               options={metricOptions}
@@ -45,7 +48,7 @@ export default function DailyMapFilledParana() {
               onChange={setMetric}
             />
           </div>
-          <div className="flex h-8 w-fit items-center rounded-lg border">
+          <div className="flex h-8 w-full max-w-sm items-center rounded-lg border">
             {mapData ? (
               <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
             ) : null}
