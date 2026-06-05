@@ -63,18 +63,6 @@ const AboutPage: NextPage = () => (
       <Separator className="my-6" />
 
       <TextImageContainer>
-        <SectionTitle>Curva de casos</SectionTitle>
-        <SectionSubtitle>Estados do Brasil</SectionSubtitle>
-        <div className="h-4" />
-        <CenteredImage src="/figs/animacao_corona.gif" alt="Curva de casos" />
-        <p className="mt-2 text-center">
-          Contribuição: Prof. Marco Antonio Leonel Caetano (INSPER/SP)
-        </p>
-      </TextImageContainer>
-
-      <Separator className="my-6" />
-
-      <TextImageContainer>
         <StyledFlex>
           <AdaptiveBox>
             <SectionTitle>Evolução do número de casos e óbitos.</SectionTitle>
