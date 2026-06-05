@@ -1,10 +1,11 @@
-import styled from "@emotion/styled";
+import type { ComponentProps } from "react";
+import { cn } from "@/lib/utils";
 
-const StyledFlex = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-flow: row wrap;
-  align-items: center;
-`;
+const StyledFlex = ({ className, ...props }: ComponentProps<"div">) => (
+  <div
+    className={cn("flex flex-row flex-wrap items-center justify-center", className)}
+    {...props}
+  />
+);
 
 export default StyledFlex;

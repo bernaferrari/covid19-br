@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react";
 import * as d3 from "d3";
 import { group } from "d3-array";
 import { useEffect, useRef } from "react";
@@ -280,11 +279,11 @@ const TopGrowing = () => {
   }, []);
 
   return (
-    <Box className="TopGrowing">
-      <Box id="observablehq-b9b69f31">
-        <Box ref={rootRef} className="observablehq-table" />
-      </Box>
-    </Box>
+    <div className="TopGrowing">
+      <div id="observablehq-b9b69f31">
+        <div ref={rootRef} className="observablehq-table" />
+      </div>
+    </div>
   );
 };
 

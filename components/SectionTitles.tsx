@@ -1,17 +1,24 @@
-import { Heading } from "@chakra-ui/react";
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
-type HeadingProps = ComponentProps<typeof Heading>;
+type HeadingProps = ComponentProps<"h2"> & {
+  children: ReactNode;
+};
 
-export const SectionTitle = (props: HeadingProps) => (
-  <Heading fontSize="md" textAlign="center" mx={1} {...props} />
+export const SectionTitle = ({ className, children, ...props }: HeadingProps) => (
+  <h2 className={cn("mx-1 text-center text-base font-semibold", className)} {...props}>
+    {children}
+  </h2>
 );
 
-// [SectionTitleAbout] doesn't have subtitle, so the title can be larger.
-export const SectionTitleAbout = (props: HeadingProps) => (
-  <Heading fontSize="lg" textAlign="center" mx={1} {...props} />
+export const SectionTitleAbout = ({ className, children, ...props }: HeadingProps) => (
+  <h2 className={cn("mx-1 text-center text-lg font-semibold", className)} {...props}>
+    {children}
+  </h2>
 );
 
-export const SectionSubtitle = (props: HeadingProps) => (
-  <Heading fontSize="sm" fontWeight="500" color="gray.500" textAlign="center" mx={1} {...props} />
+export const SectionSubtitle = ({ className, children, ...props }: HeadingProps) => (
+  <h3 className={cn("mx-1 text-center text-sm font-medium text-gray-500", className)} {...props}>
+    {children}
+  </h3>
 );

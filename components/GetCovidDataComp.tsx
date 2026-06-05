@@ -1,4 +1,3 @@
-import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
 import { useEffect, useState } from "react";
 import { loadDataIntoCache } from "../utils/fetcher";
@@ -14,15 +13,13 @@ const GetCovidDataComp = ({ children }: PropsWithChildren) => {
 
   if (!isReady) {
     return (
-      <Flex w="100%" minH="512px" rounded="lg">
-        <Flex mx="auto" my="auto" direction="column" align="center">
-          <Spinner size="xl" colorPalette="purple" />
-          <Box h="16px" />
-          <Text fontSize="sm" color="gray.600">
-            carregando os dados...
-          </Text>
-        </Flex>
-      </Flex>
+      <div className="flex min-h-[512px] w-full rounded-lg">
+        <div className="m-auto flex flex-col items-center">
+          <div className="size-8 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
+          <div className="h-4" />
+          <p className="text-sm text-gray-600">carregando os dados...</p>
+        </div>
+      </div>
     );
   }
 

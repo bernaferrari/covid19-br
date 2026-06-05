@@ -1,15 +1,6 @@
-import { Box, Text, chakra } from "@chakra-ui/react";
 import { timeParse } from "d3";
 import type { DSVRowString } from "d3";
 import { useEffect, useState } from "react";
-
-const Table = chakra("table");
-const Caption = chakra("caption");
-const Thead = chakra("thead");
-const Tbody = chakra("tbody");
-const Tr = chakra("tr");
-const Th = chakra("th");
-const Td = chakra("td");
 
 const parseDate = timeParse("%Y-%m-%d");
 
@@ -33,7 +24,7 @@ type SourceStats = {
   updated: string;
 };
 
-const RelatedLinksList = () => {
+const OtherSources = () => {
   const [rows, setRows] = useState<SourceStats[]>([]);
 
   useEffect(() => {
@@ -50,8 +41,8 @@ const RelatedLinksList = () => {
       if (!isMounted) return;
 
       const table: SourceStats[] = [];
-
       const jhuRow = jhuBr.at(0);
+
       if (jhuRow) {
         table.push({
           label: "Johns Hopkins",
@@ -93,79 +84,54 @@ const RelatedLinksList = () => {
   }, []);
 
   return (
-    <Box overflowX="auto" py={4}>
-      <Table
-        w="full"
-        maxW="720px"
-        mx="auto"
-        borderWidth="1px"
-        borderColor="gray.200"
-        borderRadius="md"
-        borderCollapse="collapse"
-        bg="white"
-        fontSize="sm"
-      >
-        <Caption textAlign="center" fontSize="xs" color="gray.600" p={2}>
+    <div className="overflow-x-auto py-4">
+      <table className="mx-auto w-full max-w-[720px] border-collapse rounded-md border bg-white text-sm">
+        <caption className="p-2 text-center text-xs text-gray-600">
           Séries históricas preservadas para consulta; valores refletem um momento intermediário da
           pandemia.
-        </Caption>
-        <Thead bg="gray.50">
-          <Tr>
-            <Th p={3} borderWidth="1px" borderColor="gray.200" textAlign="left">
-              Fonte
-            </Th>
-            <Th p={3} borderWidth="1px" borderColor="gray.200" textAlign="right">
-              Casos
-            </Th>
-            <Th p={3} borderWidth="1px" borderColor="gray.200" textAlign="right">
-              Óbitos
-            </Th>
-            <Th p={3} borderWidth="1px" borderColor="gray.200" textAlign="right">
-              Recuperados
-            </Th>
-            <Th p={3} borderWidth="1px" borderColor="gray.200" textAlign="left">
-              Atualização
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
+        </caption>
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="border border-gray-200 p-3 text-left">Fonte</th>
+            <th className="border border-gray-200 p-3 text-right">Casos</th>
+            <th className="border border-gray-200 p-3 text-right">Óbitos</th>
+            <th className="border border-gray-200 p-3 text-right">Recuperados</th>
+            <th className="border border-gray-200 p-3 text-left">Atualização</th>
+          </tr>
+        </thead>
+        <tbody>
           {rows.map((row, index) => (
-            <Tr key={row.label} bg={index % 2 === 0 ? "white" : "gray.25"}>
-              <Td p={3} borderWidth="1px" borderColor="gray.100" minW="160px">
-                <a href={row.href} target="_blank" rel="noopener noreferrer">
+            <tr key={row.label} className={index % 2 === 0 ? "bg-white" : "bg-gray-50/50"}>
+              <td className="min-w-40 border border-gray-100 p-3">
+                <a
+                  href={row.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
                   {row.label}
                 </a>
-              </Td>
-              <Td p={3} borderWidth="1px" borderColor="gray.100" textAlign="right">
-                {row.cases}
-              </Td>
-              <Td p={3} borderWidth="1px" borderColor="gray.100" textAlign="right">
-                {row.deaths}
-              </Td>
-              <Td p={3} borderWidth="1px" borderColor="gray.100" textAlign="right">
-                {row.recovered}
-              </Td>
-              <Td p={3} borderWidth="1px" borderColor="gray.100">
-                {row.updated}
-              </Td>
-            </Tr>
+              </td>
+              <td className="border border-gray-100 p-3 text-right">{row.cases}</td>
+              <td className="border border-gray-100 p-3 text-right">{row.deaths}</td>
+              <td className="border border-gray-100 p-3 text-right">{row.recovered}</td>
+              <td className="border border-gray-100 p-3">{row.updated}</td>
+            </tr>
           ))}
           {rows.length === 0 && (
-            <Tr>
-              <Td p={3} borderWidth="1px" borderColor="gray.100" textAlign="center" colSpan={5}>
+            <tr>
+              <td className="border border-gray-100 p-3 text-center" colSpan={5}>
                 Dados não disponíveis.
-              </Td>
-            </Tr>
+              </td>
+            </tr>
           )}
-        </Tbody>
-      </Table>
+        </tbody>
+      </table>
       {rows.length === 0 && (
-        <Text fontSize="xs" color="gray.500" textAlign="center" mt={2}>
-          Arquivo CSV ausente ou inválido.
-        </Text>
+        <p className="mt-2 text-center text-xs text-gray-500">Arquivo CSV ausente ou inválido.</p>
       )}
-    </Box>
+    </div>
   );
 };
 
-export default RelatedLinksList;
+export default OtherSources;

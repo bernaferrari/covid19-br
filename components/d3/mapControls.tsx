@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { RadioGroup as UiRadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export type CaseMetric = "c" | "d";
 
@@ -8,7 +9,7 @@ export const metricOptions: { label: string; value: CaseMetric }[] = [
 ];
 
 export const RadioGroup = <T extends string>({
-  name,
+  name: _name,
   options,
   value,
   onChange,
@@ -18,29 +19,21 @@ export const RadioGroup = <T extends string>({
   value: T;
   onChange: (value: T) => void;
 }) => (
-  <form>
+  <UiRadioGroup
+    value={value}
+    onValueChange={(nextValue) => onChange(nextValue as T)}
+    className="flex w-auto flex-row flex-wrap items-center gap-0"
+  >
     {options.map((option) => (
       <label
         key={option.value}
-        style={{
-          display: "inline-block",
-          margin: "5px 10px 3px 0",
-          fontSize: "0.85em",
-        }}
+        className="mr-2.5 mb-[3px] inline-flex items-center gap-1.5 text-[0.85em]"
       >
-        <input
-          type="radio"
-          name={name}
-          aria-label={option.label}
-          value={option.value}
-          checked={value === option.value}
-          onChange={() => onChange(option.value)}
-          style={{ verticalAlign: "baseline" }}
-        />{" "}
+        <RadioGroupItem value={option.value} aria-label={option.label} className="align-baseline" />
         {option.label}
       </label>
     ))}
-  </form>
+  </UiRadioGroup>
 );
 
 export const DateScrubber = ({
@@ -73,19 +66,11 @@ export const DateScrubber = ({
   const selectedDate = dates[index];
 
   return (
-    <form
-      style={{
-        font: "12px var(--sans-serif)",
-        fontVariantNumeric: "tabular-nums",
-        display: "flex",
-        height: "33px",
-        alignItems: "center",
-      }}
-    >
+    <form className="flex h-[33px] items-center text-xs [font-variant-numeric:tabular-nums]">
       <button
         name="b"
         type="button"
-        style={{ marginRight: "0.4em", width: "5em" }}
+        className="mr-[0.4em] w-[5em]"
         onClick={() => {
           if (!isPlaying && index < dates.length - 1) onChange(index + 1);
           setIsPlaying((value) => !value);
@@ -93,7 +78,7 @@ export const DateScrubber = ({
       >
         {isPlaying ? "Pause" : "Play"}
       </button>
-      <label style={{ display: "flex", alignItems: "center" }}>
+      <label className="flex items-center">
         <input
           name="i"
           type="range"
@@ -102,13 +87,13 @@ export const DateScrubber = ({
           max={Math.max(dates.length - 1, 0)}
           value={index}
           step={1}
-          style={{ width: "180px" }}
+          className="w-[180px]"
           onChange={(event) => {
             setIsPlaying(false);
             onChange(event.currentTarget.valueAsNumber);
           }}
         />
-        <output name="o" style={{ marginLeft: "0.4em" }}>
+        <output name="o" className="ml-[0.4em]">
           {selectedDate?.toLocaleDateString()}
         </output>
       </label>

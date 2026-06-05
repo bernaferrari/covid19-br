@@ -1,4 +1,3 @@
-import { Box, Container, Flex, Heading, Separator, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import ArchiveBanner from "../components/ArchiveBanner";
 import Footer from "../components/Footer";
@@ -6,89 +5,81 @@ import GetCovidDataComp from "../components/GetCovidDataComp";
 import Header from "../components/Header";
 import News from "../components/News";
 import OverallInfo from "../components/OverallInfo";
+import { Separator } from "@/components/ui/separator";
 import BrazilInteractive from "../components/d3/DailyMapSpikesBrazil";
 import ParanaFilledInteractive from "../components/d3/DailyMapFilledParana";
 import StatesLines from "../components/d3/DailyLinesBrazil";
 import TopGrowing from "../components/d3/TopGrowing";
 
 const IndexPage: NextPage = () => (
-  <Box pb={16}>
+  <div className="pb-16">
     <Header />
 
-    <Box as="main">
-      <Container maxW="3xl" pt={{ base: 24, md: 40 }} pb={16}>
+    <main>
+      <section className="mx-auto max-w-3xl px-4 pt-24 pb-16 md:pt-40">
         <ArchiveBanner />
 
-        <Flex
-          align="flex-start"
-          direction={{ base: "column", md: "row" }}
-          gap={{ base: 8, md: 12 }}
-        >
-          <Box flex="1" p={{ base: 0, md: 6 }}>
-            <Heading as="h1" size="xl" fontWeight="semibold">
-              Portal COVID-19 no{" "}
-              <Box as="span" color="purple.500">
-                Paraná
-              </Box>
-            </Heading>
+        <div className="flex flex-col items-start gap-8 md:flex-row md:gap-12">
+          <div className="flex-1 md:p-6">
+            <h1 className="text-3xl font-semibold">
+              Portal COVID-19 no <span className="text-primary">Paraná</span>
+            </h1>
 
-            <Text mt={4} fontSize="sm" lineHeight="tall">
+            <p className="mt-4 text-sm leading-7">
               Este portal tem por objetivo agregar informações atualizadas, modelos estatísticos,
               visualizações de dados e links úteis sobre a pandemia COVID-19 no Brasil,
               especialmente no Estado do Paraná.
-            </Text>
+            </p>
 
-            <Text mt={3} fontSize="sm" lineHeight="tall">
+            <p className="mt-3 text-sm leading-7">
               O conteúdo disponibilizado é um esforço conjunto de pesquisadores dos Departamentos de
               Estatística, Informática, Física, Matemática, Design e Saúde da Universidade Federal
               do Paraná e pesquisador do Insper-SP, com o apoio da Direção do Setor de Ciências
               Exatas da UFPR.
-            </Text>
-          </Box>
+            </p>
+          </div>
 
           <OverallInfo />
-        </Flex>
+        </div>
 
-        <Box mt={10}>
+        <div className="mt-10">
           <News />
-        </Box>
-      </Container>
+        </div>
+      </section>
 
       <GetCovidDataComp>
-        <Box bg="gray.50" py={8}>
-          <Container maxW="3xl">
-            <Heading size="sm" textAlign="center">
-              Evolução dos casos
-            </Heading>
+        <section className="bg-gray-50 py-8">
+          <div className="mx-auto max-w-3xl px-4">
+            <h2 className="text-center text-sm font-semibold">Evolução dos casos</h2>
 
-            <Box mt={6} textAlign="center">
+            <div className="mt-6 text-center">
               <div id="externalDiv">
                 <TopGrowing />
               </div>
-            </Box>
-          </Container>
-        </Box>
+            </div>
+          </div>
+        </section>
 
-        <Container maxW="3xl" py={10}>
+        <section className="mx-auto max-w-3xl px-4 py-10">
           <ParanaFilledInteractive />
-        </Container>
+        </section>
 
-        <Separator my={4} />
+        <Separator className="my-4" />
 
-        <Container maxW="3xl" py={10}>
+        <section className="mx-auto max-w-3xl px-4 py-10">
           <BrazilInteractive />
-        </Container>
+        </section>
 
-        <Separator my={4} />
+        <Separator className="my-4" />
       </GetCovidDataComp>
 
-      <Container maxW="3xl" py={10}>
+      <section className="mx-auto max-w-3xl px-4 py-10">
         <StatesLines />
-      </Container>
-    </Box>
+      </section>
+    </main>
 
     <Footer />
-  </Box>
+  </div>
 );
 
 export default IndexPage;

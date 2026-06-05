@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![Chakra UI](https://img.shields.io/badge/Chakra--UI-319795?style=flat&logo=chakra-ui&logoColor=white)](https://chakra-ui.com/)
+[![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-111111?style=flat&logo=shadcnui&logoColor=white)](https://ui.shadcn.com/)
 
 O **Portal COVID-19 Paraná** reúne visualizações interativas, modelos estatísticos e dados históricos sobre a pandemia no Paraná e no Brasil. Este projeto é fruto de um esforço multidisciplinar de pesquisadores da **Universidade Federal do Paraná (UFPR)**, abrangendo os departamentos de Estatística, Informática, Física, Matemática, Design e Saúde, com apoio de parceiros externos como o Insper-SP.
 
@@ -29,7 +29,7 @@ O desenvolvimento desta plataforma serviu de base para estudos em Interação Hu
 
 ## 🚀 Tecnologias
 
-- **Frontend:** Next.js, TypeScript, Chakra UI.
+- **Frontend:** Next.js, TypeScript, Tailwind CSS, shadcn/ui.
 - **Visualização de Dados:** D3.js, TopoJSON.
 - **Backend/Data Pipeline:** Python (scripts históricos em `scripts/`).
 
@@ -53,7 +53,7 @@ pnpm export
 
 ## 📂 Estrutura do Repositório
 
-- `pages/` & `components/`: Interface do usuário construída com Chakra UI.
+- `pages/` & `components/`: Interface do usuário.
 - `components/d3/`: Visualizações em D3.
 - `public/`: Ativos estáticos e snapshots de dados (CSVs).
 - `scripts/`: Scripts Python utilizados historicamente para coleta e processamento (JHU, Brasil.IO).

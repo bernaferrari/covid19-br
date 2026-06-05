@@ -1,5 +1,3 @@
-import { Flex } from "@chakra-ui/react";
-import styled from "@emotion/styled";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   type DailyMapData,
@@ -7,14 +5,6 @@ import {
   renderParanaFilledMap,
 } from "./dailyMapRenderers";
 import { DateScrubber, type CaseMetric, metricOptions, RadioGroup } from "./mapControls";
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-flow: row wrap;
-  align-items: center;
-  margin: 12px;
-`;
 
 export default function DailyMapFilledParana() {
   const [metric, setMetric] = useState<CaseMetric>("c");
@@ -46,38 +36,22 @@ export default function DailyMapFilledParana() {
   return (
     <div className="App">
       <div id="observablehq-cf886714">
-        <Container>
-          <Flex
-            rounded={8}
-            borderWidth="1px"
-            pl={4}
-            m={4}
-            minH={10}
-            className="observablehq-viewof-confirmed_or_deaths"
-            align="center"
-          >
+        <div className="m-3 flex flex-row flex-wrap items-center justify-center">
+          <div className="m-4 flex min-h-10 items-center rounded-lg border pl-4 observablehq-viewof-confirmed_or_deaths">
             <RadioGroup
               name="confirmed_or_deaths"
               options={metricOptions}
               value={metric}
               onChange={setMetric}
             />
-          </Flex>
-          <Flex
-            w={380}
-            minH={10}
-            rounded={8}
-            align="center"
-            borderWidth="1px"
-            pr={4}
-            className="observablehq-viewof-day"
-          >
+          </div>
+          <div className="flex min-h-10 w-[380px] items-center rounded-lg border pr-4 observablehq-viewof-day">
             {mapData ? (
               <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
             ) : null}
-          </Flex>
-        </Container>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          </div>
+        </div>
+        <div className="flex items-center justify-center">
           <div ref={legendRef} className="observablehq-colorlegend" />
         </div>
         <div ref={mapRef} className="observablehq-map_spike" />

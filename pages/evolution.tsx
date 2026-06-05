@@ -1,11 +1,13 @@
-import { Box, Button, Container, Flex, Image, Link, Separator, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
+import Image from "next/image";
 import ArchiveBanner from "../components/ArchiveBanner";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import OtherSources from "../components/OtherSources";
 import RelatedLinksList from "../components/RelatedLinksList";
 import { SectionTitleAbout } from "../components/SectionTitles";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 type AccessOtherSiteProps = {
   title: string;
@@ -16,58 +18,43 @@ type AccessOtherSiteProps = {
 };
 
 const AccessOtherSite = ({ title, subtitle, access, src, url }: AccessOtherSiteProps) => (
-  <Box p={2} w={{ base: "100%", md: "50%" }}>
-    <Box
-      display="inline-flex"
-      rounded="lg"
-      bg="white"
-      borderWidth={1}
-      p={2}
-      w="100%"
-      transition="all 0.2s ease"
-      _hover={{ borderColor: "purple.400", shadow: "md" }}
-    >
-      <Box w="100%">
-        <Link href={url} target="_blank" rel="noopener noreferrer" display="block">
-          <Flex align="center">
-            <Box flex="none">
-              <Image
-                rounded="lg"
-                boxSize="96px"
-                objectFit="cover"
-                src={src}
-                alt={`Preview ${title}`}
-              />
-            </Box>
-            <Box ml={4} flex="1 1 auto">
-              <Text fontSize="lg" fontWeight="semibold" lineHeight="short">
-                {title}
-              </Text>
-              <Text mt={2} color="gray.500" fontSize="sm">
-                {subtitle}
-              </Text>
-            </Box>
-          </Flex>
+  <div className="w-full p-2 md:w-1/2">
+    <div className="inline-flex w-full rounded-lg border bg-white p-2 transition hover:border-primary/60 hover:shadow-md">
+      <a href={url} target="_blank" rel="noopener noreferrer" className="block w-full">
+        <div className="flex items-center">
+          <div className="shrink-0">
+            <Image
+              className="size-24 rounded-lg object-cover"
+              src={src}
+              alt={`Preview ${title}`}
+              width={96}
+              height={96}
+            />
+          </div>
+          <div className="ml-4 flex-auto">
+            <p className="text-lg font-semibold leading-tight">{title}</p>
+            <p className="mt-2 text-sm text-gray-500">{subtitle}</p>
+          </div>
+        </div>
 
-          <Button mt={3} w="100%" colorScheme="purple" variant="outline">
-            {access}
-          </Button>
-        </Link>
-      </Box>
-    </Box>
-  </Box>
+        <Button className="mt-3 w-full" variant="outline">
+          {access}
+        </Button>
+      </a>
+    </div>
+  </div>
 );
 
 const EvolutionPage: NextPage = () => (
-  <Box pb={16}>
+  <div className="pb-16">
     <Header />
-    <Box as="main">
-      <Box pt={{ base: 24, md: 40 }}>
+    <main>
+      <div className="pt-24 md:pt-40">
         <ArchiveBanner />
-      </Box>
+      </div>
 
-      <Box bg="gray.50" py={10}>
-        <Flex maxW="3xl" mx="auto" px={2} wrap="wrap" justify="center" align="stretch">
+      <section className="bg-gray-50 py-10">
+        <div className="mx-auto flex max-w-3xl flex-wrap items-stretch justify-center px-2">
           <AccessOtherSite
             title="Monitoramento do R(t)"
             subtitle="Monitoramento estatístico no Brasil e Paraná."
@@ -96,29 +83,29 @@ const EvolutionPage: NextPage = () => (
             src="/elias_preview.jpg"
             url="http://shiny.leg.ufpr.br/elias/covid19time/"
           />
-        </Flex>
+        </div>
 
-        <Separator my={8} color="gray.300" />
+        <Separator className="my-8 bg-gray-300" />
 
-        <Container maxW="3xl">
+        <section className="mx-auto max-w-3xl px-4">
           <SectionTitleAbout>Outras Fontes</SectionTitleAbout>
           <OtherSources />
-        </Container>
+        </section>
 
-        <Separator my={8} color="gray.300" />
+        <Separator className="my-8 bg-gray-300" />
 
-        <Container maxW="3xl">
+        <section className="mx-auto max-w-3xl px-4">
           <SectionTitleAbout>Documentos e Links</SectionTitleAbout>
-          <Box h={4} />
+          <div className="h-4" />
           <RelatedLinksList />
-        </Container>
-      </Box>
-    </Box>
+        </section>
+      </section>
+    </main>
 
-    <Box h="16px" />
+    <div className="h-4" />
 
     <Footer />
-  </Box>
+  </div>
 );
 
 export default EvolutionPage;

@@ -1,16 +1,6 @@
-import {
-  Badge,
-  Flex,
-  Heading,
-  Icon,
-  LinkBox,
-  LinkOverlay,
-  SimpleGrid,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
 import type { IconType } from "react-icons";
 import { FaFileAlt, FaInfoCircle, FaNewspaper } from "react-icons/fa";
+import { Badge } from "@/components/ui/badge";
 
 type DocumentKind = "article" | "info" | "document";
 
@@ -105,89 +95,71 @@ const documents: RelatedDocument[] = [
 
 const kindConfig: Record<
   DocumentKind,
-  { label: string; icon: IconType; colorScheme: "green" | "orange" | "gray" }
+  { label: string; icon: IconType; tone: "green" | "orange" | "gray" }
 > = {
-  article: { label: "Artigo", icon: FaNewspaper, colorScheme: "green" },
-  info: { label: "Informação", icon: FaInfoCircle, colorScheme: "orange" },
-  document: { label: "Documento", icon: FaFileAlt, colorScheme: "gray" },
+  article: { label: "Artigo", icon: FaNewspaper, tone: "green" },
+  info: { label: "Informação", icon: FaInfoCircle, tone: "orange" },
+  document: { label: "Documento", icon: FaFileAlt, tone: "gray" },
 };
 
+const toneClasses = {
+  green: {
+    icon: "bg-green-100 text-green-700",
+    border: "hover:border-green-300",
+    badge: "bg-green-100 text-green-800",
+  },
+  orange: {
+    icon: "bg-orange-100 text-orange-700",
+    border: "hover:border-orange-300",
+    badge: "bg-orange-100 text-orange-800",
+  },
+  gray: {
+    icon: "bg-gray-100 text-gray-700",
+    border: "hover:border-gray-300",
+    badge: "bg-gray-100 text-gray-800",
+  },
+} satisfies Record<string, Record<string, string>>;
+
 const RelatedLinksList = () => (
-  <SimpleGrid w="full" gap={{ base: 4, md: 5 }} columns={{ base: 1, md: 2, xl: 3 }}>
+  <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-3">
     {documents.map((document) => {
-      const { label, icon, colorScheme } = kindConfig[document.kind];
+      const { label, icon: Icon, tone } = kindConfig[document.kind];
       const isExternal = document.url.startsWith("http");
+      const classes = toneClasses[tone];
 
       return (
-        <LinkBox
+        <article
           key={document.url}
-          as="article"
-          h="full"
-          borderWidth="1px"
-          borderColor="gray.200"
-          rounded="xl"
-          bg="white"
-          shadow="sm"
-          transition="all 0.2s ease"
-          _hover={{
-            shadow: "md",
-            borderColor: `${colorScheme}.300`,
-          }}
+          className={`h-full rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md ${classes.border}`}
         >
-          <Stack gap={4} p={{ base: 4, sm: 5 }} h="full">
-            <Flex align="center" gap={3}>
-              <Flex
-                rounded="full"
-                w={10}
-                h={10}
-                align="center"
-                justify="center"
-                bg={`${colorScheme}.100`}
-                color={`${colorScheme}.600`}
-                transition="all 0.2s ease"
-                _groupHover={{ color: `${colorScheme}.700` }}
+          <a
+            href={document.url}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+            className="flex h-full flex-col gap-4 p-4 sm:p-5"
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className={`flex size-10 items-center justify-center rounded-full ${classes.icon}`}
               >
-                <Icon as={icon} boxSize={5} />
-              </Flex>
-              <Stack gap={1} flex="1" minW={0}>
-                <Badge
-                  colorScheme={colorScheme}
-                  variant="subtle"
-                  textTransform="uppercase"
-                  letterSpacing="wide"
-                  fontSize="xs"
-                  w="fit-content"
-                >
-                  {label}
-                </Badge>
-                <Heading
-                  as="h3"
-                  fontSize="md"
-                  lineHeight="short"
-                  fontWeight="semibold"
-                  lineClamp={3}
-                >
-                  <LinkOverlay
-                    href={document.url}
-                    target={isExternal ? "_blank" : undefined}
-                    rel={isExternal ? "noopener noreferrer" : undefined}
-                  >
-                    {document.title}
-                  </LinkOverlay>
-                </Heading>
-              </Stack>
-            </Flex>
+                <Icon className="size-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <Badge className={`mb-1 uppercase tracking-wide ${classes.badge}`}>{label}</Badge>
+                <h3 className="line-clamp-3 text-base font-semibold leading-tight">
+                  {document.title}
+                </h3>
+              </div>
+            </div>
 
             {document.author && (
-              <Text fontSize="sm" color="gray.600" lineClamp={2}>
-                {document.author}
-              </Text>
+              <p className="line-clamp-2 text-sm text-gray-600">{document.author}</p>
             )}
-          </Stack>
-        </LinkBox>
+          </a>
+        </article>
       );
     })}
-  </SimpleGrid>
+  </div>
 );
 
 export default RelatedLinksList;

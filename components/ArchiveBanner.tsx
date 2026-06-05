@@ -1,47 +1,31 @@
-import { Alert, Box, Link } from "@chakra-ui/react";
+import { Info } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const ArchiveBanner = () => (
-  <Box maxW="3xl" mx="auto" px={{ base: 4, md: 6 }} py={4}>
-    <Alert.Root
-      variant="subtle"
-      colorPalette="purple"
-      alignItems="flex-start"
-      rounded="xl"
-      borderWidth="1px"
-      borderColor="purple.200"
-      shadow="sm"
-      px={{ base: 4, md: 5 }}
-      py={{ base: 4, md: 5 }}
-      gap={3}
-    >
-      <Alert.Indicator boxSize={5} />
-      <Alert.Content>
-        <Alert.Title
-          fontSize="sm"
-          fontWeight="semibold"
-          textTransform="uppercase"
-          letterSpacing="wide"
-        >
+  <div className="mx-auto max-w-3xl px-4 py-4 md:px-6">
+    <Alert className="items-start gap-3 border-primary/30 px-4 py-4 shadow-sm md:px-5 md:py-5">
+      <Info className="mt-0.5 size-5 text-primary" />
+      <div>
+        <AlertTitle className="text-sm font-semibold uppercase tracking-wide">
           Portal arquivado
-        </Alert.Title>
-        <Alert.Description fontSize="sm" color="gray.700">
+        </AlertTitle>
+        <AlertDescription className="text-sm text-gray-700">
           Mantemos este site como registro histórico da mobilização coletiva nos primeiros anos da
           pandemia (2020-2021). Os dados não são mais atualizados e os serviços estão indisponíveis.{" "}
           Para saber mais sobre o contexto e as limitações atuais, consulte o{" "}
-          <Link
+          <a
             href="https://github.com/bernaferrari/covid19-br"
             target="_blank"
             rel="noopener noreferrer"
-            fontWeight="semibold"
-            color="purple.600"
+            className="font-semibold text-primary hover:underline"
           >
             README do repositório
-          </Link>
+          </a>
           .
-        </Alert.Description>
-      </Alert.Content>
-    </Alert.Root>
-  </Box>
+        </AlertDescription>
+      </div>
+    </Alert>
+  </div>
 );
 
 export default ArchiveBanner;

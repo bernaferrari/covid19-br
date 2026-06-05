@@ -1,5 +1,3 @@
-import { Flex } from "@chakra-ui/react";
-import styled from "@emotion/styled";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   type DailyMapData,
@@ -9,13 +7,6 @@ import {
 import { DateScrubber, type CaseMetric, metricOptions, RadioGroup } from "./mapControls";
 
 type ScaleType = "bolhas" | "espinhos";
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-flow: row wrap;
-  align-items: center;
-`;
 
 const scaleOptions: { label: string; value: ScaleType }[] = [
   { label: "bolhas", value: "bolhas" },
@@ -52,56 +43,31 @@ export default function DailyMapSpikesBrazil() {
   return (
     <div className="Map">
       <div id="observablehq-3176bb0d">
-        <Container>
-          <Flex
-            rounded={8}
-            borderWidth="1px"
-            pl={4}
-            m={2}
-            minH={10}
-            className="observablehq-viewof-confirmed_or_deaths"
-            align="center"
-          >
+        <div className="flex flex-row flex-wrap items-center justify-center">
+          <div className="m-2 flex min-h-10 items-center rounded-lg border pl-4 observablehq-viewof-confirmed_or_deaths">
             <RadioGroup
               name="confirmed_or_deaths"
               options={metricOptions}
               value={metric}
               onChange={setMetric}
             />
-          </Flex>
-          <Flex
-            rounded={8}
-            borderWidth="1px"
-            pl={4}
-            m={2}
-            minH={10}
-            className="observablehq-viewof-scale"
-            align="center"
-          >
+          </div>
+          <div className="m-2 flex min-h-10 items-center rounded-lg border pl-4 observablehq-viewof-scale">
             <RadioGroup
               name="scale"
               options={scaleOptions}
               value={scaleType}
               onChange={setScaleType}
             />
-          </Flex>
-        </Container>
-        <Container>
-          <Flex
-            w={380}
-            h={10}
-            rounded={8}
-            mt={2}
-            mb={8}
-            align="center"
-            borderWidth="1px"
-            className="observablehq-viewof-day"
-          >
+          </div>
+        </div>
+        <div className="flex flex-row flex-wrap items-center justify-center">
+          <div className="mt-2 mb-8 flex h-10 w-[380px] items-center rounded-lg border observablehq-viewof-day">
             {mapData ? (
               <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
             ) : null}
-          </Flex>
-        </Container>
+          </div>
+        </div>
 
         <div ref={mapRef} className="observablehq-map" />
         <div className="observablehq-style" style={{ display: "none" }} />

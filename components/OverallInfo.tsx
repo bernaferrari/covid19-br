@@ -1,4 +1,3 @@
-import { Box, Link, SimpleGrid, Text } from "@chakra-ui/react";
 import { timeParse } from "d3";
 import type { DSVRowString } from "d3";
 import { useEffect, useMemo, useState } from "react";
@@ -40,9 +39,7 @@ const OverallInfo = () => {
   }, []);
 
   const stats = useMemo(() => {
-    if (data.length === 0) {
-      return null;
-    }
+    if (data.length === 0) return null;
 
     const brazilTotals = data.reduce(
       (acc, row) => {
@@ -52,7 +49,6 @@ const OverallInfo = () => {
       },
       { confirmed: 0, deaths: 0 },
     );
-
     const parana = data.find((row) => row.state === "PR");
 
     return {
@@ -65,61 +61,48 @@ const OverallInfo = () => {
   }, [data]);
 
   if (!stats) {
-    return <Box p={6} flex="1" rounded="lg" borderWidth="1px" minH="196px" />;
+    return <div className="min-h-[196px] flex-1 rounded-lg border p-6" />;
   }
 
   const parsed = parseDate?.(stats.lastDate);
   const formattedDate = parsed ? parsed.toLocaleDateString("pt-BR") : stats.lastDate;
-
   const cards = [
     {
       label: "Casos no Brasil",
       value: formatNumber(stats.brazilConfirmed),
-      color: "orange.400",
+      color: "text-orange-400",
     },
-    {
-      label: "Óbitos no Brasil",
-      value: formatNumber(stats.brazilDeaths),
-      color: "pink.500",
-    },
+    { label: "Óbitos no Brasil", value: formatNumber(stats.brazilDeaths), color: "text-pink-600" },
     {
       label: "Casos no Paraná",
       value: formatNumber(stats.paranaConfirmed),
-      color: "orange.400",
+      color: "text-orange-400",
     },
-    {
-      label: "Óbitos no Paraná",
-      value: formatNumber(stats.paranaDeaths),
-      color: "pink.500",
-    },
+    { label: "Óbitos no Paraná", value: formatNumber(stats.paranaDeaths), color: "text-pink-600" },
   ];
 
   return (
-    <Box p={6} flex="1" rounded="lg" borderWidth="1px" bg="white">
-      <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+    <aside className="flex-1 rounded-lg border bg-white p-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {cards.map((card) => (
-          <Box key={card.label} borderWidth="1px" rounded="md" p={4} bg="gray.50">
-            <Text fontSize="sm" color="gray.600">
-              {card.label}
-            </Text>
-            <Text fontSize="2xl" fontWeight="bold" color={card.color} mt={1}>
-              {card.value}
-            </Text>
-          </Box>
+          <div key={card.label} className="rounded-md border bg-gray-50 p-4">
+            <p className="text-sm text-gray-600">{card.label}</p>
+            <p className={`mt-1 text-2xl font-bold ${card.color}`}>{card.value}</p>
+          </div>
         ))}
-      </SimpleGrid>
+      </div>
 
-      <Text textAlign="center" mt={4} fontSize="xs">
-        <Link
+      <p className="mt-4 text-center text-xs">
+        <a
           href="https://brasil.io/dataset/covid19/"
-          color="purple.500"
           target="_blank"
           rel="noopener noreferrer"
+          className="text-primary hover:underline"
         >
           última atualização: {formattedDate} (fonte Brasil.IO)
-        </Link>
-      </Text>
-    </Box>
+        </a>
+      </p>
+    </aside>
   );
 };
 

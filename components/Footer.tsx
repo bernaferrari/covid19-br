@@ -1,4 +1,3 @@
-import { Box, Container, Link as ChakraLink, Stack, Text } from "@chakra-ui/react";
 import Image from "next/image";
 
 const partners = [
@@ -33,9 +32,9 @@ const partners = [
 ];
 
 const Footer = () => (
-  <Box as="footer" borderTopWidth="1px" bg="white" py={6}>
-    <Container maxW="6xl">
-      <Stack direction={{ base: "column", md: "row" }} justify="center" align="center" gap={8}>
+  <footer className="border-t bg-white py-6">
+    <div className="mx-auto max-w-6xl px-4">
+      <div className="flex flex-col items-center justify-center gap-8 md:flex-row">
         {partners.map(({ href, src, alt, width, height }) => {
           const logo = (
             <Image
@@ -49,35 +48,36 @@ const Footer = () => (
           );
 
           return href ? (
-            <ChakraLink key={alt} href={href} target="_blank" rel="noopener noreferrer">
+            <a key={alt} href={href} target="_blank" rel="noopener noreferrer">
               {logo}
-            </ChakraLink>
+            </a>
           ) : (
-            <Box key={alt}>{logo}</Box>
+            <div key={alt}>{logo}</div>
           );
         })}
-      </Stack>
+      </div>
 
-      <Box textAlign="center" mt={6}>
-        <Text fontSize="xs" color="gray.600" lineHeight="tall">
+      <div className="mt-6 text-center">
+        <p className="text-xs leading-6 text-gray-600">
           Developed &amp; designed by{" "}
-          <ChakraLink
+          <a
             href="https://github.com/bernaferrari"
             target="_blank"
             rel="noopener noreferrer"
+            className="font-medium text-primary hover:underline"
           >
             Bernardo Ferrari
-          </ChakraLink>{" "}
+          </a>{" "}
           &amp; Rafael Ancara.
           <br />
           Mantido por Fernanda Yukari Kawasaki (IC voluntária), Natália Yada e Tamy Beppler (com
           financiamento da bolsa CAPES para combate ao COVID-19).
           <br />
           Administrado por André Grégio.
-        </Text>
-      </Box>
-    </Container>
-  </Box>
+        </p>
+      </div>
+    </div>
+  </footer>
 );
 
 export default Footer;

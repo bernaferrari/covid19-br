@@ -1,25 +1,13 @@
-import { Box, Button, Container, Flex, Link as ChakraLink } from "@chakra-ui/react";
 import Image from "next/image";
-import NextLink from "next/link";
-import type { ComponentProps } from "react";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-type HeaderProps = ComponentProps<typeof Box>;
-
-const Header = (props: HeaderProps) => (
-  <Box
-    as="header"
-    position="fixed"
-    top={0}
-    left={0}
-    right={0}
-    zIndex={10}
-    borderBottomWidth="1px"
-    bg="white"
-    {...props}
-  >
-    <Container maxW="6xl" py={2}>
-      <Flex align="center" justify="space-between">
-        <ChakraLink as={NextLink} href="/" display="inline-flex" alignItems="center">
+const Header = () => (
+  <header className="fixed inset-x-0 top-0 z-10 border-b bg-white">
+    <div className="mx-auto max-w-6xl px-4 py-2">
+      <div className="flex items-center justify-between">
+        <Link href="/" className="inline-flex items-center">
           <Image
             src="/header_footer/img_logo.png"
             alt="Portal COVID-19 Paraná"
@@ -27,21 +15,20 @@ const Header = (props: HeaderProps) => (
             height={107}
             style={{ width: 120, height: "auto" }}
           />
-        </ChakraLink>
+        </Link>
 
-        <Flex align="center" color="gray.600" gap={2}>
-          <Button asChild variant="ghost">
-            <NextLink href="/evolution">Monitoramento</NextLink>
-          </Button>
-          <Button asChild variant="ghost">
-            <NextLink href="/about">Projeções</NextLink>
-          </Button>
-          <ChakraLink
+        <div className="flex items-center gap-2 text-gray-600">
+          <Link href="/evolution" className={cn(buttonVariants({ variant: "ghost" }))}>
+            Monitoramento
+          </Link>
+          <Link href="/about" className={cn(buttonVariants({ variant: "ghost" }))}>
+            Projeções
+          </Link>
+          <a
             href="https://www.ufpr.br/portalufpr/"
             target="_blank"
             rel="noopener noreferrer"
-            display="inline-flex"
-            alignItems="center"
+            className="inline-flex items-center"
           >
             <Image
               src="/header_footer/img_ufpr.png"
@@ -50,11 +37,11 @@ const Header = (props: HeaderProps) => (
               height={118}
               style={{ width: 80, height: "auto" }}
             />
-          </ChakraLink>
-        </Flex>
-      </Flex>
-    </Container>
-  </Box>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
 );
 
 export default Header;

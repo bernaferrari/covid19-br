@@ -1,8 +1,7 @@
-import { Box, Flex } from "@chakra-ui/react";
-import styled from "@emotion/styled";
 import * as d3 from "d3";
 import { groups, least } from "d3-array";
 import { useEffect, useRef, useState } from "react";
+import { RadioGroup } from "./mapControls";
 
 type Indicator = "confirmed" | "deaths" | "confirmed_per_100k_inhabitants";
 
@@ -24,13 +23,6 @@ type ChartData = {
   series: StateSeries[];
   dates: Date[];
 };
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-flow: row wrap;
-  align-items: center;
-`;
 
 const indicatorOptions: { label: string; value: Indicator }[] = [
   { label: "casos", value: "confirmed" },
@@ -304,44 +296,18 @@ export default function DailyLinesBrazil() {
   return (
     <div className="Map">
       <div id="observablehq-65e7d81f">
-        <Container>
-          <Flex
-            rounded={8}
-            borderWidth="1px"
-            pl={4}
-            m={2}
-            minH={10}
-            className="observablehq-viewof-indicator"
-            align="center"
-            alignContent="center"
-          >
-            <form>
-              {indicatorOptions.map((option) => (
-                <label
-                  key={option.value}
-                  style={{
-                    display: "inline-block",
-                    margin: "5px 10px 3px 0",
-                    fontSize: "0.85em",
-                  }}
-                >
-                  <input
-                    type="radio"
-                    name="input"
-                    aria-label={option.label}
-                    value={option.value}
-                    checked={indicator === option.value}
-                    onChange={() => setIndicator(option.value)}
-                    style={{ verticalAlign: "baseline" }}
-                  />{" "}
-                  {option.label}
-                </label>
-              ))}
-            </form>
-          </Flex>
-        </Container>
+        <div className="flex flex-row flex-wrap items-center justify-center">
+          <div className="m-2 flex min-h-10 items-center rounded-lg border pl-4 observablehq-viewof-indicator">
+            <RadioGroup
+              name="input"
+              options={indicatorOptions}
+              value={indicator}
+              onChange={setIndicator}
+            />
+          </div>
+        </div>
 
-        <Box h={400} id="externalDivForDaily" ref={chartRef} className="observablehq-chart" />
+        <div id="externalDivForDaily" ref={chartRef} className="h-[400px] observablehq-chart" />
       </div>
     </div>
   );
