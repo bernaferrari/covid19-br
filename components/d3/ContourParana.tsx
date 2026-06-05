@@ -19,8 +19,8 @@ export default function ContourParana() {
   }, []);
 
   return (
-    <div id="observablehq-contour-state">
-      <div ref={mapRef} className="observablehq-map" />
+    <div>
+      <div ref={mapRef} />
     </div>
   );
 }

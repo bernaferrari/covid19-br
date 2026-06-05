@@ -53,7 +53,7 @@ const IndexPage: NextPage = () => (
             <h2 className="text-center text-sm font-semibold">Evolução dos casos</h2>
 
             <div className="mt-6 text-center">
-              <div id="externalDiv">
+              <div id="top-growing-chart">
                 <TopGrowing />
               </div>
             </div>

@@ -99,8 +99,8 @@ const buildChartData = (rows: StateRow[], indicator: Indicator): ChartData => {
 
 const renderChart = (container: HTMLDivElement, rows: StateRow[], indicator: Indicator) => {
   const data = buildChartData(rows, indicator);
-  const width = document.getElementById("externalDivForDaily")?.clientWidth ?? 700;
-  const height = document.getElementById("externalDivForDaily")?.clientHeight ?? 400;
+  const width = document.getElementById("states-daily-chart")?.clientWidth ?? 700;
+  const height = document.getElementById("states-daily-chart")?.clientHeight ?? 400;
   const margin = { top: 40, right: 40, bottom: 40, left: 60 };
 
   const x = d3
@@ -294,10 +294,10 @@ export default function DailyLinesBrazil() {
   }, [indicator]);
 
   return (
-    <div className="Map">
-      <div id="observablehq-65e7d81f">
+    <div>
+      <div>
         <div className="flex flex-row flex-wrap items-center justify-center">
-          <div className="m-2 flex h-8 items-center observablehq-viewof-indicator">
+          <div className="m-2 flex h-8 items-center">
             <TabsGroup
               label="Selecionar indicador"
               options={indicatorOptions}
@@ -307,7 +307,7 @@ export default function DailyLinesBrazil() {
           </div>
         </div>
 
-        <div id="externalDivForDaily" ref={chartRef} className="h-[400px] observablehq-chart" />
+        <div id="states-daily-chart" ref={chartRef} className="h-[400px]" />
       </div>
     </div>
   );

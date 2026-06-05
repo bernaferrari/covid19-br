@@ -19,9 +19,8 @@ export default function ContourBrazil() {
   }, []);
 
   return (
-    <div id="observablehq-c65430d5">
-      <div ref={mapRef} className="observablehq-map" />
-      <div className="observablehq-style" style={{ display: "none" }} />
+    <div>
+      <div ref={mapRef} />
     </div>
   );
 }

@@ -34,10 +34,10 @@ export default function DailyMapFilledParana() {
   }, [index, mapData, metric]);
 
   return (
-    <div className="App">
-      <div id="observablehq-cf886714">
+    <div>
+      <div>
         <div className="m-3 flex flex-row flex-wrap items-center justify-center">
-          <div className="m-4 flex h-8 items-center observablehq-viewof-confirmed_or_deaths">
+          <div className="m-4 flex h-8 items-center">
             <TabsGroup
               label="Selecionar métrica"
               options={metricOptions}
@@ -45,18 +45,16 @@ export default function DailyMapFilledParana() {
               onChange={setMetric}
             />
           </div>
-          <div className="flex h-8 w-fit items-center rounded-lg border observablehq-viewof-day">
+          <div className="flex h-8 w-fit items-center rounded-lg border">
             {mapData ? (
               <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
             ) : null}
           </div>
         </div>
         <div className="flex items-center justify-center">
-          <div ref={legendRef} className="observablehq-colorlegend" />
+          <div ref={legendRef} />
         </div>
-        <div ref={mapRef} className="observablehq-map_spike" />
-        <div className="observablehq-style" style={{ display: "none" }} />
-        <div className="observablehq-indexSetter" style={{ display: "none" }} />
+        <div ref={mapRef} />
       </div>
     </div>
   );

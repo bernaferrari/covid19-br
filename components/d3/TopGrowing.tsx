@@ -195,7 +195,7 @@ const TopGrowing = () => {
     loadTopGrowingData().then(({ allTimeseries, cities }) => {
       if (!isMounted || !rootRef.current) return;
 
-      const width = document.getElementById("externalDiv")?.clientWidth ?? 700;
+      const width = document.getElementById("top-growing-chart")?.clientWidth ?? 700;
       const columns = width / 150 > 4 ? 4 : 2;
       const padding = 4;
       const chartWidth = width / columns - padding * 2;
@@ -279,9 +279,9 @@ const TopGrowing = () => {
   }, []);
 
   return (
-    <div className="TopGrowing">
-      <div id="observablehq-b9b69f31">
-        <div ref={rootRef} className="observablehq-table" />
+    <div>
+      <div>
+        <div ref={rootRef} />
       </div>
     </div>
   );

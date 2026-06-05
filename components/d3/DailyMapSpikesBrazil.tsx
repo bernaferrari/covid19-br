@@ -41,10 +41,10 @@ export default function DailyMapSpikesBrazil() {
   }, [index, mapData, metric, scaleType]);
 
   return (
-    <div className="Map">
-      <div id="observablehq-3176bb0d">
+    <div>
+      <div>
         <div className="flex flex-row flex-wrap items-center justify-center">
-          <div className="m-2 flex h-8 items-center observablehq-viewof-confirmed_or_deaths">
+          <div className="m-2 flex h-8 items-center">
             <TabsGroup
               label="Selecionar métrica"
               options={metricOptions}
@@ -52,7 +52,7 @@ export default function DailyMapSpikesBrazil() {
               onChange={setMetric}
             />
           </div>
-          <div className="m-2 flex h-8 items-center observablehq-viewof-scale">
+          <div className="m-2 flex h-8 items-center">
             <TabsGroup
               label="Selecionar escala do mapa"
               options={scaleOptions}
@@ -62,17 +62,14 @@ export default function DailyMapSpikesBrazil() {
           </div>
         </div>
         <div className="flex flex-row flex-wrap items-center justify-center">
-          <div className="mt-2 mb-8 flex h-8 w-fit items-center rounded-lg border observablehq-viewof-day">
+          <div className="mt-2 mb-8 flex h-8 w-fit items-center rounded-lg border">
             {mapData ? (
               <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
             ) : null}
           </div>
         </div>
 
-        <div ref={mapRef} className="observablehq-map" />
-        <div className="observablehq-style" style={{ display: "none" }} />
-        <div className="observablehq-draw" style={{ display: "none" }} />
-        <div className="observablehq-indexSetter" style={{ display: "none" }} />
+        <div ref={mapRef} />
       </div>
     </div>
   );
