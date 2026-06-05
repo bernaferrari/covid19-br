@@ -40,7 +40,7 @@ const RelatedLinksList = () => {
     let isMounted = true;
 
     const load = async () => {
-      const [{ csv }] = await Promise.all([import("d3")]);
+      const { csv } = await import("d3");
 
       const [jhuBr, brio] = await Promise.all([
         csv("/current_BR.csv").catch(() => [] as DSVRowString<string>[]),

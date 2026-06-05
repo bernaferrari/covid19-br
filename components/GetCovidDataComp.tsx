@@ -1,13 +1,13 @@
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import type { PropsWithChildren } from "react";
 import { useEffect, useState } from "react";
-import { loadDataIntoCache } from "../utils/fetcher";
+import { preloadCovidData } from "../utils/covidData";
 
 const GetCovidDataComp = ({ children }: PropsWithChildren) => {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    void loadDataIntoCache()
+    void preloadCovidData()
       .then(() => setIsReady(true))
       .catch(() => setIsReady(true));
   }, []);
