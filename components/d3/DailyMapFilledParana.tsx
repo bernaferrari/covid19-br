@@ -1,145 +1,81 @@
-import { Box, Stack, Text } from "@chakra-ui/react";
-import { geoMercator, geoPath, interpolatePurples, max, scaleSequentialSqrt } from "d3";
-import { useMemo, useState } from "react";
-import { feature, mesh } from "topojson-client";
-import type { FeatureCollection, Geometry, MultiLineString } from "geojson";
-import type { GeometryCollection, Topology } from "topojson-specification";
-import {
-  formatDate,
-  formatNumber,
-  getMetricValue,
-  indexByCityCode,
-  latestDate,
-  loadCities,
-  loadMunicipalityDays,
-  loadTopology,
-  metricLabel,
-  type City,
-  type Metric,
-  type MunicipalityDay,
-} from "../../utils/covidData";
-import { ChartFrame, DateSlider, MetricToggle, chartHeight, chartWidth } from "./chartUi";
-import { useAsyncData } from "./useAsyncData";
+import React, { Component } from "react";
+import type { Runtime } from "@observablehq/runtime";
+import { Inspector } from "@observablehq/inspector";
+import { Flex } from "@chakra-ui/react";
+import notebook from "../../from_observablehq/daily_parana_map_filled";
+import styled from "@emotion/styled";
+import { createRuntime } from "../../utils/observableRuntime";
 
-type ParanaData = {
-  topology: Topology;
-  cities: City[];
-  days: MunicipalityDay[];
-};
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+  align-items: center;
+  margin: 12px;
+`;
 
-const loadParanaData = async (): Promise<ParanaData> => {
-  const [topology, cities, days] = await Promise.all([
-    loadTopology("parana"),
-    loadCities(),
-    loadMunicipalityDays("parana"),
-  ]);
+export default class App extends Component {
+  private runtime?: Runtime;
 
-  return { topology, cities, days };
-};
-
-const getParanaFeatures = (topology: Topology) =>
-  feature(topology, topology.objects["41"] as GeometryCollection) as FeatureCollection<
-    Geometry,
-    { cod: number }
-  >;
-
-const DailyMapFilledParana = () => {
-  const state = useAsyncData(loadParanaData);
-  const [metric, setMetric] = useState<Metric>("confirmed");
-  const [dateIndex, setDateIndex] = useState<number | null>(null);
-
-  const model = useMemo(() => {
-    if (state.status !== "ready") return null;
-
-    const dates = [...new Set(state.data.days.map((row) => row.date))].sort();
-    const selectedIndex = dateIndex ?? Math.max(dates.length - 1, 0);
-    const selectedDate = dates[selectedIndex] ?? latestDate(state.data.days);
-    const currentRows = state.data.days.filter((row) => row.date === selectedDate);
-    const valuesByCity = indexByCityCode(currentRows);
-    const citiesByCode = new Map(state.data.cities.map((city) => [city.code, city]));
-    const municipalities = getParanaFeatures(state.data.topology);
-    const boundaries = mesh(
-      state.data.topology,
-      state.data.topology.objects["41"] as GeometryCollection,
-      (a, b) => a !== b,
-    ) as MultiLineString;
-
-    const projection = geoMercator().fitSize([chartWidth, chartHeight], municipalities);
-    const path = geoPath(projection);
-    const maxValue = max(currentRows, (row) => getMetricValue(row, metric)) ?? 0;
-    const color = scaleSequentialSqrt(interpolatePurples).domain([0, maxValue]);
-
-    const leaders = [...currentRows]
-      .sort((a, b) => getMetricValue(b, metric) - getMetricValue(a, metric))
-      .slice(0, 5)
-      .map((row) => ({ ...row, city: citiesByCode.get(row.cityCode) }))
-      .filter((row): row is typeof row & { city: City } => Boolean(row.city));
-
-    return {
-      dates,
-      selectedIndex,
-      selectedDate,
-      municipalities,
-      boundaries,
-      path,
-      color,
-      valuesByCity,
-      leaders,
-    };
-  }, [dateIndex, metric, state]);
-
-  if (state.status === "loading") {
-    return <ChartFrame status="loading" message="Carregando mapa do Paraná..." />;
+  componentDidMount() {
+    this.runtime = createRuntime();
+    this.runtime.module(notebook, (name: string) => {
+      if (name === "viewof confirmed_or_deaths")
+        return Inspector.into("#observablehq-cf886714 .observablehq-viewof-confirmed_or_deaths")();
+      if (name === "viewof day")
+        return Inspector.into("#observablehq-cf886714 .observablehq-viewof-day")();
+      if (name === "colorlegend")
+        return Inspector.into("#observablehq-cf886714 .observablehq-colorlegend")();
+      if (name === "map_spike")
+        return Inspector.into("#observablehq-cf886714 .observablehq-map_spike")();
+      if (name === "style") return Inspector.into("#observablehq-cf886714 .observablehq-style")();
+      if (name === "indexSetter")
+        return Inspector.into("#observablehq-cf886714 .observablehq-indexSetter")();
+    });
   }
 
-  if (state.status === "error") {
-    return <ChartFrame status="error" message="Não foi possível carregar o mapa do Paraná." />;
+  componentWillUnmount() {
+    this.runtime?.dispose();
   }
 
-  if (!model) {
-    return <ChartFrame status="empty" message="Sem dados para o mapa do Paraná." />;
+  render() {
+    return (
+      <div className="App">
+        <div id="observablehq-cf886714">
+          <Container>
+            <Flex
+              rounded={8}
+              borderWidth="1px"
+              pl={4}
+              m={4}
+              minH={10}
+              className="observablehq-viewof-confirmed_or_deaths"
+              align="center"
+            />
+            <Flex
+              w={380}
+              minH={10}
+              rounded={8}
+              align="center"
+              borderWidth="1px"
+              pr={4}
+              className="observablehq-viewof-day"
+            />
+          </Container>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div className="observablehq-colorlegend" />
+          </div>
+          <div className="observablehq-map_spike"></div>
+          <div className="observablehq-style" style={{ display: "none" }}></div>
+          <div className="observablehq-indexSetter" style={{ display: "none" }}></div>
+        </div>
+      </div>
+    );
   }
-
-  return (
-    <Stack gap={4}>
-      <MetricToggle value={metric} onChange={setMetric} />
-      <DateSlider dates={model.dates} index={model.selectedIndex} onChange={setDateIndex} />
-      <Text textAlign="center" fontSize="sm" color="gray.600">
-        {metricLabel(metric)} por município em {formatDate(model.selectedDate)}
-      </Text>
-      <Box overflowX="auto">
-        <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} aria-label="Mapa do Paraná">
-          <rect width={chartWidth} height={chartHeight} fill="#f8fafc" rx={12} />
-          {model.municipalities.features.map((municipality) => {
-            const cityCode = Number(municipality.properties.cod);
-            const row = model.valuesByCity.get(cityCode);
-            const value = row ? getMetricValue(row, metric) : 0;
-
-            return (
-              <path
-                key={cityCode}
-                d={model.path(municipality) ?? undefined}
-                fill={value > 0 ? model.color(value) : "#f3f4f6"}
-                stroke="#ffffff"
-                strokeWidth={0.35}
-              >
-                <title>
-                  {cityCode}: {formatNumber(value)} {metricLabel(metric).toLowerCase()}
-                </title>
-              </path>
-            );
-          })}
-          <path d={model.path(model.boundaries) ?? undefined} fill="none" stroke="#ffffff" />
-        </svg>
-      </Box>
-      <Text fontSize="xs" color="gray.600" textAlign="center">
-        Maiores valores:{" "}
-        {model.leaders
-          .map((row) => `${row.city.name} (${formatNumber(getMetricValue(row, metric))})`)
-          .join(", ")}
-      </Text>
-    </Stack>
-  );
-};
-
-export default DailyMapFilledParana;
+}

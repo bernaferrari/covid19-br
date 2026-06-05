@@ -1,5 +1,6 @@
 import {
   Badge,
+  Box,
   Flex,
   Heading,
   Icon,
@@ -122,6 +123,7 @@ const RelatedLinksList = () => (
         <LinkBox
           key={document.url}
           as="article"
+          role="group"
           h="full"
           borderWidth="1px"
           borderColor="gray.200"
@@ -145,6 +147,7 @@ const RelatedLinksList = () => (
                 bg={`${colorScheme}.100`}
                 color={`${colorScheme}.600`}
                 transition="all 0.2s ease"
+                _groupHover={{ color: `${colorScheme}.700` }}
               >
                 <Icon as={icon} boxSize={5} />
               </Flex>
