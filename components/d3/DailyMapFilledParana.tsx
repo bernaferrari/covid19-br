@@ -45,7 +45,7 @@ export default function DailyMapFilledParana() {
               onChange={setMetric}
             />
           </div>
-          <div className="flex h-8 w-fit items-center rounded-lg border px-0.5 observablehq-viewof-day">
+          <div className="flex h-8 w-fit items-center rounded-lg border observablehq-viewof-day">
             {mapData ? (
               <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
             ) : null}

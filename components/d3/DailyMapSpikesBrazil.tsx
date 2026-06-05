@@ -62,7 +62,7 @@ export default function DailyMapSpikesBrazil() {
           </div>
         </div>
         <div className="flex flex-row flex-wrap items-center justify-center">
-          <div className="mt-2 mb-8 flex h-8 w-fit items-center rounded-lg border px-0.5 observablehq-viewof-day">
+          <div className="mt-2 mb-8 flex h-8 w-fit items-center rounded-lg border observablehq-viewof-day">
             {mapData ? (
               <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
             ) : null}

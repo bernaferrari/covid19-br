@@ -68,7 +68,6 @@ export const DateScrubber = ({
       <Button
         type="button"
         variant="ghost"
-        size="sm"
         className="w-[5.25rem]"
         onClick={() => {
           if (isPlaying) {
