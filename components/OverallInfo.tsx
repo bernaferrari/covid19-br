@@ -61,7 +61,7 @@ const OverallInfo = () => {
   }, [data]);
 
   if (!stats) {
-    return <div className="min-h-[196px] flex-1 rounded-lg border p-6" />;
+    return <div className="min-h-[196px] w-full flex-1 rounded-lg border p-6" />;
   }
 
   const parsed = parseDate?.(stats.lastDate);
@@ -82,7 +82,7 @@ const OverallInfo = () => {
   ];
 
   return (
-    <aside className="flex-1 rounded-lg border bg-white p-6">
+    <aside className="w-full flex-1 rounded-lg border bg-white p-6">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {cards.map((card) => (
           <div key={card.label} className="rounded-md border bg-gray-50 p-4">
