@@ -4,7 +4,7 @@ import {
   loadBrazilDailyMapData,
   renderBrazilSpikeMap,
 } from "./dailyMapRenderers";
-import { DateScrubber, type CaseMetric, metricOptions, RadioGroup } from "./mapControls";
+import { DateScrubber, type CaseMetric, metricOptions, TabsGroup } from "./mapControls";
 
 type ScaleType = "bolhas" | "espinhos";
 
@@ -44,17 +44,17 @@ export default function DailyMapSpikesBrazil() {
     <div className="Map">
       <div id="observablehq-3176bb0d">
         <div className="flex flex-row flex-wrap items-center justify-center">
-          <div className="m-2 flex min-h-10 items-center rounded-lg border pl-4 observablehq-viewof-confirmed_or_deaths">
-            <RadioGroup
-              name="confirmed_or_deaths"
+          <div className="m-2 flex h-8 items-center observablehq-viewof-confirmed_or_deaths">
+            <TabsGroup
+              label="Selecionar métrica"
               options={metricOptions}
               value={metric}
               onChange={setMetric}
             />
           </div>
-          <div className="m-2 flex min-h-10 items-center rounded-lg border pl-4 observablehq-viewof-scale">
-            <RadioGroup
-              name="scale"
+          <div className="m-2 flex h-8 items-center observablehq-viewof-scale">
+            <TabsGroup
+              label="Selecionar escala do mapa"
               options={scaleOptions}
               value={scaleType}
               onChange={setScaleType}
@@ -62,7 +62,7 @@ export default function DailyMapSpikesBrazil() {
           </div>
         </div>
         <div className="flex flex-row flex-wrap items-center justify-center">
-          <div className="mt-2 mb-8 flex h-10 w-[380px] items-center rounded-lg border observablehq-viewof-day">
+          <div className="mt-2 mb-8 flex h-8 w-fit items-center rounded-lg border observablehq-viewof-day">
             {mapData ? (
               <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
             ) : null}

@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { groups, least } from "d3-array";
 import { useEffect, useRef, useState } from "react";
-import { RadioGroup } from "./mapControls";
+import { TabsGroup } from "./mapControls";
 
 type Indicator = "confirmed" | "deaths" | "confirmed_per_100k_inhabitants";
 
@@ -297,9 +297,9 @@ export default function DailyLinesBrazil() {
     <div className="Map">
       <div id="observablehq-65e7d81f">
         <div className="flex flex-row flex-wrap items-center justify-center">
-          <div className="m-2 flex min-h-10 items-center rounded-lg border pl-4 observablehq-viewof-indicator">
-            <RadioGroup
-              name="input"
+          <div className="m-2 flex h-8 items-center observablehq-viewof-indicator">
+            <TabsGroup
+              label="Selecionar indicador"
               options={indicatorOptions}
               value={indicator}
               onChange={setIndicator}

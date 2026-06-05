@@ -16,10 +16,10 @@ const IndexPage: NextPage = () => (
     <Header />
 
     <main>
-      <section className="mx-auto max-w-3xl px-4 pt-24 pb-16 md:pt-40">
+      <section className="mx-auto max-w-3xl pt-24 pb-16 md:pt-40">
         <ArchiveBanner />
 
-        <div className="flex flex-col items-start gap-8 md:flex-row md:gap-12">
+        <div className="flex flex-col items-start gap-8 px-4 md:flex-row md:gap-12">
           <div className="flex-1 md:p-6">
             <h1 className="text-3xl font-semibold">
               Portal COVID-19 no <span className="text-primary">Paraná</span>
@@ -42,7 +42,7 @@ const IndexPage: NextPage = () => (
           <OverallInfo />
         </div>
 
-        <div className="mt-10">
+        <div className="mt-10 px-4">
           <News />
         </div>
       </section>

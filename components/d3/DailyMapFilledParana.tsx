@@ -4,7 +4,7 @@ import {
   loadParanaDailyMapData,
   renderParanaFilledMap,
 } from "./dailyMapRenderers";
-import { DateScrubber, type CaseMetric, metricOptions, RadioGroup } from "./mapControls";
+import { DateScrubber, type CaseMetric, metricOptions, TabsGroup } from "./mapControls";
 
 export default function DailyMapFilledParana() {
   const [metric, setMetric] = useState<CaseMetric>("c");
@@ -37,15 +37,15 @@ export default function DailyMapFilledParana() {
     <div className="App">
       <div id="observablehq-cf886714">
         <div className="m-3 flex flex-row flex-wrap items-center justify-center">
-          <div className="m-4 flex min-h-10 items-center rounded-lg border pl-4 observablehq-viewof-confirmed_or_deaths">
-            <RadioGroup
-              name="confirmed_or_deaths"
+          <div className="m-4 flex h-8 items-center observablehq-viewof-confirmed_or_deaths">
+            <TabsGroup
+              label="Selecionar métrica"
               options={metricOptions}
               value={metric}
               onChange={setMetric}
             />
           </div>
-          <div className="flex min-h-10 w-[380px] items-center rounded-lg border pr-4 observablehq-viewof-day">
+          <div className="flex h-8 w-fit items-center rounded-lg border observablehq-viewof-day">
             {mapData ? (
               <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
             ) : null}

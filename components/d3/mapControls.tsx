@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { RadioGroup as UiRadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Pause, Play } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export type CaseMetric = "c" | "d";
 
@@ -8,32 +11,26 @@ export const metricOptions: { label: string; value: CaseMetric }[] = [
   { label: "mortes", value: "d" },
 ];
 
-export const RadioGroup = <T extends string>({
-  name: _name,
+export const TabsGroup = <T extends string>({
+  label,
   options,
   value,
   onChange,
 }: {
-  name: string;
+  label: string;
   options: { label: string; value: T }[];
   value: T;
   onChange: (value: T) => void;
 }) => (
-  <UiRadioGroup
-    value={value}
-    onValueChange={(nextValue) => onChange(nextValue as T)}
-    className="flex w-auto flex-row flex-wrap items-center gap-0"
-  >
-    {options.map((option) => (
-      <label
-        key={option.value}
-        className="mr-2.5 mb-[3px] inline-flex items-center gap-1.5 text-[0.85em]"
-      >
-        <RadioGroupItem value={option.value} aria-label={option.label} className="align-baseline" />
-        {option.label}
-      </label>
-    ))}
-  </UiRadioGroup>
+  <Tabs value={value} onValueChange={(nextValue) => onChange(nextValue as T)}>
+    <TabsList aria-label={label}>
+      {options.map((option) => (
+        <TabsTrigger key={option.value} value={option.value}>
+          {option.label}
+        </TabsTrigger>
+      ))}
+    </TabsList>
+  </Tabs>
 );
 
 export const DateScrubber = ({
@@ -64,39 +61,47 @@ export const DateScrubber = ({
   }, [dates.length, delay, index, isPlaying, onChange]);
 
   const selectedDate = dates[index];
+  const lastIndex = Math.max(dates.length - 1, 0);
 
   return (
-    <form className="flex h-[33px] items-center text-xs [font-variant-numeric:tabular-nums]">
-      <button
-        name="b"
+    <div className="flex w-full items-center gap-2 text-xs [font-variant-numeric:tabular-nums]">
+      <Button
         type="button"
-        className="mr-[0.4em] w-[5em]"
+        variant="ghost"
+        size="sm"
+        className="w-[5.25rem]"
         onClick={() => {
-          if (!isPlaying && index < dates.length - 1) onChange(index + 1);
-          setIsPlaying((value) => !value);
+          if (isPlaying) {
+            setIsPlaying(false);
+            return;
+          }
+
+          if (index >= lastIndex) onChange(0);
+          setIsPlaying(true);
         }}
       >
+        {isPlaying ? <Pause /> : <Play />}
         {isPlaying ? "Pause" : "Play"}
-      </button>
-      <label className="flex items-center">
-        <input
-          name="i"
-          type="range"
+      </Button>
+
+      <div className="w-[180px]">
+        <Slider
           aria-label="Selecionar data"
           min={0}
-          max={Math.max(dates.length - 1, 0)}
-          value={index}
+          max={lastIndex}
           step={1}
-          className="w-[180px]"
-          onChange={(event) => {
+          value={index}
+          defaultValue={[0]}
+          onValueChange={(nextValue) => {
+            const value = Array.isArray(nextValue) ? nextValue[0] : nextValue;
+
             setIsPlaying(false);
-            onChange(event.currentTarget.valueAsNumber);
+            onChange(value ?? 0);
           }}
         />
-        <output name="o" className="ml-[0.4em]">
-          {selectedDate?.toLocaleDateString()}
-        </output>
-      </label>
-    </form>
+      </div>
+
+      <output className="min-w-[4.75rem]">{selectedDate?.toLocaleDateString()}</output>
+    </div>
   );
 };
