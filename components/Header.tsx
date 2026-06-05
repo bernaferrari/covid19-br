@@ -13,7 +13,7 @@ const Header = () => (
             alt="Portal COVID-19 Paraná"
             width={216}
             height={107}
-            style={{ width: 120, height: "auto" }}
+            style={{ width: 80, height: "auto" }}
           />
         </Link>
 
@@ -35,7 +35,7 @@ const Header = () => (
               alt="UFPR"
               width={182}
               height={118}
-              style={{ width: 80, height: "auto" }}
+              style={{ width: 56, height: "auto" }}
             />
           </a>
         </div>
