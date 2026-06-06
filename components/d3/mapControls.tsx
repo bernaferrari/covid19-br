@@ -68,7 +68,7 @@ export const DateScrubber = ({
       <Button
         type="button"
         variant="ghost"
-        className="w-16 sm:w-[5.25rem]"
+        className="w-20"
         onClick={() => {
           if (isPlaying) {
             setIsPlaying(false);
@@ -100,9 +100,23 @@ export const DateScrubber = ({
         />
       </div>
 
-      <output className="min-w-16 text-right sm:min-w-[4.75rem]">
+      <output className="min-w-16 pr-2 text-right sm:min-w-[4.75rem]">
         {selectedDate?.toLocaleDateString()}
       </output>
     </div>
   );
 };
+
+export const DateScrubberControl = ({
+  dates,
+  index,
+  onChange,
+}: {
+  dates: Date[];
+  index: number;
+  onChange: (index: number) => void;
+}) => (
+  <div className="flex h-8 w-full max-w-sm items-center rounded-lg border">
+    <DateScrubber dates={dates} index={index} onChange={onChange} />
+  </div>
+);

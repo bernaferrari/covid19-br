@@ -159,16 +159,7 @@ const renderChart = (container: HTMLDivElement, rows: StateRow[], indicator: Ind
     .append("g")
     .attr("transform", `translate(${margin.left},0)`)
     .call(d3.axisLeft(y))
-    .call((group) => group.select(".domain").remove())
-    .call((group) =>
-      group
-        .append("text")
-        .attr("x", -margin.left)
-        .attr("y", 10)
-        .attr("fill", "currentColor")
-        .attr("text-anchor", "start")
-        .text(data.y),
-    );
+    .call((group) => group.select(".domain").remove());
 
   const grid = svg.append("g").attr("stroke", "currentColor").attr("stroke-opacity", 0.05);
 
@@ -274,6 +265,7 @@ const renderChart = (container: HTMLDivElement, rows: StateRow[], indicator: Ind
 export default function DailyLinesBrazil() {
   const [indicator, setIndicator] = useState<Indicator>("deaths");
   const chartRef = useRef<HTMLDivElement>(null);
+  const title = `${labelForIndicator(indicator)} por estado`;
 
   useEffect(() => {
     let isMounted = true;
@@ -296,8 +288,9 @@ export default function DailyLinesBrazil() {
   return (
     <div>
       <div>
-        <div className="flex flex-row flex-wrap items-center justify-center">
-          <div className="m-2 flex h-8 items-center">
+        <h2 className="mb-5 text-center text-sm font-semibold">{title}</h2>
+        <div className="mb-8 flex flex-row flex-wrap items-center justify-center gap-3">
+          <div className="flex h-8 items-center">
             <TabsGroup
               label="Selecionar indicador"
               options={indicatorOptions}

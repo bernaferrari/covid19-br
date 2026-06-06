@@ -4,7 +4,7 @@ import {
   loadBrazilDailyMapData,
   renderBrazilSpikeMap,
 } from "./dailyMapRenderers";
-import { DateScrubber, type CaseMetric, metricOptions, TabsGroup } from "./mapControls";
+import { DateScrubberControl, type CaseMetric, metricOptions, TabsGroup } from "./mapControls";
 
 type ScaleType = "bolhas" | "espinhos";
 
@@ -63,11 +63,13 @@ export default function DailyMapSpikesBrazil() {
               onChange={setScaleType}
             />
           </div>
-          <div className="flex h-8 w-full max-w-sm items-center rounded-lg border">
-            {mapData ? (
-              <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
-            ) : null}
-          </div>
+          {mapData ? (
+            <DateScrubberControl
+              dates={mapData.dates}
+              index={index}
+              onChange={handleIndexChange}
+            />
+          ) : null}
         </div>
 
         <div ref={mapRef} />

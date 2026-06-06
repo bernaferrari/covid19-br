@@ -4,7 +4,7 @@ import {
   loadParanaDailyMapData,
   renderParanaFilledMap,
 } from "./dailyMapRenderers";
-import { DateScrubber, type CaseMetric, metricOptions, TabsGroup } from "./mapControls";
+import { DateScrubberControl, type CaseMetric, metricOptions, TabsGroup } from "./mapControls";
 
 export default function DailyMapFilledParana() {
   const [metric, setMetric] = useState<CaseMetric>("c");
@@ -48,11 +48,13 @@ export default function DailyMapFilledParana() {
               onChange={setMetric}
             />
           </div>
-          <div className="flex h-8 w-full max-w-sm items-center rounded-lg border">
-            {mapData ? (
-              <DateScrubber dates={mapData.dates} index={index} onChange={handleIndexChange} />
-            ) : null}
-          </div>
+          {mapData ? (
+            <DateScrubberControl
+              dates={mapData.dates}
+              index={index}
+              onChange={handleIndexChange}
+            />
+          ) : null}
         </div>
         <div className="flex items-center justify-center">
           <div ref={legendRef} />
