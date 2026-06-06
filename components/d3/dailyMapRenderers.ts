@@ -14,6 +14,7 @@ export type DailyRow = {
 
 type DailyCityRow = DailyRow & Partial<City>;
 type DailyData = Record<string, DailyCityRow[]>;
+type ScaleType = "bolhas" | "espinhos";
 
 export type DailyMapData = {
   data: DailyData;
@@ -51,6 +52,9 @@ const currentData = (data: DailyData, index: number) => {
   return data[keys[keys.length - 1 - index]] ?? [];
 };
 
+const currentDataFromKeys = (data: DailyData, keys: string[], index: number) =>
+  data[keys[keys.length - 1 - index]] ?? [];
+
 const cityByCode = (cities: City[]) =>
   new Map(cities.map((city) => [city.city_ibge_code, city] as const));
 
@@ -71,6 +75,16 @@ const topologyObject = (map: unknown, key: string) =>
   (map as { objects: Record<string, unknown> }).objects[key] as Parameters<
     typeof topojson.feature
   >[1];
+
+type BrazilSpikeRenderer = {
+  mapData: DailyMapData;
+  metric: CaseMetric;
+  scaleType: ScaleType;
+  width: number;
+  update: (index: number) => void;
+};
+
+const brazilSpikeRenderers = new WeakMap<HTMLDivElement, BrazilSpikeRenderer>();
 
 const makeSequentialLegend = (
   container: HTMLDivElement,
@@ -166,10 +180,23 @@ export const renderBrazilSpikeMap = (
   container: HTMLDivElement,
   mapData: DailyMapData,
   metric: CaseMetric,
-  scaleType: "bolhas" | "espinhos",
+  scaleType: ScaleType,
   index: number,
 ) => {
   const width = Math.min(container.clientWidth || 700, 700);
+  const cached = brazilSpikeRenderers.get(container);
+
+  if (
+    cached &&
+    cached.mapData === mapData &&
+    cached.metric === metric &&
+    cached.scaleType === scaleType &&
+    cached.width === width
+  ) {
+    cached.update(index);
+    return;
+  }
+
   const height = 500;
   const breakpoint = 500;
   const maxValue = maxCases(mapData.data, metric);
@@ -190,7 +217,7 @@ export const renderBrazilSpikeMap = (
     provinces,
   );
   const path = d3.geoPath().projection(projection);
-  const current = currentData(mapData.data, index);
+  const dateKeys = Object.keys(mapData.data);
   const recent = mapData.data[Object.keys(mapData.data)[0]] ?? [];
   const yScale = d3.scaleSqrt([0, d3.max(recent, (row) => row[metric]) ?? 0], [0, 80]);
   const wrapper = document.createElement("div");
@@ -209,23 +236,9 @@ export const renderBrazilSpikeMap = (
     .attr("stroke", "#999")
     .attr("stroke-width", 0.5);
 
-  if (scaleType === "bolhas") {
-    svg
-      .selectAll(".bubble")
-      .data(current)
-      .enter()
-      .append("circle")
-      .attr(
-        "transform",
-        (row) => `translate(${projection([row.longitude ?? 0, row.latitude ?? 0])})`,
-      )
-      .attr("class", "bubble")
-      .attr("fill-opacity", 0.5)
-      .attr("fill", (row) => colorScale(row[metric]))
-      .attr("r", (row) => radius(row[metric]))
-      .append("title")
-      .text((row) => `${row.city}: ${numFormat(row[metric])}`);
+  const dynamicLayer = svg.append("g").attr("class", "map-data");
 
+  if (scaleType === "bolhas") {
     const legendRadii = [maxValue / 8, maxValue / 4, maxValue / 2, maxValue].map((value) =>
       Math.round(value),
     );
@@ -257,10 +270,12 @@ export const renderBrazilSpikeMap = (
       .attr("text-anchor", "middle")
       .attr("font-size", 13)
       .text(shortFormat);
-  } else {
-    const gradientId = `spike-gradient-${Math.random().toString(36).slice(2)}`;
-    const gradientColors = d3.scaleOrdinal<number, string>([100, 0], ["#f3f3f3", "#cc0000"]);
+  }
 
+  const gradientId = `spike-gradient-${Math.random().toString(36).slice(2)}`;
+
+  if (scaleType === "espinhos") {
+    const gradientColors = d3.scaleOrdinal<number, string>([100, 0], ["#f3f3f3", "#cc0000"]);
     svg
       .append("linearGradient")
       .attr("id", gradientId)
@@ -273,13 +288,43 @@ export const renderBrazilSpikeMap = (
       .join("stop")
       .attr("offset", (value) => `${value}%`)
       .attr("stop-color", (value) => gradientColors(value));
+  }
 
-    svg
-      .selectAll("polyline")
-      .data(current)
-      .enter()
-      .append("polyline")
-      .attr("class", "polyline")
+  const update = (nextIndex: number) => {
+    const current = currentDataFromKeys(mapData.data, dateKeys, nextIndex);
+
+    if (scaleType === "bolhas") {
+      const bubbles = dynamicLayer
+        .selectAll<SVGCircleElement, DailyCityRow>(".bubble")
+        .data(current, (row) => String(row.z))
+        .join((enter) => {
+          const circle = enter
+            .append("circle")
+            .attr("class", "bubble")
+            .attr(
+              "transform",
+              (row) => `translate(${projection([row.longitude ?? 0, row.latitude ?? 0])})`,
+            )
+            .attr("fill-opacity", 0.5);
+          circle.append("title");
+          return circle;
+        })
+        .attr("fill", (row) => colorScale(row[metric]))
+        .attr("r", (row) => radius(row[metric]));
+
+      bubbles.select("title").text((row) => `${row.city}: ${numFormat(row[metric])}`);
+
+      return;
+    }
+
+    const spikes = dynamicLayer
+      .selectAll<SVGPolylineElement, DailyCityRow>("polyline")
+      .data(current, (row) => String(row.z))
+      .join((enter) => {
+        const polyline = enter.append("polyline").attr("class", "polyline");
+        polyline.append("title");
+        return polyline;
+      })
       .attr("id", (row) => String(row.z))
       .attr("points", (row) => {
         const h = yScale(row[metric]);
@@ -288,13 +333,15 @@ export const renderBrazilSpikeMap = (
         return `${x - 4},${y} ${x},${y - h} ${x + 4},${y}`;
       })
       .attr("stroke", (row) => colorScale(row[metric]))
-      .attr("fill", `url(#${gradientId})`)
-      .append("title")
-      .text((row) => `${row.city}: ${numFormat(row[metric])} casos`);
-  }
+      .attr("fill", `url(#${gradientId})`);
+
+    spikes.select("title").text((row) => `${row.city}: ${numFormat(row[metric])} casos`);
+  };
 
   wrapper.append(svg.node() as SVGSVGElement);
   container.replaceChildren(wrapper);
+  brazilSpikeRenderers.set(container, { mapData, metric, scaleType, width, update });
+  update(index);
 };
 
 export const renderParanaFilledMap = (
