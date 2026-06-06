@@ -11,6 +11,14 @@ export const metricOptions: { label: string; value: CaseMetric }[] = [
   { label: "mortes", value: "d" },
 ];
 
+const formatScrubberDate = (date?: Date) =>
+  date?.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+
 export const TabsGroup = <T extends string>({
   label,
   options,
@@ -100,8 +108,8 @@ export const DateScrubber = ({
         />
       </div>
 
-      <output className="min-w-16 pr-2 text-right sm:min-w-[4.75rem]">
-        {selectedDate?.toLocaleDateString()}
+      <output className="w-[10ch] shrink-0 pr-2 text-right">
+        {formatScrubberDate(selectedDate)}
       </output>
     </div>
   );
