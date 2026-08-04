@@ -42,7 +42,7 @@
   },
   "engines": {
     "pnpm": ">=11",
-    "node": ">=20"
+    "node": ">=24"
   },
   "devEngines": {
     "packageManager": {
