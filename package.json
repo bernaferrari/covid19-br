@@ -48,6 +48,5 @@
       "name": "pnpm",
       "version": "^11.0.0"
     }
-  },
-  "packageManager": "pnpm@11.20.0"
+  }
 }
